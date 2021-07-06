@@ -9,11 +9,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{129A988E-C802-4E83-A8C5-7FAC5B46EDFE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{36C45C5D-8EC4-4E37-8282-9EF6D3544D0E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elevel.Domain", "Domain\Elevel.Domain.csproj", "{36C45C5D-8EC4-4E37-8282-9EF6D3544D0E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{A91A326A-9D32-445F-891F-0543A396EA58}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elevel.Application", "Application\Elevel.Application.csproj", "{A91A326A-9D32-445F-891F-0543A396EA58}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Persistence", "Persistence\Persistence.csproj", "{CB5A3558-FA38-471C-8AEF-FEE5B5DBE434}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elevel.Persistence", "Persistence\Elevel.Persistence.csproj", "{CB5A3558-FA38-471C-8AEF-FEE5B5DBE434}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
