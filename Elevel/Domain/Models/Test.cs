@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Elevel.Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,7 +18,7 @@ namespace Elevel.Domain.Models
         public Guid? CoachId { get; set; }
         public User Coach { get; set; }
 
-        public string Level { get; set; }
+        public Level Level { get; set; }
 
         public DateTimeOffset CreationDate { get; set; }
         public DateTimeOffset AssignmentStartDate { get; set; }

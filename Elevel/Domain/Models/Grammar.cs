@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Elevel.Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,7 +14,7 @@ namespace Elevel.Domain.Models
 
         public DateTimeOffset CreationDate { get; set; }
 
-        public string Level { get; set; }
+        public Level Level { get; set; }
 
         public ICollection<Test> Tests { get; set; }
 
