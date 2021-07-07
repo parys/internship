@@ -16,11 +16,7 @@ namespace Elevel.Domain.Models
 
         public Level Level { get; set; }
 
-        public ICollection<Test> Tests { get; set; }
+        public ICollection<Test> Tests { get; set; } = new List<Test>();
 
-        public Grammar()
-        {
-            Tests = new List<Test>();
-        }
     }
 }

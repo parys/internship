@@ -24,14 +24,14 @@ namespace Elevel.Domain.Models
         public DateTimeOffset AssignmentStartDate { get; set; }
         public DateTimeOffset AssignmentEndDate { get; set; }
 
-        public ICollection<Grammar> Grammars{ get; set; }
+        public ICollection<Grammar> Grammars{ get; set; } = new List<Grammar>();
         public int? GrammarMark { get; set; }
 
         public Guid? AuditionId { get; set; }
         public Audition Audition { get; set; }
         public int? AuditionMark { get; set; }
 
-        public ICollection<UserAnswer> UserAnswers { get; set; }
+        public ICollection<UserAnswer> UserAnswers { get; set; } = new List<UserAnswer>();
 
         public Guid? EssayId{ get; set; }
         public Essay Essay { get; set; }
@@ -45,10 +45,5 @@ namespace Elevel.Domain.Models
 
         public string Comment { get; set; }
 
-        public Test()
-        {
-            UserAnswers = new List<UserAnswer>();
-            Grammars = new List<Grammar>();
-        }
     }
 }
