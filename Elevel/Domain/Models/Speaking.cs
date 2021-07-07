@@ -10,7 +10,7 @@ namespace Elevel.Domain.Models
     {
         public Guid SpeakingId { get; set; }
 
-        public LevelEnum Level { get; set; }
+        public Level Level { get; set; }
 
         public string Topic { get; set; }
 
