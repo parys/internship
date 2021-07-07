@@ -10,11 +10,10 @@ namespace Elevel.Domain.Models
     {
         public Guid EssayId { get; set; }
 
-        public LevelEnum Level { get; set; }
+        public Level Level { get; set; }
 
         public string Topic { get; set; }
 
         public DateTime CreationDate { get; set; }
-
     }
 }
