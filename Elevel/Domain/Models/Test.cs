@@ -31,7 +31,7 @@ namespace Elevel.Domain.Models
         //public Audition Audition { get; set; }
         public int? AuditionMark { get; set; }
 
-        //public ICollection<UserAnswer> UserAnswers { get; set; } = new List<UserAnswer>();
+        public ICollection<UserAnswer> UserAnswers { get; set; } = new List<UserAnswer>();
 
         public Guid? EssayId{ get; set; }
         //public Essay Essay { get; set; }
