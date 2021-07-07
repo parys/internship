@@ -10,7 +10,7 @@ namespace Elevel.Domain.Models
     public class Grammar: BaseDataModel
     {
         public Guid QuestionId { get; set; }
-        public Question<Grammar> Question { get; set; }
+        public ICollection<Question> Questions { get; set; } = new List<Question>();
 
         public DateTimeOffset CreationDate { get; set; }
 
