@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Elevel.Api.Controllers
@@ -41,6 +42,18 @@ namespace Elevel.Api.Controllers
         public int GetSum(int a, int b)
         {
             return a + b;
+        }
+    }
+
+    [Authorize]
+    [Route("api/[controller]")]
+    [ApiController]
+    public class SecuredController : ControllerBase
+    {
+        [HttpGet]
+        public async Task<IActionResult> GetSecuredData()
+        {
+            return Ok("This Secured Data is available only for Authenticated Users.");
         }
     }
 }

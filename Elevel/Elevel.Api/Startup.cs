@@ -10,9 +10,18 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Elevel.Application;
+using Elevel.Application.Interfaces;
+using Elevel.Domain.Models;
+using Elevel.Infrastructure.Services.Implementation;
 using Elevel.Persistence;
+using Elevel.Persistence.Context;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Elevel.Api
 {
@@ -28,14 +37,43 @@ namespace Elevel.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Configuration from AppSettings
+            services.Configure<TokenConfiguration>(Configuration.GetSection("JWT"));
+            //User Manager Service
+            services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddApplication();
+            services.AddPersistence(Configuration);
+
+            //Adding Athentication - JWT
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(o =>
+                {
+                    o.RequireHttpsMetadata = false;
+                    o.SaveToken = false;
+                    o.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.Zero,
+                        ValidIssuer = Configuration["JWT:Issuer"],
+                        ValidAudience = Configuration["JWT:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Key"]))
+                    };
+                });
+
             services.AddSwaggerGen(c =>
             {
                 c.IncludeXmlComments($@"{System.AppDomain.CurrentDomain.BaseDirectory}\Elevel.Api.xml");
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Elevel.Api", Version = "v1" });
             });
             
-            services.AddApplication();
-            services.AddPersistence(Configuration);
             services.AddControllers();
         }
 
@@ -52,9 +90,8 @@ namespace Elevel.Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
