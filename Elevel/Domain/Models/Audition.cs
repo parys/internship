@@ -14,10 +14,8 @@ namespace Elevel.Domain.Models
 
         public Guid QuestionID { get; set; }
 
-        public LevelEnum Level { get; set; }
+        public Level Level { get; set; }
 
         public DateTime CreationDate { get; set; }
-
-
     }
 }
