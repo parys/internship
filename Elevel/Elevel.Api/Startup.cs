@@ -41,7 +41,7 @@ namespace Elevel.Api
             //Configuration from AppSettings
             services.Configure<TokenConfiguration>(Configuration.GetSection("JWT"));
             //User Manager Service
-            services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddIdentity<ApplicationUser, IdentityRole<Guid>>().AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddApplication();
             services.AddPersistence(Configuration);

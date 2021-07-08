@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Elevel.Domain;
 using Elevel.Domain.Models;
 using Microsoft.AspNetCore.Identity;
@@ -8,13 +9,13 @@ namespace Elevel.Infrastructure.Persistence.Context
     public class ApplicationDbContextSeed
     {
         public static async Task SeedEssentialsAsync(UserManager<ApplicationUser> userManager,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole<Guid>> roleManager)
         {
             //Seed Roles
-            await roleManager.CreateAsync(new IdentityRole(Authorization.Roles.Administrator.ToString()));
-            await roleManager.CreateAsync(new IdentityRole(Authorization.Roles.User.ToString()));
-            await roleManager.CreateAsync(new IdentityRole(Authorization.Roles.Coach.ToString()));
-            await roleManager.CreateAsync(new IdentityRole(Authorization.Roles.HumanResourceManager.ToString()));
+            await roleManager.CreateAsync(new IdentityRole<Guid>(Authorization.Roles.Administrator.ToString()));
+            await roleManager.CreateAsync(new IdentityRole<Guid>(Authorization.Roles.User.ToString()));
+            await roleManager.CreateAsync(new IdentityRole<Guid>(Authorization.Roles.Coach.ToString()));
+            await roleManager.CreateAsync(new IdentityRole<Guid>(Authorization.Roles.HumanResourceManager.ToString()));
 
             //Seed Default User
             foreach (var userSet in Authorization.DefaultUsers)

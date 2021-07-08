@@ -17,9 +17,9 @@ namespace Elevel.Infrastructure.Services.Implementation
     public class UserService : IUserService
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly RoleManager<IdentityRole<Guid>> _roleManager;
         private readonly TokenConfiguration _jwt;
-        public UserService(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IOptions<TokenConfiguration> jwt)
+        public UserService(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole<Guid>> roleManager, IOptions<TokenConfiguration> jwt)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -32,7 +32,6 @@ namespace Elevel.Infrastructure.Services.Implementation
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
-                authenticationModel.IsAuthenticated = false;
                 authenticationModel.Message = $"No Accounts Registered with {model.Email}.";
                 return authenticationModel;
             }
@@ -67,7 +66,7 @@ namespace Elevel.Infrastructure.Services.Implementation
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim("uid", user.Id)
+                new Claim("uid", user.Id.ToString())
             }
             .Union(userClaims)
             .Union(roleClaims);

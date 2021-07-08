@@ -28,7 +28,7 @@ namespace Elevel.Api
                 {
                     //Seed Default Users
                     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
                     await ApplicationDbContextSeed.SeedEssentialsAsync(userManager, roleManager);
                 }
                 catch (Exception ex)
