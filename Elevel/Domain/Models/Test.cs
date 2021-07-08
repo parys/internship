@@ -28,18 +28,18 @@ namespace Elevel.Domain.Models
         public int? GrammarMark { get; set; }
 
         public Guid? AuditionId { get; set; }
-        //public Audition Audition { get; set; }
+        public Audition Audition { get; set; }
         public int? AuditionMark { get; set; }
 
         public ICollection<UserAnswer> UserAnswers { get; set; } = new List<UserAnswer>();
 
         public Guid? EssayId{ get; set; }
-        //public Essay Essay { get; set; }
+        // public Topic Essay { get; set; } - uncomment this line when Topic entity will be implimented 
         public string EssayAnswer { get; set; }
         public int? EssayMark { get; set; }
 
         public Guid? SpeakingId { get; set; }
-        //public Speaking Speaking { get; set; }
+        // public Topic Speaking { get; set; } - uncomment this line when Topic entity will be implimented 
         public string SpeakingAnswerReference { get; set; }
         public int? SpeakingMark { get; set; }
 
