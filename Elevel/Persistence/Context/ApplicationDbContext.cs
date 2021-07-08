@@ -12,7 +12,13 @@ namespace Elevel.Persistence.Context
             : base(options)
         {
         }
-        
+
+        public DbSet<Answer> Answers { get; set; }
+        public DbSet<Grammar> Grammars { get; set; }
+        public DbSet<Question> Questions { get; set; }
+        public DbSet<Test> Tests { get; set; }
+        public DbSet<UserAnswer> UserAnswers { get; set; }
+
         public async Task<int> SaveChanges()
         {
             return await base.SaveChangesAsync();

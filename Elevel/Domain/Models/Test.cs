@@ -10,13 +10,13 @@ namespace Elevel.Domain.Models
     public class Test: BaseDataModel
     {
         public Guid UserId { get; set; }
-        public User User { get; set; }
+        //public User User { get; set; }
 
         public Guid? HrId { get; set; }
-        public User Hr { get; set; }
+        //public User Hr { get; set; }
 
         public Guid? CoachId { get; set; }
-        public User Coach { get; set; }
+        //public User Coach { get; set; }
 
         public Level Level { get; set; }
 

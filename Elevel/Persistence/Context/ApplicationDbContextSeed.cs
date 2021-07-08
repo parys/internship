@@ -3,7 +3,7 @@ using Elevel.Domain;
 using Elevel.Domain.Models;
 using Microsoft.AspNetCore.Identity;
 
-namespace Elevel.Persistence.Context
+namespace Elevel.Infrastructure.Persistence.Context
 {
     public class ApplicationDbContextSeed
     {

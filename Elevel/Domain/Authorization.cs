@@ -24,8 +24,11 @@ namespace Elevel.Domain
                 {
                     new ApplicationUser()
                     {
-                        FirstName = "FirstName",
-                        LastName = "LastName",
+                        EmailConfirmed = true, 
+                        PhoneNumberConfirmed = true,
+                        FirstName = "Admin",
+                        LastName = "Adminov",
+                        UserName = "AdminAdminov",
                         Email = "ElevelAdministrator@gmail.com",
                         CreationDate = DateTimeOffset.Now
                     }
@@ -37,8 +40,11 @@ namespace Elevel.Domain
                 {
                     new ApplicationUser()
                     {
-                        FirstName = "FirstName",
-                        LastName = "LastName",
+                        UserName = "UserUserov",
+                        EmailConfirmed = true,
+                        PhoneNumberConfirmed = true,
+                        FirstName = "User",
+                        LastName = "Userov",
                         Email = "ElevelUser@gmail.com",
                         CreationDate = DateTimeOffset.Now
                     }
@@ -50,8 +56,11 @@ namespace Elevel.Domain
                 {
                     new ApplicationUser()
                     {
-                        FirstName = "FirstName",
-                        LastName = "LastName",
+                        UserName = "CoachCoachev",
+                        EmailConfirmed = true,
+                        PhoneNumberConfirmed = true,
+                        FirstName = "Coach",
+                        LastName = "Coachev",
                         Email = "ElevelCoach@gmail.com",
                         CreationDate = DateTimeOffset.Now
                     }
@@ -63,8 +72,11 @@ namespace Elevel.Domain
                 {
                     new ApplicationUser()
                     {
-                        FirstName = "FirstName",
-                        LastName = "LastName",
+                        UserName = "ManagerManagerov",
+                        EmailConfirmed = true,
+                        PhoneNumberConfirmed = true,
+                        FirstName = "Manager",
+                        LastName = "Managerov",
                         Email = "ElevelHumanResourceManager@gmail.com",
                         CreationDate = DateTimeOffset.Now
                     }

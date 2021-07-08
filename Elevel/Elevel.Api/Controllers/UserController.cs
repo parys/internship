@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Elevel.Application.Interfaces;
+using Elevel.Domain.Authentication;
 
 namespace Elevel.Api.Controllers
 {
@@ -16,6 +17,13 @@ namespace Elevel.Api.Controllers
         public UserController(IUserService userService)
         {
             _userService = userService;
+        }
+
+        [HttpPost("token")]
+        public async Task<IActionResult> GetTokenAsync(TokenRequestModel model)
+        {
+            var result = await _userService.GetTokenAsync(model);
+            return Ok(result);
         }
     }
 }

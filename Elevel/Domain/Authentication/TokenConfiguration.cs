@@ -1,4 +1,4 @@
-﻿namespace Elevel.Domain.Models
+﻿namespace Elevel.Domain.Authentication
 {
     public class TokenConfiguration
     {
