@@ -19,4 +19,4 @@ namespace Elevel.Domain.Models
 
         public DateTimeOffset CreationDate { get; set; }
     }
-    }
+}

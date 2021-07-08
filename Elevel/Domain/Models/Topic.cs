@@ -7,14 +7,15 @@ using Elevel.Domain.Enums;
 
 namespace Elevel.Domain.Models
 {
-    public class Essay : BaseDataModel
+    public class Topic : BaseDataModel
     {
-        public Guid EssayId { get; set; }
+        public Guid TopicId { get; set; }
 
         public Level Level { get; set; }
 
-        public string Topic { get; set; }
+        public string TopicName { get; set; }
 
         public DateTimeOffset CreationDate { get; set; }
+
     }
 }
