@@ -12,7 +12,7 @@ namespace Elevel.Domain.Models
 
         public string AuditionAudio { get; set; }
 
-        public Guid QuestionID { get; set; }
+        public Guid QuestionId { get; set; }
 
         public Level Level { get; set; }
 
