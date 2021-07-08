@@ -14,6 +14,6 @@ namespace Elevel.Domain.Models
 
         public string Topic { get; set; }
 
-        public DateTime CreationDate { get; set; }
+        public DateTimeOffset CreationDate { get; set; }
     }
 }
