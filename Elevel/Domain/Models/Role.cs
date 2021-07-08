@@ -7,5 +7,7 @@ namespace Elevel.Domain.Models
         public string Name { get; set; }
 
         public List<User> Users { get; set; }
+
+        public int Permissions { get; set; }
     }
 }
