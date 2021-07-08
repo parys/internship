@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Elevel.Domain;
+using Elevel.Domain.Enums;
 using Elevel.Domain.Models;
 using Microsoft.AspNetCore.Identity;
 
@@ -12,10 +13,10 @@ namespace Elevel.Infrastructure.Persistence.Context
             RoleManager<IdentityRole<Guid>> roleManager)
         {
             //Seed Roles
-            await roleManager.CreateAsync(new IdentityRole<Guid>(Authorization.Roles.Administrator.ToString()));
-            await roleManager.CreateAsync(new IdentityRole<Guid>(Authorization.Roles.User.ToString()));
-            await roleManager.CreateAsync(new IdentityRole<Guid>(Authorization.Roles.Coach.ToString()));
-            await roleManager.CreateAsync(new IdentityRole<Guid>(Authorization.Roles.HumanResourceManager.ToString()));
+            await roleManager.CreateAsync(new IdentityRole<Guid>(UserRole.Administrator.ToString()));
+            await roleManager.CreateAsync(new IdentityRole<Guid>(UserRole.User.ToString()));
+            await roleManager.CreateAsync(new IdentityRole<Guid>(UserRole.Coach.ToString()));
+            await roleManager.CreateAsync(new IdentityRole<Guid>(UserRole.HumanResourceManager.ToString()));
 
             //Seed Default User
             foreach (var userSet in Authorization.DefaultUsers)

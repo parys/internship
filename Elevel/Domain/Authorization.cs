@@ -1,25 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using Elevel.Domain.Enums;
 using Elevel.Domain.Models;
 
 namespace Elevel.Domain
 {
     public class Authorization
     {
-        public enum Roles
-        {
-            Administrator,
-            HumanResourceManager,
-            Coach,
-            User
-        }
-
         public const string DefaultPassword = "Pa$$w0rd.";
 
-        public static Dictionary<Roles, List<ApplicationUser>> DefaultUsers = new Dictionary<Roles, List<ApplicationUser>>()
+        public static Dictionary<UserRole, List<ApplicationUser>> DefaultUsers = new Dictionary<UserRole, List<ApplicationUser>>()
         {
             {
-                Roles.Administrator,
+                UserRole.Administrator,
                 new List<ApplicationUser>()
                 {
                     new ApplicationUser()
@@ -35,7 +28,7 @@ namespace Elevel.Domain
                 }
             },
             {
-                Roles.User,
+                UserRole.User,
                 new List<ApplicationUser>()
                 {
                     new ApplicationUser()
@@ -51,7 +44,7 @@ namespace Elevel.Domain
                 }
             },
             {
-                Roles.Coach,
+                UserRole.Coach,
                 new List<ApplicationUser>()
                 {
                     new ApplicationUser()
@@ -67,7 +60,7 @@ namespace Elevel.Domain
                 }
             },
             {
-                Roles.HumanResourceManager,
+                UserRole.HumanResourceManager,
                 new List<ApplicationUser>()
                 {
                     new ApplicationUser()
