@@ -8,7 +8,6 @@ namespace Elevel.Domain.Models
 {
     public class Question : BaseDataModel
     {
-        public Guid QuestionId { get; set; }
         public Guid PhaseId { get; set; }
         public string NameQuestion { get; set; }
         public Guid AnswerId { get; set; }

@@ -9,14 +9,9 @@ namespace Elevel.Domain.Models
 {
     public class Audition : BaseDataModel
     {
-        public Guid AuditionId { get; set; }
-
         public string AuditionAudio { get; set; }
-
         public Guid QuestionId { get; set; }
-
         public Level Level { get; set; }
-
         public DateTimeOffset CreationDate { get; set; }
     }
 }
