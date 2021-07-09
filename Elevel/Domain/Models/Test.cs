@@ -10,14 +10,14 @@ namespace Elevel.Domain.Models
     public class Test: BaseDataModel
     {
         public Guid UserId { get; set; }
-        //public ApplicationUser User { get; set; }
+        public ApplicationUser User { get; set; }
 
         public Guid? HrId { get; set; }
-        //public ApplicationUser Hr { get; set; }
+       public ApplicationUser Hr { get; set; }
 
         public Guid? CoachId { get; set; }
 
-        //public ApplicationUser Coach { get; set; }
+        public ApplicationUser Coach { get; set; }
 
         public Level Level { get; set; }
 
@@ -33,7 +33,7 @@ namespace Elevel.Domain.Models
 
         public Guid? AuditionId { get; set; }
 
-        //public Audition Audition { get; set; }
+        public Audition Audition { get; set; }
 
         public int? AuditionMark { get; set; }
 
@@ -41,7 +41,7 @@ namespace Elevel.Domain.Models
 
         public Guid? EssayId{ get; set; }
         
-        //public Essay Essay { get; set; }
+        public Topic Essay { get; set; }
 
         public string EssayAnswer { get; set; }
 
@@ -49,7 +49,7 @@ namespace Elevel.Domain.Models
 
         public Guid? SpeakingId { get; set; }
 
-        //public Speaking Speaking { get; set; }
+        public Topic Speaking { get; set; }
 
         public string SpeakingAnswerReference { get; set; }
 
