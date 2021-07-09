@@ -9,13 +9,8 @@ namespace Elevel.Domain.Models
 {
     public class Topic : BaseDataModel
     {
-        public Guid TopicId { get; set; }
-
         public Level Level { get; set; }
-
         public string TopicName { get; set; }
-
         public DateTimeOffset CreationDate { get; set; }
-
     }
 }
