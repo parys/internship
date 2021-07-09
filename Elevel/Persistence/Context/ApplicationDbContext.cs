@@ -20,6 +20,7 @@ namespace Elevel.Persistence.Context
         public DbSet<Question> Questions { get; set; }
         public DbSet<Test> Tests { get; set; }
         public DbSet<UserAnswer> UserAnswers { get; set; }
+        public DbSet<Audition> Auditions { get; set; }
 
         public async Task<int> SaveChanges()
         {
