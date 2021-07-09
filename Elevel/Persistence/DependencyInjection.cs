@@ -1,4 +1,5 @@
 ﻿using Elevel.Application.Interfaces;
+using Elevel.Infrastructure.Services.Implementation;
 using Elevel.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -15,6 +16,7 @@ namespace Elevel.Persistence
                     configuration.GetConnectionString("DefaultConnection"),
                     b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
             services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
+            services.AddScoped<IUserService, UserService>();
         }
     }
 }
