@@ -8,10 +8,10 @@ namespace Elevel.Domain.Enums
 {
     public enum Level : byte
     {
-        Elementary,
-        PreIntermediate,
-        Intermediate,
-        Upperintermediate,
-        Advanced
+        Elementary = 0,
+        PreIntermediate = 1,
+        Intermediate = 2,
+        Upperintermediate = 3,
+        Advanced = 4
     }
 }
