@@ -9,9 +9,11 @@ namespace Elevel.Domain.Models
 {
     public class Audition : BaseDataModel
     {
-        public string AuditionAudio { get; set; }
-        public Guid QuestionId { get; set; }
+        public string AudioFilePath { get; set; }
         public Level Level { get; set; }
         public DateTimeOffset CreationDate { get; set; }
+
+        public ICollection<Question> Questions { get; set; }
+        public ICollection<Test> Tests { get; set; }
     }
 }
