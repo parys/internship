@@ -1,16 +1,12 @@
+using Elevel.Domain.Models;
+using Elevel.Infrastructure.Persistence.Context;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Elevel.Domain.Models;
-using Elevel.Infrastructure.Persistence.Context;
-using Elevel.Persistence.Context;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Elevel.Api
 {

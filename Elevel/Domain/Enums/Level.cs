@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Elevel.Domain.Enums
 {
-    public enum Level
+    public enum Level : byte
     {
         Elementary,
         PreIntermediate,

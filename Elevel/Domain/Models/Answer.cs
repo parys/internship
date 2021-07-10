@@ -8,8 +8,12 @@ namespace Elevel.Domain.Models
 {
     public class Answer : BaseDataModel
     {
-        public Guid QuestionId { get; set; }
         public string NameAnswer { get; set; }
         public bool IsRight { get; set; }
+
+        public Guid QuestionId { get; set; }
+        public Question Question { get; set; }
+
+        public ICollection<TestQuestion> TestQuestions { get; set; }
     }
 }
