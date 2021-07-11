@@ -9,6 +9,9 @@ namespace Elevel.Domain.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTimeOffset CreationDate { get; set; }
-        public ICollection<Test> Tests { get; set; } 
+
+        public ICollection<Test> UserTests { get; set; }
+        public ICollection<Test> HrTests { get; set; }
+        public ICollection<Test> CoachTests { get; set; }
     }
 }

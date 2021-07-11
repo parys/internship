@@ -19,15 +19,15 @@ namespace Elevel.Infrastructure.Persistence.Configurations
                 .HasForeignKey(x => x.SpeakingId);
 
             builder.HasOne(x => x.User)
-                .WithMany(x => x.Tests)
+                .WithMany(x => x.UserTests)
                 .HasForeignKey(x => x.UserId);
 
             builder.HasOne(x => x.Hr)
-                .WithMany(x => x.Tests)
+                .WithMany(x => x.HrTests)
                 .HasForeignKey(x => x.HrId);
 
             builder.HasOne(x => x.Coach)
-                .WithMany(x => x.Tests)
+                .WithMany(x => x.CoachTests)
                 .HasForeignKey(x => x.CoachId);
 
             builder.HasOne(x => x.Audition)
