@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Elevel.Application.Interfaces;
 using Elevel.Domain.Models;
@@ -34,11 +35,6 @@ namespace Elevel.Infrastructure.Persistence.Context
                 relationship.DeleteBehavior = DeleteBehavior.Restrict;
             }
 
-        }
-
-        public async Task<int> SaveChangesAsync()
-        {
-            return await base.SaveChangesAsync();
         }
     }
 }
