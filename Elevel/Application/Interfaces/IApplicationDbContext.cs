@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Elevel.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,6 +13,6 @@ namespace Elevel.Application.Interfaces
         DbSet<Test> Tests { get; set; }
         DbSet<Topic> Topics { get; set; }
         DbSet<Audition> Auditions { get; set; }
-        Task<int> SaveChangesAsync();
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }
