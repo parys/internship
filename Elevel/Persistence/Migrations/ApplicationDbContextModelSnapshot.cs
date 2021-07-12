@@ -38,7 +38,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Answers");
+                    b.ToTable("Answer");
                 });
 
             modelBuilder.Entity("Elevel.Domain.Models.ApplicationUser", b =>
@@ -49,6 +49,9 @@ namespace Elevel.Infrastructure.Persistence.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
+
+                    b.Property<string>("Avatar")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -225,9 +228,15 @@ namespace Elevel.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("AuditionId");
 
+                    b.HasIndex("CoachId");
+
                     b.HasIndex("EssayId");
 
+                    b.HasIndex("HrId");
+
                     b.HasIndex("SpeakingId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Test");
                 });
@@ -435,9 +444,19 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         .HasForeignKey("AuditionId")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("Elevel.Domain.Models.ApplicationUser", "Coach")
+                        .WithMany("CoachTests")
+                        .HasForeignKey("CoachId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("Elevel.Domain.Models.Topic", "Essay")
                         .WithMany("EssayTests")
                         .HasForeignKey("EssayId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Elevel.Domain.Models.ApplicationUser", "Hr")
+                        .WithMany("HrTests")
+                        .HasForeignKey("HrId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Elevel.Domain.Models.Topic", "Speaking")
@@ -445,11 +464,23 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         .HasForeignKey("SpeakingId")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("Elevel.Domain.Models.ApplicationUser", "User")
+                        .WithMany("UserTests")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Audition");
+
+                    b.Navigation("Coach");
 
                     b.Navigation("Essay");
 
+                    b.Navigation("Hr");
+
                     b.Navigation("Speaking");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Elevel.Domain.Models.TestQuestion", b =>
@@ -532,6 +563,15 @@ namespace Elevel.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("Elevel.Domain.Models.Answer", b =>
                 {
                     b.Navigation("TestQuestions");
+                });
+
+            modelBuilder.Entity("Elevel.Domain.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("CoachTests");
+
+                    b.Navigation("HrTests");
+
+                    b.Navigation("UserTests");
                 });
 
             modelBuilder.Entity("Elevel.Domain.Models.Audition", b =>

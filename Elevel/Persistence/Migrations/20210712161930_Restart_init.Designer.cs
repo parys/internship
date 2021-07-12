@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Elevel.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210708193223_initial")]
-    partial class initial
+    [Migration("20210712161930_Restart_init")]
+    partial class Restart_init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -27,9 +27,6 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("AnswerId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<bool>("IsRight")
                         .HasColumnType("bit");
 
@@ -43,7 +40,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Answers");
+                    b.ToTable("Answer");
                 });
 
             modelBuilder.Entity("Elevel.Domain.Models.ApplicationUser", b =>
@@ -54,6 +51,9 @@ namespace Elevel.Infrastructure.Persistence.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
+
+                    b.Property<string>("Avatar")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -121,24 +121,24 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("Elevel.Domain.Models.Grammar", b =>
+            modelBuilder.Entity("Elevel.Domain.Models.Audition", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("AudioFilePath")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTimeOffset>("CreationDate")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<int>("Level")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("QuestionId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<byte>("Level")
+                        .HasColumnType("tinyint");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Grammars");
+                    b.ToTable("Auditions");
                 });
 
             modelBuilder.Entity("Elevel.Domain.Models.Question", b =>
@@ -150,26 +150,21 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("AnswerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("AnswerId1")
+                    b.Property<Guid?>("AuditionId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("GrammarId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<DateTimeOffset>("CreationDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<byte>("Level")
+                        .HasColumnType("tinyint");
 
                     b.Property<string>("NameQuestion")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("PhaseId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("QuestionId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("AnswerId1");
-
-                    b.HasIndex("GrammarId");
+                    b.HasIndex("AuditionId");
 
                     b.ToTable("Questions");
                 });
@@ -216,8 +211,8 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     b.Property<Guid?>("HrId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Level")
-                        .HasColumnType("int");
+                    b.Property<byte>("Level")
+                        .HasColumnType("tinyint");
 
                     b.Property<string>("SpeakingAnswerReference")
                         .HasColumnType("nvarchar(max)");
@@ -233,51 +228,65 @@ namespace Elevel.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tests");
+                    b.HasIndex("AuditionId");
+
+                    b.HasIndex("CoachId");
+
+                    b.HasIndex("EssayId");
+
+                    b.HasIndex("HrId");
+
+                    b.HasIndex("SpeakingId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Test");
                 });
 
-            modelBuilder.Entity("Elevel.Domain.Models.UserAnswer", b =>
+            modelBuilder.Entity("Elevel.Domain.Models.TestQuestion", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("AnswerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("QuestionId")
+                    b.Property<Guid>("QuestionId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("TestId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UserAnswerId")
+                    b.Property<Guid?>("UserAnswerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AnswerId");
 
                     b.HasIndex("QuestionId");
 
                     b.HasIndex("TestId");
 
-                    b.ToTable("UserAnswers");
+                    b.HasIndex("UserAnswerId");
+
+                    b.ToTable("TestQuestions");
                 });
 
-            modelBuilder.Entity("GrammarTest", b =>
+            modelBuilder.Entity("Elevel.Domain.Models.Topic", b =>
                 {
-                    b.Property<Guid>("GrammarsId")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("TestsId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<DateTimeOffset>("CreationDate")
+                        .HasColumnType("datetimeoffset");
 
-                    b.HasKey("GrammarsId", "TestsId");
+                    b.Property<byte>("Level")
+                        .HasColumnType("tinyint");
 
-                    b.HasIndex("TestsId");
+                    b.Property<string>("TopicName")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("GrammarTest");
+                    b.HasKey("Id");
+
+                    b.ToTable("Topics");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
@@ -411,62 +420,95 @@ namespace Elevel.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Elevel.Domain.Models.Answer", b =>
                 {
-                    b.HasOne("Elevel.Domain.Models.Question", null)
+                    b.HasOne("Elevel.Domain.Models.Question", "Question")
                         .WithMany("Answers")
                         .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Elevel.Domain.Models.Question", b =>
-                {
-                    b.HasOne("Elevel.Domain.Models.Answer", "Answer")
-                        .WithMany()
-                        .HasForeignKey("AnswerId1");
-
-                    b.HasOne("Elevel.Domain.Models.Grammar", null)
-                        .WithMany("Questions")
-                        .HasForeignKey("GrammarId");
-
-                    b.Navigation("Answer");
-                });
-
-            modelBuilder.Entity("Elevel.Domain.Models.UserAnswer", b =>
-                {
-                    b.HasOne("Elevel.Domain.Models.Answer", "Answer")
-                        .WithMany()
-                        .HasForeignKey("AnswerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Elevel.Domain.Models.Question", "Question")
-                        .WithMany("UserAnswers")
-                        .HasForeignKey("QuestionId");
-
-                    b.HasOne("Elevel.Domain.Models.Test", null)
-                        .WithMany("UserAnswers")
-                        .HasForeignKey("TestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Answer");
 
                     b.Navigation("Question");
                 });
 
-            modelBuilder.Entity("GrammarTest", b =>
+            modelBuilder.Entity("Elevel.Domain.Models.Question", b =>
                 {
-                    b.HasOne("Elevel.Domain.Models.Grammar", null)
-                        .WithMany()
-                        .HasForeignKey("GrammarsId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("Elevel.Domain.Models.Audition", "Audition")
+                        .WithMany("Questions")
+                        .HasForeignKey("AuditionId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Audition");
+                });
+
+            modelBuilder.Entity("Elevel.Domain.Models.Test", b =>
+                {
+                    b.HasOne("Elevel.Domain.Models.Audition", "Audition")
+                        .WithMany("Tests")
+                        .HasForeignKey("AuditionId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Elevel.Domain.Models.ApplicationUser", "Coach")
+                        .WithMany("CoachTests")
+                        .HasForeignKey("CoachId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Elevel.Domain.Models.Topic", "Essay")
+                        .WithMany("EssayTests")
+                        .HasForeignKey("EssayId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Elevel.Domain.Models.ApplicationUser", "Hr")
+                        .WithMany("HrTests")
+                        .HasForeignKey("HrId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Elevel.Domain.Models.Topic", "Speaking")
+                        .WithMany("SpeakingTests")
+                        .HasForeignKey("SpeakingId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Elevel.Domain.Models.ApplicationUser", "User")
+                        .WithMany("UserTests")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Elevel.Domain.Models.Test", null)
-                        .WithMany()
-                        .HasForeignKey("TestsId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.Navigation("Audition");
+
+                    b.Navigation("Coach");
+
+                    b.Navigation("Essay");
+
+                    b.Navigation("Hr");
+
+                    b.Navigation("Speaking");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Elevel.Domain.Models.TestQuestion", b =>
+                {
+                    b.HasOne("Elevel.Domain.Models.Question", "Question")
+                        .WithMany("TestQuestions")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("Elevel.Domain.Models.Test", "Test")
+                        .WithMany("TestQuestions")
+                        .HasForeignKey("TestId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Elevel.Domain.Models.Answer", "UserAnswer")
+                        .WithMany("TestQuestions")
+                        .HasForeignKey("UserAnswerId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Question");
+
+                    b.Navigation("Test");
+
+                    b.Navigation("UserAnswer");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -474,7 +516,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -483,7 +525,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     b.HasOne("Elevel.Domain.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -492,7 +534,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     b.HasOne("Elevel.Domain.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -501,13 +543,13 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Elevel.Domain.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -516,25 +558,48 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     b.HasOne("Elevel.Domain.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Elevel.Domain.Models.Grammar", b =>
+            modelBuilder.Entity("Elevel.Domain.Models.Answer", b =>
+                {
+                    b.Navigation("TestQuestions");
+                });
+
+            modelBuilder.Entity("Elevel.Domain.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("CoachTests");
+
+                    b.Navigation("HrTests");
+
+                    b.Navigation("UserTests");
+                });
+
+            modelBuilder.Entity("Elevel.Domain.Models.Audition", b =>
                 {
                     b.Navigation("Questions");
+
+                    b.Navigation("Tests");
                 });
 
             modelBuilder.Entity("Elevel.Domain.Models.Question", b =>
                 {
                     b.Navigation("Answers");
 
-                    b.Navigation("UserAnswers");
+                    b.Navigation("TestQuestions");
                 });
 
             modelBuilder.Entity("Elevel.Domain.Models.Test", b =>
                 {
-                    b.Navigation("UserAnswers");
+                    b.Navigation("TestQuestions");
+                });
+
+            modelBuilder.Entity("Elevel.Domain.Models.Topic", b =>
+                {
+                    b.Navigation("EssayTests");
+
+                    b.Navigation("SpeakingTests");
                 });
 #pragma warning restore 612, 618
         }
