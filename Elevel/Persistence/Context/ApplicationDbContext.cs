@@ -36,7 +36,7 @@ namespace Elevel.Infrastructure.Persistence.Context
 
         }
 
-        public async Task<int> SaveChanges()
+        public async Task<int> SaveChangesAsync()
         {
             return await base.SaveChangesAsync();
         }
