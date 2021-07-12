@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Elevel.Infrastructure.Persistence.Migrations
 {
-    public partial class initial : Migration
+    public partial class Restart_init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -29,6 +29,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    Avatar = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -50,45 +51,31 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Grammars",
+                name: "Auditions",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    QuestionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    Level = table.Column<int>(type: "int", nullable: false)
+                    AudioFilePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Level = table.Column<byte>(type: "tinyint", nullable: false),
+                    CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Grammars", x => x.Id);
+                    table.PrimaryKey("PK_Auditions", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Tests",
+                name: "Topics",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    HrId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    CoachId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    Level = table.Column<int>(type: "int", nullable: false),
-                    CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    AssignmentStartDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    AssignmentEndDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    GrammarMark = table.Column<int>(type: "int", nullable: true),
-                    AuditionId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    AuditionMark = table.Column<int>(type: "int", nullable: true),
-                    EssayId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    EssayAnswer = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    EssayMark = table.Column<int>(type: "int", nullable: true),
-                    SpeakingId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    SpeakingAnswerReference = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SpeakingMark = table.Column<int>(type: "int", nullable: true),
-                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    TopicName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Level = table.Column<byte>(type: "tinyint", nullable: false),
+                    CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tests", x => x.Id);
+                    table.PrimaryKey("PK_Topics", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -109,7 +96,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -130,7 +117,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -150,7 +137,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -168,13 +155,13 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_AspNetUserRoles_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -194,31 +181,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "GrammarTest",
-                columns: table => new
-                {
-                    GrammarsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TestsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_GrammarTest", x => new { x.GrammarsId, x.TestsId });
-                    table.ForeignKey(
-                        name: "FK_GrammarTest_Grammars_GrammarsId",
-                        column: x => x.GrammarsId,
-                        principalTable: "Grammars",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_GrammarTest_Tests_TestsId",
-                        column: x => x.TestsId,
-                        principalTable: "Tests",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -226,81 +189,142 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    QuestionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PhaseId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     NameQuestion = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Level = table.Column<byte>(type: "tinyint", nullable: false),
+                    CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     AnswerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AnswerId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    GrammarId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    AuditionId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Questions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Questions_Grammars_GrammarId",
-                        column: x => x.GrammarId,
-                        principalTable: "Grammars",
+                        name: "FK_Questions_Auditions_AuditionId",
+                        column: x => x.AuditionId,
+                        principalTable: "Auditions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Answers",
+                name: "Test",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AnswerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    QuestionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Level = table.Column<byte>(type: "tinyint", nullable: false),
+                    CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    AssignmentStartDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    AssignmentEndDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    GrammarMark = table.Column<int>(type: "int", nullable: true),
+                    AuditionMark = table.Column<int>(type: "int", nullable: true),
+                    EssayMark = table.Column<int>(type: "int", nullable: true),
+                    SpeakingMark = table.Column<int>(type: "int", nullable: true),
+                    EssayAnswer = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SpeakingAnswerReference = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    HrId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CoachId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    AuditionId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    EssayId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    SpeakingId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Test", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Test_AspNetUsers_CoachId",
+                        column: x => x.CoachId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Test_AspNetUsers_HrId",
+                        column: x => x.HrId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Test_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Test_Auditions_AuditionId",
+                        column: x => x.AuditionId,
+                        principalTable: "Auditions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Test_Topics_EssayId",
+                        column: x => x.EssayId,
+                        principalTable: "Topics",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Test_Topics_SpeakingId",
+                        column: x => x.SpeakingId,
+                        principalTable: "Topics",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Answer",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     NameAnswer = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsRight = table.Column<bool>(type: "bit", nullable: false)
+                    IsRight = table.Column<bool>(type: "bit", nullable: false),
+                    QuestionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Answers", x => x.Id);
+                    table.PrimaryKey("PK_Answer", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Answers_Questions_QuestionId",
+                        name: "FK_Answer_Questions_QuestionId",
                         column: x => x.QuestionId,
                         principalTable: "Questions",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserAnswers",
+                name: "TestQuestions",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserAnswerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    QuestionId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    AnswerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TestId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    UserAnswerId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    TestId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    QuestionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserAnswers", x => x.Id);
+                    table.PrimaryKey("PK_TestQuestions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserAnswers_Answers_AnswerId",
-                        column: x => x.AnswerId,
-                        principalTable: "Answers",
+                        name: "FK_TestQuestions_Answer_UserAnswerId",
+                        column: x => x.UserAnswerId,
+                        principalTable: "Answer",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_UserAnswers_Questions_QuestionId",
+                        name: "FK_TestQuestions_Questions_QuestionId",
                         column: x => x.QuestionId,
                         principalTable: "Questions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_UserAnswers_Tests_TestId",
+                        name: "FK_TestQuestions_Test_TestId",
                         column: x => x.TestId,
-                        principalTable: "Tests",
+                        principalTable: "Test",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Answers_QuestionId",
-                table: "Answers",
+                name: "IX_Answer_QuestionId",
+                table: "Answer",
                 column: "QuestionId");
 
             migrationBuilder.CreateIndex(
@@ -343,50 +367,58 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_GrammarTest_TestsId",
-                table: "GrammarTest",
-                column: "TestsId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Questions_AnswerId1",
+                name: "IX_Questions_AuditionId",
                 table: "Questions",
-                column: "AnswerId1");
+                column: "AuditionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Questions_GrammarId",
-                table: "Questions",
-                column: "GrammarId");
+                name: "IX_Test_AuditionId",
+                table: "Test",
+                column: "AuditionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserAnswers_AnswerId",
-                table: "UserAnswers",
-                column: "AnswerId");
+                name: "IX_Test_CoachId",
+                table: "Test",
+                column: "CoachId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserAnswers_QuestionId",
-                table: "UserAnswers",
+                name: "IX_Test_EssayId",
+                table: "Test",
+                column: "EssayId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Test_HrId",
+                table: "Test",
+                column: "HrId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Test_SpeakingId",
+                table: "Test",
+                column: "SpeakingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Test_UserId",
+                table: "Test",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TestQuestions_QuestionId",
+                table: "TestQuestions",
                 column: "QuestionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserAnswers_TestId",
-                table: "UserAnswers",
+                name: "IX_TestQuestions_TestId",
+                table: "TestQuestions",
                 column: "TestId");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_Questions_Answers_AnswerId1",
-                table: "Questions",
-                column: "AnswerId1",
-                principalTable: "Answers",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
+            migrationBuilder.CreateIndex(
+                name: "IX_TestQuestions_UserAnswerId",
+                table: "TestQuestions",
+                column: "UserAnswerId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Answers_Questions_QuestionId",
-                table: "Answers");
-
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -403,28 +435,28 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "GrammarTest");
-
-            migrationBuilder.DropTable(
-                name: "UserAnswers");
+                name: "TestQuestions");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Answer");
 
             migrationBuilder.DropTable(
-                name: "Tests");
+                name: "Test");
 
             migrationBuilder.DropTable(
                 name: "Questions");
 
             migrationBuilder.DropTable(
-                name: "Answers");
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Grammars");
+                name: "Topics");
+
+            migrationBuilder.DropTable(
+                name: "Auditions");
         }
     }
 }

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Elevel.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210712155350_Avatar")]
-    partial class Avatar
+    [Migration("20210712161930_Restart_init")]
+    partial class Restart_init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
