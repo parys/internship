@@ -12,7 +12,8 @@ namespace Elevel.Infrastructure.Persistence.Configurations
 
             builder.HasOne(x => x.Audition)
                 .WithMany(x => x.Questions)
-                .HasForeignKey(x => x.AuditionId);
+                .HasForeignKey(x => x.AuditionId)
+                .IsRequired(false);
         }
     }
 }

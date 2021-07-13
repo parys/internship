@@ -24,11 +24,13 @@ namespace Elevel.Infrastructure.Persistence.Configurations
 
             builder.HasOne(x => x.Hr)
                 .WithMany(x => x.HrTests)
-                .HasForeignKey(x => x.HrId);
+                .HasForeignKey(x => x.HrId)
+                .IsRequired(false);
 
             builder.HasOne(x => x.Coach)
                 .WithMany(x => x.CoachTests)
-                .HasForeignKey(x => x.CoachId);
+                .HasForeignKey(x => x.CoachId)
+                .IsRequired(false);
 
             builder.HasOne(x => x.Audition)
                 .WithMany(x => x.Tests)
