@@ -12,9 +12,7 @@ namespace Elevel.Domain.Models
         public string TopicName { get; set; }
         public Level Level { get; set; }
         public DateTimeOffset CreationDate { get; set; }
-
         public bool Deleted { get; set; }
-
         public ICollection<Test> EssayTests { get; set; }
         public ICollection<Test> SpeakingTests { get; set; }
     }
