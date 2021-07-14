@@ -24,7 +24,7 @@ namespace Elevel.Domain
                         UserName = "AdminAdminov",
                         Email = "ElevelAdministrator@gmail.com",
                         CreationDate = DateTimeOffset.Now,
-                        Avatar = "..\\Elevel.Api\\Resources\\default_avatar.jpg"
+                        Avatar = @"\wwwroot\default_avatar.jpg"
                     }
                 }
             },
@@ -41,7 +41,7 @@ namespace Elevel.Domain
                         LastName = "Userov",
                         Email = "ElevelUser@gmail.com",
                         CreationDate = DateTimeOffset.Now,
-                        Avatar = "..\\Elevel.Api\\Resources\\default_avatar.jpg"
+                        Avatar = @"\wwwroot\default_avatar.jpg"
                     }
                 }
             },
@@ -58,7 +58,7 @@ namespace Elevel.Domain
                         LastName = "Coachev",
                         Email = "ElevelCoach@gmail.com",
                         CreationDate = DateTimeOffset.Now,
-                        Avatar = "..\\Elevel.Api\\Resources\\default_avatar.jpg"
+                        Avatar = @"\wwwroot\default_avatar.jpg"
                     }
                 }
             },
@@ -75,7 +75,7 @@ namespace Elevel.Domain
                         LastName = "Managerov",
                         Email = "ElevelHumanResourceManager@gmail.com",
                         CreationDate = DateTimeOffset.Now,
-                        Avatar = "..\\Elevel.Api\\Resources\\default_avatar.jpg"
+                        Avatar = @"\wwwroot\default_avatar.jpg"
                     }
                 }
             }
