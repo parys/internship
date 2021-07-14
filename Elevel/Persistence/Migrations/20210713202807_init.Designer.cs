@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Elevel.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210712161930_Restart_init")]
-    partial class Restart_init
+    [Migration("20210713202807_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -156,6 +156,9 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     b.Property<DateTimeOffset>("CreationDate")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("bit");
+
                     b.Property<byte>("Level")
                         .HasColumnType("tinyint");
 
@@ -277,6 +280,9 @@ namespace Elevel.Infrastructure.Persistence.Migrations
 
                     b.Property<DateTimeOffset>("CreationDate")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("bit");
 
                     b.Property<byte>("Level")
                         .HasColumnType("tinyint");
