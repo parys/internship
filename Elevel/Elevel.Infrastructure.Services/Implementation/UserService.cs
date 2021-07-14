@@ -43,7 +43,7 @@ namespace Elevel.Infrastructure.Services.Implementation
                 authenticationModel.Email = user.Email;
                 authenticationModel.FirstName = user.FirstName;
                 authenticationModel.LastName = user.LastName;
-                authenticationModel.Avatar = @".\wwwroot\default_avatar.jpg";
+                authenticationModel.Avatar = @"\wwwroot\default_avatar.jpg";
 
                 var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
                 authenticationModel.Roles = rolesList.ToList();
