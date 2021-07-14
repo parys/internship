@@ -14,6 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 namespace Elevel.Api
 {
@@ -32,7 +33,9 @@ namespace Elevel.Api
             //Configuration from AppSettings
             services.Configure<TokenConfiguration>(Configuration.GetSection("JWT"));
             //User Manager Service
-            services.AddIdentity<ApplicationUser, IdentityRole<Guid>>().AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddApplication();
             services.AddPersistence(Configuration);
