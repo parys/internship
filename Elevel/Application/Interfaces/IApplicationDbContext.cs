@@ -6,6 +6,7 @@ namespace Elevel.Application.Interfaces
 {
     public interface IApplicationDbContext
     {
+        public DbSet<Audition> Auditions { get; set; }
         Task<int> SaveChanges();
     }
 }
