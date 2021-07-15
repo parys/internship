@@ -93,7 +93,7 @@ namespace Elevel.Api
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ApplicationDbContext context)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -101,10 +101,6 @@ namespace Elevel.Api
             }
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Elevel.Api v1"));
-
-            //app.UseHttpsRedirection();
-
-            context.Database.Migrate();
 
             app.UseRouting();
             app.UseAuthentication();
