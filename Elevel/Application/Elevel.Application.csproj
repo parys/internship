@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <Folder Include="Profiles\" />
-    <Folder Include="TestQuestion\" />
   </ItemGroup>
 
 </Project>
