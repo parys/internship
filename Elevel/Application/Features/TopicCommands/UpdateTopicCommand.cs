@@ -31,7 +31,7 @@ namespace Elevel.Application.Features.TopicCommands
                 var topic = await _context.Topics.FirstOrDefaultAsync(a => a.TopicName == request.TopicName && a.CreationDate == request.CreationDate, cancelationtoken);
                 if (topic is null)
                 {
-                    throw new NullReferenceException();
+                    return null;
                 }
                 topic = _mapper.Map(request, topic);
 
