@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Elevel.Application.Interfaces;
-using Elevel.Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
