@@ -13,7 +13,6 @@ namespace Elevel.Application.Features.TopicCommands
     {
         public Guid? Id { get; set; }
         public string TopicName { get; set; }
-        public Level Level { get; set; }
         public DateTimeOffset CreationDate { get; set; }
     }
 
@@ -28,7 +27,7 @@ namespace Elevel.Application.Features.TopicCommands
         }
         public async Task<Response> Handle(Request request, CancellationToken cancelationtoken)
         {
-            var topic = await _context.Topics.FirstOrDefaultAsync(a => a.TopicName == request.TopicName && a.Level == request.Level && a.CreationDate == request.CreationDate, cancelationtoken);
+            var topic = await _context.Topics.FirstOrDefaultAsync(a => a.TopicName == request.TopicName && a.CreationDate == request.CreationDate, cancelationtoken);
             if (topic is null)
             {
                 throw new NullReferenceException();

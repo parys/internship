@@ -14,7 +14,6 @@ namespace Elevel.Application.Features.TopicCommands
         public class Request : IRequest<Response>
         {
             public string TopicName { get; set; }
-            public Level Level { get; set; }
             public DateTimeOffset CreationDate { get; set; }
         }
 
