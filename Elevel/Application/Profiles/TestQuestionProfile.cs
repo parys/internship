@@ -9,7 +9,6 @@ namespace Elevel.Application.Profiles
         public TestQuestionProfile()
         {
             CreateMap<UpdateTestQuestionCommand.Request, TestQuestion>();
-            return;
         }
     }
 }
