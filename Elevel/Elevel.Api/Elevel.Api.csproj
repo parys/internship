@@ -46,4 +46,10 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Elevel.Api.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
