@@ -14,6 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Text;
+using Elevel.Application.Profiles;
 using Microsoft.EntityFrameworkCore;
 
 namespace Elevel.Api
@@ -30,6 +31,7 @@ namespace Elevel.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper(typeof(TestQuestionProfile));
             //Configuration from AppSettings
             services.Configure<TokenConfiguration>(Configuration.GetSection("JWT"));
             //User Manager Service
