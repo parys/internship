@@ -32,7 +32,7 @@ namespace Elevel.Application.Features.AnswerCommands
                 var answer = await _context.Answers.FirstOrDefaultAsync(a => a.Id == request.Id, cancelationtoken);
                 if (answer is null)
                 {
-                    throw new NullReferenceException();
+                    return null;
                 }
                 _context.Answers.Remove(answer);
 

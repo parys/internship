@@ -32,7 +32,7 @@ namespace Elevel.Application.Features.TopicCommands
                 var answer = await _context.Answers.FirstOrDefaultAsync(a => a.NameAnswer== request.NameAnswer && a.IsRight == request.IsRight && a.QuestionId == request.QuestionId, cancelationtoken);
                 if (answer is null)
                 {
-                    throw new NullReferenceException();
+                    return null;
                 }
                 answer = _mapper.Map(request, answer);
 
