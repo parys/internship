@@ -53,7 +53,7 @@ namespace Elevel.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetSecuredData()
         {
-            return Ok("This Secured Data is available only for Authenticated Users.");
+            return await Task.FromResult(Ok("This Secured Data is available only for Authenticated Users."));
         }
     }
 }
