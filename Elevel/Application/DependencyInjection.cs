@@ -8,6 +8,7 @@ namespace Elevel.Application
     {
         public static void AddApplication(this IServiceCollection services)
         {
+
             services.AddMediatR(Assembly.GetExecutingAssembly());
         }
     }
