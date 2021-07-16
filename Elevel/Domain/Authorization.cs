@@ -17,13 +17,14 @@ namespace Elevel.Domain
                 {
                     new ApplicationUser()
                     {
-                        EmailConfirmed = true, 
+                        EmailConfirmed = true,
                         PhoneNumberConfirmed = true,
                         FirstName = "Admin",
                         LastName = "Adminov",
                         UserName = "AdminAdminov",
                         Email = "ElevelAdministrator@gmail.com",
-                        CreationDate = DateTimeOffset.Now
+                        CreationDate = DateTimeOffset.Now,
+                        Avatar = @"\wwwroot\default_avatar.jpg"
                     }
                 }
             },
@@ -39,7 +40,8 @@ namespace Elevel.Domain
                         FirstName = "User",
                         LastName = "Userov",
                         Email = "ElevelUser@gmail.com",
-                        CreationDate = DateTimeOffset.Now
+                        CreationDate = DateTimeOffset.Now,
+                        Avatar = @"\wwwroot\default_avatar.jpg"
                     }
                 }
             },
@@ -55,7 +57,8 @@ namespace Elevel.Domain
                         FirstName = "Coach",
                         LastName = "Coachev",
                         Email = "ElevelCoach@gmail.com",
-                        CreationDate = DateTimeOffset.Now
+                        CreationDate = DateTimeOffset.Now,
+                        Avatar = @"\wwwroot\default_avatar.jpg"
                     }
                 }
             },
@@ -71,7 +74,8 @@ namespace Elevel.Domain
                         FirstName = "Manager",
                         LastName = "Managerov",
                         Email = "ElevelHumanResourceManager@gmail.com",
-                        CreationDate = DateTimeOffset.Now
+                        CreationDate = DateTimeOffset.Now,
+                        Avatar = @"\wwwroot\default_avatar.jpg"
                     }
                 }
             }
