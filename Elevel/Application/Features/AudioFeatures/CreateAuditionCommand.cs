@@ -8,7 +8,7 @@ using Elevel.Domain.Models;
 
 namespace Elevel.Application.Features.AudioFeatures
 {
-    public class CreateAudiotionCommand
+    public class CreateAuditionCommand
     {
         public class Request : IRequest<Response>
         {

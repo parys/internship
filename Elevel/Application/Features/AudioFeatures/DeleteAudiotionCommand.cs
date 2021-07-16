@@ -14,18 +14,14 @@ namespace Elevel.Application.Features.AudioFeatures
         public class Request : IRequest<Response>
         {
             public Guid Id{ get; set; }
-            public string AudioFilePath { get; set; }
-            public DateTimeOffset CreationDate { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IApplicationDbContext _context;
-            private readonly IMapper _mapper;
-            public Handler(IApplicationDbContext context, IMapper mapper)
+            public Handler(IApplicationDbContext context)
             {
                 _context = context;
-                _mapper = mapper;
             }
             public async Task<Response> Handle(Request request, CancellationToken cancelationtoken)
             {
