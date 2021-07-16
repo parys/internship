@@ -2,6 +2,7 @@ using Elevel.Domain.Models;
 using Elevel.Infrastructure.Persistence.Context;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -20,6 +21,8 @@ namespace Elevel.Api
             {
                 var services = scope.ServiceProvider;
                 var loggerFactory = services.GetRequiredService<ILoggerFactory>();
+
+                services.GetService<ApplicationDbContext>().Database.Migrate();
                 try
                 {
                     //Seed Default Users
@@ -42,5 +45,6 @@ namespace Elevel.Api
                 {
                     webBuilder.UseStartup<Startup>();
                 });
+        
     }
 }

@@ -11,9 +11,17 @@ namespace Elevel.Persistence
     {
         public static void AddPersistence(this IServiceCollection services, IConfiguration configuration)
         {
+            string connectionString = string.Empty;
+#if DEBUG
+            connectionString = configuration.GetConnectionString("DefaultConnection");
+#else
+            connectionString = configuration.GetConnectionString("ProductionConnection");
+#endif
+
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    configuration.GetConnectionString("DefaultConnection"),
+                    connectionString,
                     b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
             services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
             services.AddScoped<IUserService, UserService>();
