@@ -5,6 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="TestQuestion\**" />
+    <EmbeddedResource Remove="TestQuestion\**" />
+    <None Remove="TestQuestion\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.7" />
@@ -16,7 +22,6 @@
 
   <ItemGroup>
     <Folder Include="Profiles\" />
-    <Folder Include="TestQuestion\" />
   </ItemGroup>
 
 </Project>
