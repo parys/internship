@@ -21,7 +21,6 @@ namespace Elevel.Application.Features.ApplicationUserFeatures
         {
         }
 
-
         public class Handler : IRequestHandler<Request, Response>
         {
 
@@ -56,12 +55,10 @@ namespace Elevel.Application.Features.ApplicationUserFeatures
             }
         }
 
-
         [Serializable]
         public class Response : PagedResult<UserDto>
         {
         }
-
 
         [Serializable]
         public class UserDto

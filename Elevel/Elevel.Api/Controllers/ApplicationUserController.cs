@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Elevel.Api.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "HumanResourceManager")]
     [Route("api/[controller]")]
     public class ApplicationUserController : BaseApiController
     {
