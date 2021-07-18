@@ -21,7 +21,8 @@ namespace Elevel.Application.Features.TopicCommands
         {
             private readonly IApplicationDbContext _context;
             private readonly IMapper _mapper;
-            public Handler(IApplicationDbContext context, IMapper mapper)
+            public 
+                Handler(IApplicationDbContext context, IMapper mapper)
             {
                 _context = context;
                 _mapper = mapper;
@@ -35,8 +36,12 @@ namespace Elevel.Application.Features.TopicCommands
                 }
                 topic = _mapper.Map(request, topic);
 
-                await _context.SaveChangesAsync(cancelationtoken);
+                var a =  await _context.SaveChangesAsync(cancelationtoken);
+               
+               
                 return new Response { Id = topic.Id };
+               
+
             }
         }
         public class Response
