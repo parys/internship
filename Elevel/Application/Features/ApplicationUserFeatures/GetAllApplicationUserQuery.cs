@@ -19,6 +19,9 @@ namespace Elevel.Application.Features.ApplicationUserFeatures
 
         public class Request : PagedQueryBase, IRequest<Response>
         {
+            public string LastName { get; set; }
+            public string FirstName { get; set; }
+            public DateTimeOffset? CreationDate { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Response>
@@ -43,7 +46,47 @@ namespace Elevel.Application.Features.ApplicationUserFeatures
                     }
                 }
 
-                var users = userList.OrderBy(u => u.LastName).AsQueryable();
+                IQueryable<ApplicationUser> users;
+
+                if (string.IsNullOrWhiteSpace(request.LastName) && string.IsNullOrWhiteSpace(request.FirstName) && request.CreationDate == null)
+                {
+                    users = userList.OrderBy(u => u.LastName).AsQueryable();
+                }
+
+                if (!string.IsNullOrWhiteSpace(request.LastName) && !string.IsNullOrWhiteSpace(request.FirstName) && request.CreationDate != null)
+                {
+                    users = userList.Where(x => x.LastName == request.LastName && x.FirstName == request.FirstName && x.CreationDate == request.CreationDate).OrderBy(u => u.LastName).AsQueryable();
+                }
+
+                if (!string.IsNullOrWhiteSpace(request.LastName) && !string.IsNullOrWhiteSpace(request.FirstName) && request.CreationDate == null)
+                {
+                    users = userList.Where(x => x.LastName == request.LastName && x.FirstName == request.FirstName ).OrderBy(u => u.LastName).AsQueryable();
+                }
+
+                if (!string.IsNullOrWhiteSpace(request.LastName) && string.IsNullOrWhiteSpace(request.FirstName) && request.CreationDate != null)
+                {
+                    users = userList.Where(x => x.LastName == request.LastName  && x.CreationDate == request.CreationDate).OrderBy(u => u.LastName).AsQueryable();
+                }
+
+                if (string.IsNullOrWhiteSpace(request.LastName) && !string.IsNullOrWhiteSpace(request.FirstName) && request.CreationDate != null)
+                {
+                    users = userList.Where(x =>  x.FirstName == request.FirstName && x.CreationDate == request.CreationDate).OrderBy(u => u.LastName).AsQueryable();
+                }
+
+                if (string.IsNullOrWhiteSpace(request.LastName) && string.IsNullOrWhiteSpace(request.FirstName) && request.CreationDate != null)
+                {
+                    users = userList.Where(x => x.CreationDate == request.CreationDate).OrderBy(u => u.LastName).AsQueryable();
+                }
+
+                if (string.IsNullOrWhiteSpace(request.LastName) && !string.IsNullOrWhiteSpace(request.FirstName) && request.CreationDate == null)
+                {
+                    users = userList.Where(x =>x.FirstName == request.FirstName).OrderBy(u => u.LastName).AsQueryable();
+                }
+
+                else 
+                {
+                    users = userList.Where(x => x.LastName == request.LastName).OrderBy(u => u.LastName).AsQueryable();
+                }
 
                 return new Response()
                 {

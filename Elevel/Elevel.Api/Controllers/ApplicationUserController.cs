@@ -18,12 +18,17 @@ namespace Elevel.Api.Controllers
         }
 
         [Authorize, HttpGet("")]
-        public  async Task<IActionResult> GetListAsync([FromQuery] GetAllApplicationUserQuery.Request request )
+        public  async Task<IActionResult> GetAllUsersAsync([FromQuery] GetAllApplicationUserQuery.Request request )
+        {
+            var result = _mediator.Send(request);
+            return Ok(await result);
+        }
+        [Authorize, HttpGet("{id:Guid}")]
+        public async Task<IActionResult> GetUsersByIdAsync([FromQuery] GetApplicationUserByIdQuery.Request request)
         {
             var result = _mediator.Send(request);
             return Ok(await result);
         }
 
-        
     }
 }
