@@ -25,12 +25,12 @@ namespace Elevel.Application.Features.TopicCommands
                 _context = context;
                 _mapper = mapper;
             }
-            public async Task<Response> Handle(Request request, CancellationToken cancelationtoken)
+            public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
                 var topic = _mapper.Map<Topic>(request);
 
                 _context.Topics.Add(topic);
-                await _context.SaveChangesAsync(cancelationtoken);
+                await _context.SaveChangesAsync(cancellationToken);
 
                 return new Response { Id = topic.Id };
             }
