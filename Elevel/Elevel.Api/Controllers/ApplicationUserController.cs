@@ -23,8 +23,9 @@ namespace Elevel.Api.Controllers
             var result = _mediator.Send(request);
             return Ok(await result);
         }
-        [Authorize, HttpGet("{id:Guid}")]
-        public async Task<IActionResult> GetUsersByIdAsync([FromQuery] GetApplicationUserByIdQuery.Request request)
+
+        [Authorize, HttpGet("{Id:Guid}")]
+        public async Task<IActionResult> GetUsersByIdAsync([FromRoute] GetApplicationUserByIdQuery.Request request)
         {
             var result = _mediator.Send(request);
             return Ok(await result);

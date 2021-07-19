@@ -43,6 +43,8 @@ namespace Elevel.Api
             services.AddApplication();
             services.AddPersistence(Configuration);
 
+
+
             //Adding Athentication - JWT
             services.AddAuthentication(options =>
                 {

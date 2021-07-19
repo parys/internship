@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Elevel.Application.Interfaces;
 using Elevel.Application.Pagination;
 using Elevel.Domain;
 using Elevel.Domain.Models;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -21,6 +23,7 @@ namespace Elevel.Application.Features.ApplicationUserFeatures
         {
             public string LastName { get; set; }
             public string FirstName { get; set; }
+            public string Email { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Response>
@@ -28,46 +31,72 @@ namespace Elevel.Application.Features.ApplicationUserFeatures
 
             private readonly IMapper _mapper;
 
-            public Handler(IMapper mapper)
+            private readonly IApplicationDbContext _context;
+
+            private readonly UserManager<ApplicationUser> _userManager;
+
+            public Handler(IMapper mapper, UserManager<ApplicationUser> userManager)
             {
                 _mapper = mapper;
+                _userManager = userManager;
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var userList = new List<ApplicationUser>();
-
-                foreach (var user in Authorization.DefaultUsers.Values)
-                {
-                    foreach (var item in user)
-                    {
-                        userList.Add(item);
-                    }
-                }
 
                 IQueryable<ApplicationUser> users;
 
-                if (!string.IsNullOrWhiteSpace(request.LastName) && string.IsNullOrWhiteSpace(request.FirstName))
+                if (!string.IsNullOrWhiteSpace(request.LastName) && !string.IsNullOrWhiteSpace(request.FirstName) && !string.IsNullOrWhiteSpace(request.Email))
                 {
-                    users = userList.Where(x => x.LastName == request.LastName).OrderBy(u => u.LastName).AsQueryable();
+                    users = _userManager.Users.AsNoTracking().Where(x =>
+                        x.LastName == request.LastName
+                        && x.FirstName == request.FirstName
+                        && x.Email == request.Email);
                 }
-                else if (!string.IsNullOrWhiteSpace(request.LastName) && !string.IsNullOrWhiteSpace(request.FirstName))
+                else if (!string.IsNullOrWhiteSpace(request.LastName) && !string.IsNullOrWhiteSpace(request.FirstName) && string.IsNullOrWhiteSpace(request.Email))
                 {
-                    users = userList.Where(x => x.LastName == request.LastName && x.FirstName == request.FirstName).OrderBy(u => u.LastName).AsQueryable();
+                    users = _userManager.Users.AsNoTracking().Where(x =>
+                        x.LastName == request.LastName
+                        && x.FirstName == request.FirstName);
                 }
-                else if (string.IsNullOrWhiteSpace(request.LastName) && !string.IsNullOrWhiteSpace(request.FirstName))
+                else if (!string.IsNullOrWhiteSpace(request.LastName) && string.IsNullOrWhiteSpace(request.FirstName) && !string.IsNullOrWhiteSpace(request.Email))
                 {
-                    users = userList.Where(x => x.FirstName == request.FirstName).OrderBy(u => u.LastName).AsQueryable();
+                    users = _userManager.Users.AsNoTracking().Where(x =>
+                        x.LastName == request.LastName
+                        && x.Email == request.Email);
                 }
-                else if (string.IsNullOrWhiteSpace(request.LastName) && string.IsNullOrWhiteSpace(request.FirstName))
+                else if (string.IsNullOrWhiteSpace(request.LastName) && !string.IsNullOrWhiteSpace(request.FirstName) && !string.IsNullOrWhiteSpace(request.Email))
                 {
-                    users = userList.OrderBy(u => u.LastName).AsQueryable();
+                    users = _userManager.Users.AsNoTracking().Where(x =>
+                        x.FirstName == request.FirstName
+                        && x.Email == request.Email);
+                }
+                else if (!string.IsNullOrWhiteSpace(request.LastName) && string.IsNullOrWhiteSpace(request.FirstName) && string.IsNullOrWhiteSpace(request.Email))
+                {
+                    users = _userManager.Users.AsNoTracking().Where(x =>
+                        x.LastName == request.LastName);
+                }
+                else if (string.IsNullOrWhiteSpace(request.LastName) && string.IsNullOrWhiteSpace(request.FirstName) && !string.IsNullOrWhiteSpace(request.Email))
+                {
+                    users = _userManager.Users.AsNoTracking().Where(x =>
+                         x.Email == request.Email);
+                }
+                else if (string.IsNullOrWhiteSpace(request.LastName) && !string.IsNullOrWhiteSpace(request.FirstName) && string.IsNullOrWhiteSpace(request.Email))
+                {
+                    users = _userManager.Users.AsNoTracking().Where(x =>
+                        x.FirstName == request.FirstName);
+                }
+                else if (string.IsNullOrWhiteSpace(request.LastName) && string.IsNullOrWhiteSpace(request.FirstName) && string.IsNullOrWhiteSpace(request.Email))
+                {
+                    users = _userManager.Users.AsNoTracking();
                 }
                 else
                 {
-                    users = userList.Where(x => x.LastName == request.LastName && x.FirstName == request.FirstName).OrderBy(u => u.LastName).AsQueryable();
+                    users = _userManager.Users.AsNoTracking().Where(x =>
+                        x.LastName == request.LastName
+                        && x.FirstName == request.FirstName
+                        && x.Email == request.Email);
                 }
-
 
                 return new Response()
                 {
@@ -92,6 +121,7 @@ namespace Elevel.Application.Features.ApplicationUserFeatures
             public string LastName { get; set; }
             public DateTimeOffset CreationDate { get; set; }
             public string Avatar { get; set; }
+            public string Email { get; set; }
         }
     }
 }
