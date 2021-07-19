@@ -9,6 +9,7 @@ using MediatR;
 
 namespace Elevel.Api.Controllers
 {
+    [Route("[controller]/[action]")]
     public class AuditionController : BaseApiController
     {
         private readonly IMediator _mediator;
@@ -22,7 +23,7 @@ namespace Elevel.Api.Controllers
             var res = await _mediator.Send(request);
             return Ok(res);
         }
-        [Authorize, HttpPut("{id:int}")]
+        [Authorize, HttpPut("{id:Guid}")]
         public async Task<IActionResult> UpdateAuditionAsync([FromRoute] Guid id, [FromBody] UpdateAuditionCommand.Request request)
         {
             if (id != request.Id)
@@ -32,7 +33,7 @@ namespace Elevel.Api.Controllers
             var res = await _mediator.Send(request);
             return Ok(res);
         }
-        [Authorize,HttpDelete("{id:int}")]
+        [Authorize,HttpDelete("{id:Guid}")]
         public async Task<IActionResult> DeleteAuditionAsync([FromRoute] Guid id, [FromBody] DeleteAudiotionCommand.Request request)
         {
             if(id != request.Id)
@@ -44,6 +45,11 @@ namespace Elevel.Api.Controllers
         }
         [Authorize,HttpGet]
         public async Task<IActionResult> GetAuditionList([FromBody] GetAuditionListQuery.Request request)
+        {
+            return Ok(await Mediator.Send(request));
+        }
+        [Authorize, HttpGet("{id:Guid}")]
+        public async Task<IActionResult> GetAuditionById([FromBody] GetAuditionByIdQuery.Request request)
         {
             return Ok(await Mediator.Send(request));
         }

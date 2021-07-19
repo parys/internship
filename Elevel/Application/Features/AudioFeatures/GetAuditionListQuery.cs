@@ -8,13 +8,13 @@ using AutoMapper;
 using Elevel.Application.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Elevel.Domain;
+using Elevel.Application.Pagination;
 
 namespace Elevel.Application.Features.AudioFeatures
 {
     public class GetAuditionListQuery
     {
-        public class Request: IRequest<Response>
+        public class Request : PagedQueryBase, IRequest<Response>
         {
             public Guid Id { get; set; }
             public string AudioFilePath { get; set; }
@@ -44,13 +44,16 @@ namespace Elevel.Application.Features.AudioFeatures
                 }
                 return new Response
                 {
-
+                    PageSize = request.PageSize,
+                    CurrentPage = request.CurrentPage,
+                    Results = audition,
+                    RowCount = await auditionList.CountAsync(cancellationToken)
                 };
             }
         }
 
         [Serializable]
-        public class Response: AuditionDto
+        public class Response: PagedResult<AuditionDto>
         {
 
         }
