@@ -89,6 +89,7 @@ namespace Elevel.Api
                         new string[] { }
                     }
                 });
+                c.CustomSchemaIds(x => x.FullName);
             });
             
             services.AddControllers();

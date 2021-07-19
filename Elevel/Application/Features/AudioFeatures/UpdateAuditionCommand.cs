@@ -12,6 +12,7 @@ namespace Elevel.Application.Features.AudioFeatures
     {
         public class Request: IRequest<Response>
         {
+            public Guid Id { get; set; }
             public string AudioFilePath { get; set; }
             public DateTimeOffset CreationDate { get; set; }
         }
