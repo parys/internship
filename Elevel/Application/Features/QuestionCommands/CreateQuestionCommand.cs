@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Elevel.Application.Features.QuestionCommands
 {
-    class CreateQuestionCommand
+    public class CreateQuestionCommand
     {
         public class Request : IRequest<Response>
         {
