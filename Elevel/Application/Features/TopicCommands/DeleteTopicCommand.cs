@@ -1,47 +1,32 @@
-﻿using AutoMapper;
-using Elevel.Application.Interfaces;
+﻿using Elevel.Application.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Elevel.Application.Features.TopicCommands
 {
-    public class DeleteTopicCommand
+    public class DeleteTopicCommand : IRequest<Guid>
     {
-        public class Request : IRequest<Response>
-        {
-            public Guid? Id { get; set; }
-            public string TopicName { get; set; }
-            public DateTimeOffset CreationDate { get; set; }
-        }
-
-        public class Handler : IRequestHandler<Request, Response>
+        public Guid Id { get; set; }
+        public class DeleteTopicCommandHandler : IRequestHandler<DeleteTopicCommand, Guid>
         {
             private readonly IApplicationDbContext _context;
-            private readonly IMapper _mapper;
-            public Handler(IApplicationDbContext context, IMapper mapper)
+            public DeleteTopicCommandHandler(IApplicationDbContext context)
             {
                 _context = context;
-                _mapper = mapper;
             }
-            public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
+            public async Task<Guid> Handle(DeleteTopicCommand command, CancellationToken cancellationToken)
             {
-                var topic = await _context.Topics.FirstOrDefaultAsync(a => a.Id == request.Id, cancellationToken);
-                if (topic is null)
-                {
-                    return null;
-                }
+                var topic = await _context.Topics.Where(x => x.Id == command.Id).FirstOrDefaultAsync();
+                if (topic == null)
+                    return default;
                 _context.Topics.Remove(topic);
-
-                await _context.SaveChangesAsync(cancellationToken);
-                return new Response { Id = topic.Id };
+                await _context.SaveChangesAsync();
+                return topic.Id;
             }
-        }
-        public class Response
-        {
-            public Guid? Id { get; set; }
         }
     }
 }

@@ -1,14 +1,10 @@
 ﻿using Elevel.Application.Features.TopicCommands;
-using Elevel.Application.Interfaces;
-using Elevel.Domain.Models;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Elevel.Api.Controllers
 {
@@ -16,51 +12,41 @@ namespace Elevel.Api.Controllers
     [Route("api/[controller]")]
     public class TopicController : BaseApiController
     {
-        private readonly IMediator _mediator;
-        public TopicController(IMediator mediator)
+        private  IMediator _mediator;
+        protected IMediator Mediator => _mediator ??= HttpContext.RequestServices.GetService<IMediator>();
+
+        [HttpPost]
+        public async Task<IActionResult> Create(CreateTopicCommand command)
         {
-            _mediator = mediator;
+            return Ok(await Mediator.Send(command));
         }
 
-        [Authorize,HttpGet]
-        public async Task<IActionResult> GetTopicList([FromBody] GetTopicListQuery.Request request)
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
         {
-            return Ok(await Mediator.Send(request));
+            return Ok(await Mediator.Send(new GetAllTopicsQuery()));
         }
 
-        [Authorize, HttpGet("{id:Guid}")]
-        public async Task<IActionResult> GetTopicById([FromBody] GetTopicDetailQuery.Request request)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(Guid id)
         {
-            return Ok(await Mediator.Send(request));
+            return Ok(await Mediator.Send(new GetTopicByIdQuery { Id = id }));
         }
 
-        [Authorize, HttpPost]
-        public async Task<IActionResult> CreateTopicAsync([FromBody] CreateTopicCommand.Request request)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
         {
-            var res = await _mediator.Send(request);
-            return Ok(res);
+            return Ok(await Mediator.Send(new DeleteTopicCommand { Id = id }));
         }
 
-        [Authorize, HttpPut("{id:Guid}")]
-        public async Task<IActionResult> UpdateTopicAsync([FromRoute] Guid id, [FromBody] UpdateTopicCommand.Request request)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(Guid id, UpdateTopicCommand command)
         {
-            if (id != request.Id)
+            if (id != command.Id)
             {
                 return BadRequest();
             }
-            var res = await _mediator.Send(request);
-            return Ok(res);
-        }
-
-        [Authorize, HttpDelete("{id:Guid}")]
-        public async Task<IActionResult> DeleteTopicAsync([FromRoute] Guid id, [FromBody] DeleteTopicCommand.Request request)
-        {
-            if(id != request.Id)
-            {
-                return BadRequest();
-            }
-            var res = await _mediator.Send(request);
-            return Ok(res);
+            return Ok(await Mediator.Send(command));
         }
     }
 }

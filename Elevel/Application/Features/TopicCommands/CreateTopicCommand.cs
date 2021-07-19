@@ -1,5 +1,5 @@
-﻿using AutoMapper;
-using Elevel.Application.Interfaces;
+﻿using Elevel.Application.Interfaces;
+using Elevel.Domain.Enums;
 using Elevel.Domain.Models;
 using MediatR;
 using System;
@@ -8,36 +8,35 @@ using System.Threading.Tasks;
 
 namespace Elevel.Application.Features.TopicCommands
 {
-    public class CreateTopicCommand
+    public class CreateTopicCommand : IRequest<Guid>
     {
-        public class Request : IRequest<Response>
-        {
-            public string TopicName { get; set; }
-            public DateTimeOffset CreationDate { get; set; }
-        }
+        public Guid Id { get; set; }
+        public string TopicName { get; set; }
+        public Level Level { get; set; }
+        public DateTimeOffset CreationDate { get; set; }
+        public bool Deleted { get; set; }
 
-        public class Handler : IRequestHandler<Request, Response>
+        public class CreateTopicCommandHandler : IRequestHandler<CreateTopicCommand, Guid>
         {
             private readonly IApplicationDbContext _context;
-            private readonly IMapper _mapper;
-            public Handler(IApplicationDbContext context, IMapper mapper)
+            public CreateTopicCommandHandler(IApplicationDbContext context)
             {
                 _context = context;
-                _mapper = mapper;
             }
-            public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
+
+            public async Task<Guid> Handle(CreateTopicCommand command, CancellationToken cancellationToken)
             {
-                var topic = _mapper.Map<Topic>(request);
-
+                var topic = new Topic();
+                topic.TopicName = command.TopicName;
+                topic.Level = command.Level;
+                topic.CreationDate = command.CreationDate;
+                topic.Deleted = command.Deleted;
                 _context.Topics.Add(topic);
-                await _context.SaveChangesAsync(cancellationToken);
-
-                return new Response { Id = topic.Id };
+                await _context.SaveChangesAsync();
+                return topic.Id;
             }
-        }
-        public class Response
-        {
-            public Guid? Id { get; set; }
+
+            
         }
     }
 }
