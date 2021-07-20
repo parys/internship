@@ -17,10 +17,6 @@ namespace Elevel.Application.Features.QuestionCommands
         public class Request: IRequest<Response>
         {
             public Guid Id { get; set; }
-            public string NameQuestion { get; set; }
-            public DateTimeOffset CreationDate { get; set; }
-            public Guid AnswerId { get; set; }
-            public Guid? AuditionId { get; set; }
         }
 
         public class Handler: IRequestHandler<Request, Response>
@@ -48,7 +44,15 @@ namespace Elevel.Application.Features.QuestionCommands
                 question = _mapper.Map(request, question);
 
                 await _context.SaveChangesAsync(cancellationToken);
-                return new Response { Id = question.Id };
+                return new Response
+                {
+                    Id = question.Id,
+                    NameQuestion = question.NameQuestion,
+                    CreationDate = question.CreationDate,
+                    Deleted = question.Deleted,
+                    AnswerId = question.AnswerId,
+                    AuditionId = question.AuditionId
+                };
             }
         }
 
@@ -57,6 +61,7 @@ namespace Elevel.Application.Features.QuestionCommands
             public Guid Id { get; set; }
             public string NameQuestion { get; set; }
             public DateTimeOffset CreationDate { get; set; }
+            public bool Deleted { get; set; }
             public Guid AnswerId { get; set; }
             public Guid? AuditionId { get; set; }
         }

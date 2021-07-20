@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Elevel.Application.Interfaces;
 using Elevel.Application.Pagination;
 using MediatR;
@@ -16,10 +17,6 @@ namespace Elevel.Application.Features.QuestionCommands
         public class Request : PagedQueryBase, IRequest<Response>
         {
             public Guid Id { get; set; }
-            public string NameQuestion { get; set; }
-            public DateTimeOffset CreationDate { get; set; }
-            public Guid AnswerId { get; set; }
-            public Guid? AuditionId { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Response>
@@ -35,41 +32,31 @@ namespace Elevel.Application.Features.QuestionCommands
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var questionList = _context.Questions.AsNoTracking()
-                    .Include(x => x.Id)
-                    .Include(x => x.NameQuestion)
-                    .Include(x => x.CreationDate)
-                    .Include(x => x.AnswerId)
-                    .Include(x => x.AuditionId)
-                    .OrderBy(x => x.NameQuestion);
+                var questions = _context.Questions.AsNoTracking()
+                    .Where(x => x.Id == request.Id);
 
-                var questions = new List<QuestionListDto>();
-                foreach (var item in questionList)
-                {
-                    var dto = _mapper.Map<QuestionListDto>(item);
-                    questions.Add(dto);
-                }
                 return new Response
                 {
                     PageSize = request.PageSize,
                     CurrentPage = request.CurrentPage,
-                    Results = questions,
-                    RowCount = await questionList.CountAsync(cancellationToken)
+                    Results = await questions.Skip(request.SkipCount()).Take(request.PageSize).ProjectTo<QuestionsDTO>(_mapper.ConfigurationProvider).ToListAsync(cancellationToken),
+                    RowCount = await questions.CountAsync(cancellationToken)
                 };
             }
         }
 
         [Serializable]
-        public class Response : PagedResult<QuestionListDto>
+        public class Response : PagedResult<QuestionsDTO>
         {
 
         }
 
         [Serializable]
-        public class QuestionListDto
+        public class QuestionsDTO
         {
             public Guid Id { get; set; }
             public string NameQuestion { get; set; }
+            public bool Deleted { get; set; }
             public DateTimeOffset CreationDate { get; set; }
             public Guid AnswerId { get; set; }
             public Guid? AuditionId { get; set; }
