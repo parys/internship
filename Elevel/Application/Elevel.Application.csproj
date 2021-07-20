@@ -14,8 +14,4 @@
     <ProjectReference Include="..\Domain\Elevel.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Profiles\" />
-  </ItemGroup>
-
 </Project>

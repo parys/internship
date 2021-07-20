@@ -18,11 +18,11 @@ namespace Elevel.Persistence
             connectionString = configuration.GetConnectionString("ProductionConnection");
 #endif
 
-
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     connectionString,
                     b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
+
             services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
             services.AddScoped<IUserService, UserService>();
         }
