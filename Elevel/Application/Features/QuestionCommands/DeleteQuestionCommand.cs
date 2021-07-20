@@ -31,7 +31,6 @@ namespace Elevel.Application.Features.QuestionCommands
                 {
                     return null;
                 }
-                _context.Questions.Remove(question);
                 question.Deleted = true;
 
                 await _context.SaveChangesAsync(cancelationtoken);
@@ -43,7 +42,7 @@ namespace Elevel.Application.Features.QuestionCommands
         }
         public class Response
         {
-            public Guid? Id { get; set; }
+            public Guid Id { get; set; }
             public bool Deleted { get; set; }
         }
     }

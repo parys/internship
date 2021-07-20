@@ -41,18 +41,7 @@ namespace Elevel.Application.Features.QuestionCommands
                     return null;
                 }
 
-                question = _mapper.Map(request, question);
-
-                await _context.SaveChangesAsync(cancellationToken);
-                return new Response
-                {
-                    Id = question.Id,
-                    NameQuestion = question.NameQuestion,
-                    CreationDate = question.CreationDate,
-                    Deleted = question.Deleted,
-                    AnswerId = question.AnswerId,
-                    AuditionId = question.AuditionId
-                };
+                return question;
             }
         }
 

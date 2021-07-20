@@ -12,7 +12,7 @@ namespace Elevel.Application.Features.QuestionCommands
     {
         public class Request : IRequest<Response>
         {
-            public Guid? Id { get; set; }
+            public Guid Id { get; set; }
             public string NameQuestion { get; set; }
             public DateTimeOffset CreationDate { get; set; }
             public bool Deleted { get; set; }
@@ -31,7 +31,7 @@ namespace Elevel.Application.Features.QuestionCommands
             }
             public async Task<Response> Handle(Request request, CancellationToken cancelationtoken)
             {
-                var question = await _context.Questions.FirstOrDefaultAsync(a => a.NameQuestion == request.NameQuestion && a.Deleted == request.Deleted && a.CreationDate == request.CreationDate && a.AnswerId == request.AnswerId && a.AuditionId == request.AuditionId, cancelationtoken);
+                var question = await _context.Questions.FirstOrDefaultAsync(a => a.Id == request.Id, cancelationtoken);
                 if (question is null)
                 {
                     return null;
@@ -44,7 +44,7 @@ namespace Elevel.Application.Features.QuestionCommands
         }
         public class Response
         {
-            public Guid? Id { get; set; }
+            public Guid Id { get; set; }
         }
     }
 }

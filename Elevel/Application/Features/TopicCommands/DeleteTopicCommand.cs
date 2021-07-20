@@ -33,7 +33,6 @@ namespace Elevel.Application.Features.TopicCommands
                 {
                     return null;
                 }
-                _context.Topics.Remove(topic);
                 topic.Deleted = true;
 
                 await _context.SaveChangesAsync(cancelationtoken);

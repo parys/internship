@@ -1,12 +1,12 @@
 ﻿using Elevel.Application.Features.QuestionCommands;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 
 namespace Elevel.Api.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
+    [Authorize, Route("api/[controller]")]
     public class QuestionController : BaseApiController
     {
         public QuestionController()

@@ -39,7 +39,7 @@ namespace Elevel.Application.Features.QuestionCommands
         }
         public class Response
         {
-            public Guid? Id { get; set; }
+            public Guid Id { get; set; }
         }
     }
 }
