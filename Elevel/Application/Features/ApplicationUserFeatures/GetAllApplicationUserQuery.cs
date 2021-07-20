@@ -31,8 +31,6 @@ namespace Elevel.Application.Features.ApplicationUserFeatures
 
             private readonly IMapper _mapper;
 
-            private readonly IApplicationDbContext _context;
-
             private readonly UserManager<ApplicationUser> _userManager;
 
             public Handler(IMapper mapper, UserManager<ApplicationUser> userManager)
@@ -44,107 +42,35 @@ namespace Elevel.Application.Features.ApplicationUserFeatures
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
 
-                IQueryable<ApplicationUser> users;
+                IQueryable<ApplicationUser> users = _userManager.Users.AsNoTracking();
 
-                if (!string.IsNullOrWhiteSpace(request.LastName) 
-                    && !string.IsNullOrWhiteSpace(request.FirstName) 
-                    && !string.IsNullOrWhiteSpace(request.Email))
+                if (!string.IsNullOrWhiteSpace(request.LastName))
                 {
-                    users = _userManager.Users.AsNoTracking().Where(x =>
-                        x.LastName == request.LastName
-                        && x.FirstName == request.FirstName
-                        && x.Email == request.Email);
+                    users = users.Where(x => x.LastName == request.LastName);
                 }
-                else 
-                if (!string.IsNullOrWhiteSpace(request.LastName) 
-                    && !string.IsNullOrWhiteSpace(request.FirstName) 
-                    && string.IsNullOrWhiteSpace(request.Email))
+                if (!string.IsNullOrWhiteSpace(request.FirstName))
                 {
-                    users = _userManager.Users.AsNoTracking().Where(x =>
-                        x.LastName == request.LastName
-                        && x.FirstName == request.FirstName);
+                    users = users.Where(x =>x.FirstName == request.FirstName);
                 }
-                else 
-                if (!string.IsNullOrWhiteSpace(request.LastName) 
-                    && string.IsNullOrWhiteSpace(request.FirstName) 
-                    && !string.IsNullOrWhiteSpace(request.Email))
+                if (!string.IsNullOrWhiteSpace(request.Email))
                 {
-                    users = _userManager.Users.AsNoTracking().Where(x =>
-                        x.LastName == request.LastName
-                        && x.Email == request.Email);
+                    users = users.Where(x => x.Email == request.Email);
                 }
-                else 
-                if (string.IsNullOrWhiteSpace(request.LastName) 
-                    && !string.IsNullOrWhiteSpace(request.FirstName) 
-                    && !string.IsNullOrWhiteSpace(request.Email))
-                {
-                    users = _userManager.Users.AsNoTracking().Where(x =>
-                        x.FirstName == request.FirstName
-                        && x.Email == request.Email);
-                }
-                else 
-                if (!string.IsNullOrWhiteSpace(request.LastName) 
-                    && string.IsNullOrWhiteSpace(request.FirstName) 
-                    && string.IsNullOrWhiteSpace(request.Email))
-                {
-                    users = _userManager.Users.AsNoTracking().Where(x =>
-                        x.LastName == request.LastName);
-                }
-                else
-                if (string.IsNullOrWhiteSpace(request.LastName) 
-                    && string.IsNullOrWhiteSpace(request.FirstName) 
-                    && !string.IsNullOrWhiteSpace(request.Email))
-                {
-                    users = _userManager.Users.AsNoTracking().Where(x =>
-                         x.Email == request.Email);
-                }
-                else 
-                if (string.IsNullOrWhiteSpace(request.LastName) 
-                    && !string.IsNullOrWhiteSpace(request.FirstName) 
-                    && string.IsNullOrWhiteSpace(request.Email))
-                {
-                    users = _userManager.Users.AsNoTracking().Where(x =>
-                        x.FirstName == request.FirstName);
-                }
-                else 
-                if (string.IsNullOrWhiteSpace(request.LastName) 
-                    && string.IsNullOrWhiteSpace(request.FirstName) 
-                    && string.IsNullOrWhiteSpace(request.Email))
-                {
-                    users = _userManager.Users.AsNoTracking();
-                }
-                else
-                {
-                    users = _userManager.Users.AsNoTracking().Where(x =>
-                        x.LastName == request.LastName
-                        && x.FirstName == request.FirstName
-                        && x.Email == request.Email);
-                }
+
 
                 return new Response()
                 {
                     CurrentPage = request.CurrentPage,
                     PageSize = request.PageSize,
-                    RowCount = users.Count(),
-                    Results = users.Skip(request.SkipCount()).Take(request.PageSize).ProjectTo<UserDto>(_mapper.ConfigurationProvider).ToList()
+                    RowCount = await users.CountAsync(),
+                    Results = await users.Skip(request.SkipCount()).Take(request.PageSize).ProjectTo<GetApplicationUserByIdQuery.Response>(_mapper.ConfigurationProvider).ToListAsync()
                 };
             }
         }
 
-        [Serializable]
-        public class Response : PagedResult<UserDto>
+        public class Response : PagedResult<GetApplicationUserByIdQuery.Response>
         {
-        }
 
-        [Serializable]
-        public class UserDto
-        {
-            public Guid Id { get; set; }
-            public string FirstName { get; set; }
-            public string LastName { get; set; }
-            public DateTimeOffset CreationDate { get; set; }
-            public string Avatar { get; set; }
-            public string Email { get; set; }
         }
     }
 }

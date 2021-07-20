@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Elevel.Application.Features.ApplicationUserFeatures;
 using Elevel.Domain.Models;
 
 namespace Elevel.Application.Profiles
@@ -7,7 +8,7 @@ namespace Elevel.Application.Profiles
     {
         public ApplicationUserProfile()
         {
-            CreateMap<ApplicationUser, Features.ApplicationUserFeatures.GetAllApplicationUserQuery.UserDto>();
+            CreateMap<ApplicationUser, GetApplicationUserByIdQuery.Response>();
         }
     }
 }

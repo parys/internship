@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Elevel.Application.Infrastructure;
 using Elevel.Application.Pagination;
 using Elevel.Domain.Models;
@@ -20,28 +21,6 @@ namespace Elevel.Application.Features.ApplicationUserFeatures
             public Guid Id { get; set; }
         }
 
-        [Serializable]
-        public class Response
-        {
-            public Response(ApplicationUser user)
-            {
-
-                Id = user.Id;
-                FirstName = user.FirstName;
-                LastName = user.LastName;
-                CreationDate = user.CreationDate;
-                Avatar = user.Avatar;
-                Email = user.Email;
-                
-            }
-            public Guid Id { get; set; }
-            public string FirstName { get; set; }
-            public string LastName { get; set; }
-            public DateTimeOffset CreationDate { get; set; }
-            public string Avatar { get; set; }
-            public string Email { get; set; }
-        }
-
         public class Handler : IRequestHandler<Request, Response>
         {
 
@@ -57,15 +36,24 @@ namespace Elevel.Application.Features.ApplicationUserFeatures
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
 
-                var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == request.Id);
+                var user = await _userManager.Users.ProjectTo<Response>(_mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
                 if(user == null)
                 {
                     throw new NotFoundException(nameof(ApplicationUser));
                 }
 
-                return new Response(user);
+                return user;
             }
+        }
+        public class Response
+        {
+            public Guid Id { get; set; }
+            public string FirstName { get; set; }
+            public string LastName { get; set; }
+            public DateTimeOffset CreationDate { get; set; }
+            public string Avatar { get; set; }
+            public string Email { get; set; }
         }
     }
 }
