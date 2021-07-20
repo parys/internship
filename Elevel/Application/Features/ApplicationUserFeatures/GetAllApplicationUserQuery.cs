@@ -63,14 +63,24 @@ namespace Elevel.Application.Features.ApplicationUserFeatures
                     CurrentPage = request.CurrentPage,
                     PageSize = request.PageSize,
                     RowCount = await users.CountAsync(),
-                    Results = await users.Skip(request.SkipCount()).Take(request.PageSize).ProjectTo<GetApplicationUserByIdQuery.Response>(_mapper.ConfigurationProvider).ToListAsync()
+                    Results = await users.Skip(request.SkipCount()).Take(request.PageSize).ProjectTo<UsersDTO>(_mapper.ConfigurationProvider).ToListAsync()
                 };
             }
         }
 
-        public class Response : PagedResult<GetApplicationUserByIdQuery.Response>
+        public class Response : PagedResult<UsersDTO>
         {
 
+        }
+
+        public class UsersDTO
+        {
+            public Guid Id { get; set; }
+            public string FirstName { get; set; }
+            public string LastName { get; set; }
+            public DateTimeOffset CreationDate { get; set; }
+            public string Avatar { get; set; }
+            public string Email { get; set; }
         }
     }
 }
