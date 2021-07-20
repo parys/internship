@@ -32,7 +32,6 @@ namespace Elevel.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(typeof(TestQuestionProfile));
-            services.AddAutoMapper(typeof(ApplicationUserProfile));
             services.AddCors();
             //Configuration from AppSettings
             services.Configure<TokenConfiguration>(Configuration.GetSection("JWT"));

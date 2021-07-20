@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Elevel.Application.Infrastructure;
 using Elevel.Application.Pagination;
 using Elevel.Domain.Models;
 using MediatR;
@@ -14,10 +15,31 @@ namespace Elevel.Application.Features.ApplicationUserFeatures
 {
     public class GetApplicationUserByIdQuery
     {
-
-        public class Request : PagedQueryBase, IRequest<Response>
+        public class Request : IRequest<Response>
         {
             public Guid Id { get; set; }
+        }
+
+        [Serializable]
+        public class Response
+        {
+            public Response(ApplicationUser user)
+            {
+
+                Id = user.Id;
+                FirstName = user.FirstName;
+                LastName = user.LastName;
+                CreationDate = user.CreationDate;
+                Avatar = user.Avatar;
+                Email = user.Email;
+                
+            }
+            public Guid Id { get; set; }
+            public string FirstName { get; set; }
+            public string LastName { get; set; }
+            public DateTimeOffset CreationDate { get; set; }
+            public string Avatar { get; set; }
+            public string Email { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Response>
@@ -39,37 +61,11 @@ namespace Elevel.Application.Features.ApplicationUserFeatures
 
                 if(user == null)
                 {
-                    return new Response();
+                    throw new NotFoundException(nameof(ApplicationUser));
                 }
 
-                return new Response()
-                {
-                    Id = user.Id,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    CreationDate = user.CreationDate,
-                    Avatar = user.Avatar,
-                    Email = user.Email                 
-                };
-
-
+                return new Response(user);
             }
-        }
-
-        [Serializable]
-        public class Response : UserDto
-        {
-        }
-
-        [Serializable]
-        public class UserDto
-        {
-            public Guid Id { get; set; }
-            public string FirstName { get; set; }
-            public string LastName { get; set; }
-            public DateTimeOffset CreationDate { get; set; }
-            public string Avatar { get; set; }
-            public string Email { get; set; }
         }
     }
 }

@@ -8,7 +8,6 @@ namespace Elevel.Application.Profiles
         public ApplicationUserProfile()
         {
             CreateMap<ApplicationUser, Features.ApplicationUserFeatures.GetAllApplicationUserQuery.UserDto>();
-            CreateMap<ApplicationUser, Features.ApplicationUserFeatures.GetApplicationUserByIdQuery.UserDto>();
         }
     }
 }

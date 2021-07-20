@@ -46,47 +46,70 @@ namespace Elevel.Application.Features.ApplicationUserFeatures
 
                 IQueryable<ApplicationUser> users;
 
-                if (!string.IsNullOrWhiteSpace(request.LastName) && !string.IsNullOrWhiteSpace(request.FirstName) && !string.IsNullOrWhiteSpace(request.Email))
+                if (!string.IsNullOrWhiteSpace(request.LastName) 
+                    && !string.IsNullOrWhiteSpace(request.FirstName) 
+                    && !string.IsNullOrWhiteSpace(request.Email))
                 {
                     users = _userManager.Users.AsNoTracking().Where(x =>
                         x.LastName == request.LastName
                         && x.FirstName == request.FirstName
                         && x.Email == request.Email);
                 }
-                else if (!string.IsNullOrWhiteSpace(request.LastName) && !string.IsNullOrWhiteSpace(request.FirstName) && string.IsNullOrWhiteSpace(request.Email))
+                else 
+                if (!string.IsNullOrWhiteSpace(request.LastName) 
+                    && !string.IsNullOrWhiteSpace(request.FirstName) 
+                    && string.IsNullOrWhiteSpace(request.Email))
                 {
                     users = _userManager.Users.AsNoTracking().Where(x =>
                         x.LastName == request.LastName
                         && x.FirstName == request.FirstName);
                 }
-                else if (!string.IsNullOrWhiteSpace(request.LastName) && string.IsNullOrWhiteSpace(request.FirstName) && !string.IsNullOrWhiteSpace(request.Email))
+                else 
+                if (!string.IsNullOrWhiteSpace(request.LastName) 
+                    && string.IsNullOrWhiteSpace(request.FirstName) 
+                    && !string.IsNullOrWhiteSpace(request.Email))
                 {
                     users = _userManager.Users.AsNoTracking().Where(x =>
                         x.LastName == request.LastName
                         && x.Email == request.Email);
                 }
-                else if (string.IsNullOrWhiteSpace(request.LastName) && !string.IsNullOrWhiteSpace(request.FirstName) && !string.IsNullOrWhiteSpace(request.Email))
+                else 
+                if (string.IsNullOrWhiteSpace(request.LastName) 
+                    && !string.IsNullOrWhiteSpace(request.FirstName) 
+                    && !string.IsNullOrWhiteSpace(request.Email))
                 {
                     users = _userManager.Users.AsNoTracking().Where(x =>
                         x.FirstName == request.FirstName
                         && x.Email == request.Email);
                 }
-                else if (!string.IsNullOrWhiteSpace(request.LastName) && string.IsNullOrWhiteSpace(request.FirstName) && string.IsNullOrWhiteSpace(request.Email))
+                else 
+                if (!string.IsNullOrWhiteSpace(request.LastName) 
+                    && string.IsNullOrWhiteSpace(request.FirstName) 
+                    && string.IsNullOrWhiteSpace(request.Email))
                 {
                     users = _userManager.Users.AsNoTracking().Where(x =>
                         x.LastName == request.LastName);
                 }
-                else if (string.IsNullOrWhiteSpace(request.LastName) && string.IsNullOrWhiteSpace(request.FirstName) && !string.IsNullOrWhiteSpace(request.Email))
+                else
+                if (string.IsNullOrWhiteSpace(request.LastName) 
+                    && string.IsNullOrWhiteSpace(request.FirstName) 
+                    && !string.IsNullOrWhiteSpace(request.Email))
                 {
                     users = _userManager.Users.AsNoTracking().Where(x =>
                          x.Email == request.Email);
                 }
-                else if (string.IsNullOrWhiteSpace(request.LastName) && !string.IsNullOrWhiteSpace(request.FirstName) && string.IsNullOrWhiteSpace(request.Email))
+                else 
+                if (string.IsNullOrWhiteSpace(request.LastName) 
+                    && !string.IsNullOrWhiteSpace(request.FirstName) 
+                    && string.IsNullOrWhiteSpace(request.Email))
                 {
                     users = _userManager.Users.AsNoTracking().Where(x =>
                         x.FirstName == request.FirstName);
                 }
-                else if (string.IsNullOrWhiteSpace(request.LastName) && string.IsNullOrWhiteSpace(request.FirstName) && string.IsNullOrWhiteSpace(request.Email))
+                else 
+                if (string.IsNullOrWhiteSpace(request.LastName) 
+                    && string.IsNullOrWhiteSpace(request.FirstName) 
+                    && string.IsNullOrWhiteSpace(request.Email))
                 {
                     users = _userManager.Users.AsNoTracking();
                 }
