@@ -12,7 +12,7 @@ namespace Elevel.Application.Features.QuestionCommands
     {
         public class Request : IRequest<Response>
         {
-            public Guid? Id { get; set; }
+            public Guid Id { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Response>
