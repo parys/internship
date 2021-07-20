@@ -105,7 +105,7 @@ namespace Elevel.Api
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Elevel.Api v1"));
 
             app.UseRouting();
-            app.UseCors(builder => builder.AllowAnyOrigin());
+            app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
