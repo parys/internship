@@ -14,7 +14,6 @@ namespace Elevel.Application.Interfaces
         DbSet<Topic> Topics { get; set; }
         DbSet<Audition> Auditions { get; set; }
 
-
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }

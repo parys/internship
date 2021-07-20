@@ -20,7 +20,6 @@ namespace Elevel.Application.Features.TopicCommands
         {
             private readonly IApplicationDbContext _context;
             private readonly IMapper _mapper;
-
             public Handler(IApplicationDbContext context, IMapper mapper)
             {
                 _context = context;
