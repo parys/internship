@@ -11,14 +11,14 @@ namespace Elevel.Api.Controllers
     [Route("api/[controller]")]
     public class ApplicationUserController : BaseApiController
     {
-        [Authorize, HttpGet("")]
+        [HttpGet]
         public  async Task<IActionResult> GetAllUsersAsync([FromQuery] GetAllApplicationUserQuery.Request request )
         {
             var result = Mediator.Send(request);
             return Ok(await result);
         }
 
-        [Authorize, HttpGet("{Id:Guid}")]
+        [HttpGet("{Id:Guid}")]
         public async Task<IActionResult> GetUsersByIdAsync([FromRoute] GetApplicationUserByIdQuery.Request request)
         {
             var result = Mediator.Send(request);
