@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Elevel.Application.Infrastructure;
 using Elevel.Application.Interfaces;
+using Elevel.Domain.Enums;
 using Elevel.Domain.Models;
-using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,19 +12,11 @@ using System.Threading.Tasks;
 
 namespace Elevel.Application.Features.TopicCommands
 {
-    public class UpdateTopicCommand
+    public class GetTopicByIdQuery
     {
-        public class Request : UpsertTopicCommand.Request, IRequest<Response>
+        public class Request : IRequest<Response>
         {
             public Guid Id { get; set; }
-        }
-
-        public class Validator : UpsertTopicCommand.Validator<Request>
-        {
-            public Validator()
-            {
-                RuleFor(v => v.Id).NotEmpty();
-            }
         }
 
         public class Handler : IRequestHandler<Request, Response>
@@ -39,7 +32,8 @@ namespace Elevel.Application.Features.TopicCommands
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var topic = await _context.Topics
+                var topic = await _context.Topics.AsNoTracking()
+                    .ProjectTo<Response>(_mapper.ConfigurationProvider)
                     .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
                 if (topic == null)
@@ -47,16 +41,18 @@ namespace Elevel.Application.Features.TopicCommands
                     throw new NotFoundException(nameof(Topic), request.Id);
                 }
 
-                topic = _mapper.Map(request, topic);
-                await _context.SaveChangesAsync(cancellationToken);
-                return new Response { Id = topic.Id };
+                return topic;
             }
         }
 
+        [Serializable]
         public class Response
         {
             public Guid Id { get; set; }
+            public string TopicName { get; set; }
+            public Level Level { get; set; }
+            public DateTimeOffset CreationDate { get; set; }
+            public bool Deleted { get; set; }
         }
-
     }
 }

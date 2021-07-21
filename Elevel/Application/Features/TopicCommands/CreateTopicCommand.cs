@@ -10,34 +10,42 @@ namespace Elevel.Application.Features.TopicCommands
 {
     public class CreateTopicCommand
     {
-        public class Request : IRequest<Response>
+        public class Request : UpsertTopicCommand.Request, IRequest<Response>
         {
-            public string TopicName { get; set; }
-            public DateTimeOffset CreationDate { get; set; }
+
+        }
+
+        public class Validator : UpsertTopicCommand.Validator<Request>
+        {
+            public Validator()
+            {
+
+            }
         }
 
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IApplicationDbContext _context;
             private readonly IMapper _mapper;
+
             public Handler(IApplicationDbContext context, IMapper mapper)
             {
                 _context = context;
                 _mapper = mapper;
             }
-            public async Task<Response> Handle(Request request, CancellationToken cancelationtoken)
+
+            public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var topic = _mapper.Map<Topic>(request);
-
-                _context.Topics.Add(topic);
-                await _context.SaveChangesAsync(cancelationtoken);
-
-                return new Response { Id = topic.Id };
+                var entity = _mapper.Map<Topic>(request);
+                _context.Topics.Add(entity);
+                await _context.SaveChangesAsync(cancellationToken);
+                return new Response { Id = entity.Id };
             }
         }
+
         public class Response
         {
-            public Guid? Id { get; set; }
+            public Guid Id { get; set; }
         }
     }
 }
