@@ -1,16 +1,14 @@
 ﻿using AutoMapper;
-using Elevel.Application.Infrastructure;
 using Elevel.Application.Interfaces;
-using Elevel.Domain.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Elevel.Application.Features.TopicCommands
+namespace Elevel.Application.Features.QuestionCommands
 {
-    public class DeleteTopicCommand
+    public class DeleteQuestionCommand
     {
         public class Request : IRequest<Response>
         {
@@ -20,33 +18,28 @@ namespace Elevel.Application.Features.TopicCommands
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IApplicationDbContext _context;
-
-            public Handler(IApplicationDbContext context)
+            private readonly IMapper _mapper;
+            public Handler(IApplicationDbContext context, IMapper mapper)
             {
                 _context = context;
+                _mapper = mapper;
             }
-
-            public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
+            public async Task<Response> Handle(Request request, CancellationToken cancelationtoken)
             {
-                var topic = await _context.Topics
-                    .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
-                if (topic == null)
+                var question = await _context.Questions.FirstOrDefaultAsync(a => a.Id == request.Id, cancelationtoken);
+                if (question is null)
                 {
                     return null;
                 }
-                topic.Deleted = true;
+                question.Deleted = true;
 
-
-                await _context.SaveChangesAsync(cancellationToken);
-                return new Response
-                {
-                    Id = topic.Id,
-                    Deleted = topic.Deleted
+                await _context.SaveChangesAsync(cancelationtoken);
+                return new Response {
+                    Id = question.Id,
+                    Deleted = question.Deleted
                 };
-
             }
         }
-
         public class Response
         {
             public Guid Id { get; set; }
