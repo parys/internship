@@ -4,9 +4,6 @@ using Elevel.Application.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,8 +14,6 @@ namespace Elevel.Application.Features.AudioFeatures
         public class Request: IRequest<Response>
         {
             public Guid Id { get; set; }
-            public string AudioFilePath { get; set; }
-            public DateTimeOffset CreationDate { get; set; }
         }
 
         public class Handler: IRequestHandler<Request, Response>
@@ -37,7 +32,7 @@ namespace Elevel.Application.Features.AudioFeatures
                     .FirstOrDefaultAsync(m => m.Id == request.Id, cancellationToken);
                 if(audition is null)
                 {
-                    throw new NullReferenceException();
+                    return null;
                 }
                 return audition;
             }

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -9,6 +7,7 @@ using Elevel.Application.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Elevel.Application.Pagination;
+using AutoMapper.QueryableExtensions;
 
 namespace Elevel.Application.Features.AudioFeatures
 {
@@ -16,8 +15,6 @@ namespace Elevel.Application.Features.AudioFeatures
     {
         public class Request : PagedQueryBase, IRequest<Response>
         {
-            public Guid Id { get; set; }
-            public string AudioFilePath { get; set; }
         }
         public class Handler: IRequestHandler<Request, Response>
         {
@@ -30,24 +27,18 @@ namespace Elevel.Application.Features.AudioFeatures
             }
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var auditionList = _context.Auditions.AsNoTracking()
-                    .Include(c => c.Id)
-                    .Include(c => c.AudioFilePath)
-                    .Include(c => c.CreationDate)
-                    .OrderBy(c => c.CreationDate);
+                var audition = _context.Auditions.AsNoTracking()
+                    .Include(x => x.Id);
 
-                var audition = new List<AuditionDto>();
-                foreach (var item in auditionList)
-                {
-                    var dto = _mapper.Map<AuditionDto>(item);
-                    audition.Add(dto);
-                }
                 return new Response
                 {
                     PageSize = request.PageSize,
                     CurrentPage = request.CurrentPage,
-                    Results = audition,
-                    RowCount = await auditionList.CountAsync(cancellationToken)
+                    Results = await audition.Skip(request.SkipCount())
+                    .Take(request.PageSize)
+                    .ProjectTo<AuditionDto>(_mapper.ConfigurationProvider)
+                    .ToListAsync(cancellationToken),
+                    RowCount = await audition.CountAsync(cancellationToken)
                 };
             }
         }
