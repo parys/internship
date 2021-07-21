@@ -28,7 +28,7 @@ namespace Elevel.Application.Features.AudioFeatures
                 var audiotion = await _context.Auditions.FirstOrDefaultAsync(a => a.Id == request.Id, cancelationtoken);
                 if (audiotion is null)
                 {
-                    throw new NullReferenceException();
+                    return null;
                 }
                 _context.Auditions.Remove(audiotion);
 

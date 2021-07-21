@@ -32,7 +32,7 @@ namespace Elevel.Application.Features.AudioFeatures
                 var audiotion = await _context.Auditions.FirstOrDefaultAsync(a => a.AudioFilePath == request.AudioFilePath && a.CreationDate == request.UpdatedDate, cancelationtoken);
                 if(audiotion is null)
                 {
-                    throw new  NullReferenceException();
+                    return null;
                 }
 
                 audiotion = _mapper.Map(request, audiotion);
