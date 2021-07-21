@@ -27,7 +27,7 @@ namespace Elevel.Api.Controllers
         }
 
         [HttpGet("info")]
-        public async Task<IActionResult> UserInfo(string token, CancellationToken cancellationToken)
+        public async Task<IActionResult> UserInfo()
         {
             var claims = User.Claims.ToList();
             var userId = claims.FirstOrDefault(x=>x.Type == "uid").Value;
