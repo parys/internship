@@ -26,12 +26,14 @@ namespace Elevel.Application.Features.AudioFeatures
             }
             public async Task<Response> Handle(Request request, CancellationToken cancelationtoken)
             {
+                request.CreationDate = DateTime.Now;
+                request.AudioFilePath = "";
                 var audiotion = _mapper.Map<Audition>(request);
 
                 _context.Auditions.Add(audiotion);
                 await _context.SaveChangesAsync(cancelationtoken);
 
-                return new Response { Id = audiotion.Id };
+                return new Response { Id = audiotion.Id};
             }
         }
         public class Response

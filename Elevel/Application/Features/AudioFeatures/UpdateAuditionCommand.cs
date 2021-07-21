@@ -14,7 +14,7 @@ namespace Elevel.Application.Features.AudioFeatures
         {
             public Guid Id { get; set; }
             public string AudioFilePath { get; set; }
-            public DateTimeOffset CreationDate { get; set; }
+            public DateTimeOffset UpdatedDate { get; set; }
         }
 
         public class Handler: IRequestHandler<Request, Response>
@@ -28,7 +28,8 @@ namespace Elevel.Application.Features.AudioFeatures
             }
             public async Task<Response> Handle(Request request, CancellationToken cancelationtoken)
             {
-                var audiotion = await _context.Auditions.FirstOrDefaultAsync(a => a.AudioFilePath == request.AudioFilePath && a.CreationDate == request.CreationDate, cancelationtoken);
+                request.UpdatedDate = DateTime.Now;
+                var audiotion = await _context.Auditions.FirstOrDefaultAsync(a => a.AudioFilePath == request.AudioFilePath && a.CreationDate == request.UpdatedDate, cancelationtoken);
                 if(audiotion is null)
                 {
                     throw new  NullReferenceException();
