@@ -35,6 +35,7 @@ namespace Elevel.Application.Features.TopicCommands
                     throw new NotFoundException(nameof(Topic));
                 }
                 _context.Topics.Remove(topic);
+                topic.Deleted = true;
                 await _context.SaveChangesAsync(cancellationToken);
                 return new Response { Id = topic.Id };
             }
