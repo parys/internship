@@ -17,25 +17,25 @@ namespace Elevel.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create( CreateTopicCommand.Request request)
+        public async Task<IActionResult> Create([FromBody]CreateTopicCommand.Request request)
         {
             return Ok(await Mediator.Send(request));
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll( GetTopicListQuery.Request request)
+        public async Task<IActionResult> GetAll([FromQuery]GetTopicListQuery.Request request)
         {
             return Ok(await Mediator.Send(request));
         }
 
         [HttpGet("id:Guid")]
-        public async Task<IActionResult> GetById( GetTopicByIdQuery.Request request)
+        public async Task<IActionResult> GetById([FromRoute]GetTopicByIdQuery.Request request)
         {
             return Ok(await Mediator.Send(request));
         }
 
         [HttpDelete("{id:Guid}")]
-        public async Task<IActionResult> DeleteAsync(Guid id, DeleteTopicCommand.Request request)
+        public async Task<IActionResult> DeleteAsync(Guid id,[FromRoute] DeleteTopicCommand.Request request)
         {
             if(id != request.Id)
             {
@@ -45,7 +45,7 @@ namespace Elevel.Api.Controllers
         }
 
         [HttpPut("{id:Guid}")]
-        public async Task<IActionResult> Update(Guid id, UpdateTopicCommand.Request request)
+        public async Task<IActionResult> Update(Guid id,[FromBody] UpdateTopicCommand.Request request)
         {
             if (id != request.Id)
             {
