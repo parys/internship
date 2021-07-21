@@ -1,6 +1,5 @@
 ﻿using Elevel.Application.Features.ApplicationUserFeatures;
 using Elevel.Domain.Enums;
-using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
