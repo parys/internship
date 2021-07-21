@@ -32,7 +32,7 @@ namespace Elevel.Application.Features.TopicCommands
                     .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
                 if (topic == null)
                 {
-                    throw new NotFoundException(nameof(Topic), request.Id);
+                    throw new NotFoundException(nameof(Topic));
                 }
                 _context.Topics.Remove(topic);
                 await _context.SaveChangesAsync(cancellationToken);

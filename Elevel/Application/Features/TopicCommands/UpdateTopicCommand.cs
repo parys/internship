@@ -44,7 +44,7 @@ namespace Elevel.Application.Features.TopicCommands
 
                 if (topic == null)
                 {
-                    throw new NotFoundException(nameof(Topic), request.Id);
+                    throw new NotFoundException(nameof(Topic));
                 }
 
                 topic = _mapper.Map(request, topic);
