@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Elevel.Application.Interfaces;
 using Elevel.Application.Pagination;
 using Elevel.Domain.Enums;
@@ -33,8 +34,19 @@ namespace Elevel.Application.Features.TopicCommands
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var topic = await _context.Topics.AsNoTracking().ToListAsync();
-                return new Response();
+                var topic = _context.Topics.AsNoTracking()
+                    .Include(x => x.Id);
+
+                return new Response
+                {
+                    PageSize = request.PageSize,
+                    CurrentPage = request.CurrentPage,
+                    Results = await topic.Skip(request.SkipCount())
+                    .Take(request.PageSize)
+                    .ProjectTo<TopicListDto>(_mapper.ConfigurationProvider)
+                    .ToListAsync(cancellationToken),
+                    RowCount = await topic.CountAsync(cancellationToken)
+                };
             }
         }
 

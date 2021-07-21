@@ -11,33 +11,41 @@ namespace Elevel.Api.Controllers
     [Route("api/[controller]")]
     public class TopicController : BaseApiController
     {
+        public TopicController()
+        {
+
+        }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateTopicCommand.Request request)
+        public async Task<IActionResult> Create( CreateTopicCommand.Request request)
         {
             return Ok(await Mediator.Send(request));
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] GetTopicListQuery.Request request)
+        public async Task<IActionResult> GetAll( GetTopicListQuery.Request request)
         {
             return Ok(await Mediator.Send(request));
         }
 
         [HttpGet("id:Guid")]
-        public async Task<IActionResult> GetById([FromBody] GetTopicByIdQuery.Request request)
+        public async Task<IActionResult> GetById( GetTopicByIdQuery.Request request)
         {
             return Ok(await Mediator.Send(request));
         }
 
         [HttpDelete("{id:Guid}")]
-        public async Task<IActionResult> DeleteAsync([FromRoute] DeleteTopicCommand.Request request)
+        public async Task<IActionResult> DeleteAsync(Guid id, DeleteTopicCommand.Request request)
         {
+            if(id != request.Id)
+            {
+                return BadRequest();
+            }
             return Ok(await Mediator.Send(request));
         }
 
         [HttpPut("{id:Guid}")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateTopicCommand.Request request)
+        public async Task<IActionResult> Update(Guid id, UpdateTopicCommand.Request request)
         {
             if (id != request.Id)
             {

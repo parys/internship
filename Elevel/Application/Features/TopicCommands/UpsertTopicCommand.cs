@@ -18,12 +18,12 @@ namespace Elevel.Application.Features.TopicCommands
             public bool Deleted { get; set; }
         }
 
-        public abstract class Validator<T> : AbstractValidator<T> where T : Request
-        {
-            protected Validator()
-            {
+        //public abstract class Validator<T> : AbstractValidator<T> where T : Request
+        //{
+        //    protected Validator()
+        //    {
 
-            }
-        }
+        //    }
+        //}
     }
 }

@@ -18,13 +18,13 @@ namespace Elevel.Application.Features.TopicCommands
             public Guid Id { get; set; }
         }
 
-        public class Validator : UpsertTopicCommand.Validator<Request>
-        {
-            public Validator()
-            {
-                RuleFor(v => v.Id).NotEmpty();
-            }
-        }
+        //public class Validator : UpsertTopicCommand.Validator<Request>
+        //{
+        //    public Validator()
+        //    {
+        //        RuleFor(v => v.Id).NotEmpty();
+        //    }
+        //}
 
         public class Handler : IRequestHandler<Request, Response>
         {
@@ -44,7 +44,7 @@ namespace Elevel.Application.Features.TopicCommands
 
                 if (topic == null)
                 {
-                    throw new NotFoundException(nameof(Topic));
+                    return null;
                 }
 
                 topic = _mapper.Map(request, topic);

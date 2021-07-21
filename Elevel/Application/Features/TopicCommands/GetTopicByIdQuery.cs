@@ -38,7 +38,7 @@ namespace Elevel.Application.Features.TopicCommands
 
                 if (topic == null)
                 {
-                    throw new NotFoundException(nameof(Topic));
+                    return null;
                 }
 
                 return topic;

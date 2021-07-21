@@ -15,13 +15,13 @@ namespace Elevel.Application.Features.TopicCommands
 
         }
 
-        public class Validator : UpsertTopicCommand.Validator<Request>
-        {
-            public Validator()
-            {
+        //public class Validator : UpsertTopicCommand.Validator<Request>
+        //{
+        //    public Validator()
+        //    {
 
-            }
-        }
+        //    }
+        //}
 
         public class Handler : IRequestHandler<Request, Response>
         {
@@ -36,10 +36,10 @@ namespace Elevel.Application.Features.TopicCommands
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var entity = _mapper.Map<Topic>(request);
-                _context.Topics.Add(entity);
+                var topic = _mapper.Map<Topic>(request);
+                _context.Topics.Add(topic);
                 await _context.SaveChangesAsync(cancellationToken);
-                return new Response { Id = entity.Id };
+                return new Response { Id = topic.Id };
             }
         }
 
