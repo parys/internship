@@ -26,11 +26,11 @@ namespace Elevel.Api.Controllers
             return Ok(result);
         }
 
-        [HttpGet("token")]
+        [HttpGet("info")]
         public async Task<IActionResult> UserInfo(string token, CancellationToken cancellationToken)
         {
             var claims = User.Claims.ToList();
-            var userId = claims[3].Value;
+            var userId = claims.FirstOrDefault(x=>x.Type == "uid").Value;
             GetApplicationUserByIdQuery.Request request = new GetApplicationUserByIdQuery.Request()
             {
                 Id = Guid.Parse(userId)
