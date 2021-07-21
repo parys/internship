@@ -1,4 +1,5 @@
 ﻿using Elevel.Application.Features.TopicCommands;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -7,8 +8,7 @@ using System.Threading.Tasks;
 
 namespace Elevel.Api.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
+    [Authorize, Route("api/[controller]")]
     public class TopicController : BaseApiController
     {
         public TopicController()

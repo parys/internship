@@ -35,7 +35,7 @@ namespace Elevel.Application.Features.TopicCommands
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
                 var topic = _context.Topics.AsNoTracking()
-                    .Include(x => x.Id);
+                    .OrderBy(x => x.Id);
 
                 return new Response
                 {

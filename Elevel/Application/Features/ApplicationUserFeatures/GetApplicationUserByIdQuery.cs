@@ -40,7 +40,7 @@ namespace Elevel.Application.Features.ApplicationUserFeatures
 
                 if(user == null)
                 {
-                    throw new NotFoundException(nameof(Application));
+                    throw new NotFoundException(nameof(ApplicationUser));
                 }
 
                 return user;
