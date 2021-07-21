@@ -6,15 +6,13 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Elevel.Application.Features.TopicCommands
+namespace Elevel.Application.Features.QuestionCommands
 {
-    public class DeleteTopicCommand
+    public class DeleteQuestionCommand
     {
         public class Request : IRequest<Response>
         {
-            public Guid? Id { get; set; }
-            public string TopicName { get; set; }
-            public DateTimeOffset CreationDate { get; set; }
+            public Guid Id { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Response>
@@ -28,20 +26,24 @@ namespace Elevel.Application.Features.TopicCommands
             }
             public async Task<Response> Handle(Request request, CancellationToken cancelationtoken)
             {
-                var topic = await _context.Topics.FirstOrDefaultAsync(a => a.Id == request.Id, cancelationtoken);
-                if (topic is null)
+                var question = await _context.Questions.FirstOrDefaultAsync(a => a.Id == request.Id, cancelationtoken);
+                if (question is null)
                 {
                     return null;
                 }
-                topic.Deleted = true;
+                question.Deleted = true;
 
                 await _context.SaveChangesAsync(cancelationtoken);
-                return new Response { Id = topic.Id};
+                return new Response {
+                    Id = question.Id,
+                    Deleted = question.Deleted
+                };
             }
         }
         public class Response
         {
-            public Guid? Id { get; set; }
+            public Guid Id { get; set; }
+            public bool Deleted { get; set; }
         }
     }
 }

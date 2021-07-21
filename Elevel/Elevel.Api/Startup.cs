@@ -67,6 +67,7 @@ namespace Elevel.Api
 
             services.AddSwaggerGen(c =>
             {
+                c.CustomSchemaIds(type => type.ToString());
                 c.IncludeXmlComments($@"{System.AppDomain.CurrentDomain.BaseDirectory}\Elevel.Api.xml");
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Elevel.Api", Version = "v1" });
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme

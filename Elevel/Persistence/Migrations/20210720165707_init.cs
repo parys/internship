@@ -229,7 +229,8 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     CoachId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     AuditionId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     EssayId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    SpeakingId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    SpeakingId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Priority = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
