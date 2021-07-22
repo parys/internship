@@ -35,16 +35,18 @@ namespace Elevel.Application.Features.ApplicationUserFeatures
 
                 var applicationUser = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
+                if (applicationUser == null)
+                {
+                    throw new NotFoundException(nameof(ApplicationUser), request.Id);
+                }
+
                 var roles = await _userManager.GetRolesAsync(applicationUser);
 
                 var user = _mapper.Map<ApplicationUser,Response>(applicationUser);
 
                 user.Roles = roles;
 
-                if (user == null)
-                {
-                    throw new NotFoundException(nameof(ApplicationUser));
-                }
+                
 
                 return user;
             }
