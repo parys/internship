@@ -15,8 +15,4 @@
     <ProjectReference Include="..\Elevel.Infrastructure.Services\Elevel.Infrastructure.Services.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Migrations\" />
-  </ItemGroup>
-
 </Project>
