@@ -27,13 +27,11 @@ namespace Elevel.Application.Features.ApplicationUserFeatures
 
             private readonly IMapper _mapper;
             private readonly UserManager<ApplicationUser> _userManager;
-            private readonly RoleManager<IdentityRole<Guid>> _roleManager;
 
-            public Handler(IMapper mapper, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole<Guid>> roleManager)
+            public Handler(IMapper mapper, UserManager<ApplicationUser> userManager)
             {
                 _mapper = mapper;
                 _userManager = userManager;
-                _roleManager = roleManager;
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
