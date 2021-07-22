@@ -13,6 +13,7 @@ namespace Elevel.Api.Controllers
     [Authorize,Route("[controller]/[action]")]
     public class AuditionController : BaseApiController
     {
+        private readonly IMediator _mediator;
         public AuditionController(IMediator mediator)
         {
             _mediator = mediator;

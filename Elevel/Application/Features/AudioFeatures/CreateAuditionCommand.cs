@@ -12,8 +12,7 @@ namespace Elevel.Application.Features.AudioFeatures
     {
         public class Request : IRequest<Response>
         {
-            public string AudioFilePath { get; set; }
-            public DateTimeOffset CreationDate { get; set; }
+            public Guid Id { get; set; }
         }
         public class Handler : IRequestHandler<Request, Response>
         {
@@ -26,19 +25,19 @@ namespace Elevel.Application.Features.AudioFeatures
             }
             public async Task<Response> Handle(Request request, CancellationToken cancelationtoken)
             {
-                request.CreationDate = DateTime.Now;
-                request.AudioFilePath = "";
                 var audiotion = _mapper.Map<Audition>(request);
 
                 _context.Auditions.Add(audiotion);
                 await _context.SaveChangesAsync(cancelationtoken);
 
-                return new Response { Id = audiotion.Id};
+                return new Response { Id = audiotion.Id, CreationDate = DateTime.UtcNow};
             }
         }
         public class Response
         {
             public Guid? Id { get; set; }
+            public DateTimeOffset CreationDate { get; set; }
+
         }
     }
 }

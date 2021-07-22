@@ -28,7 +28,7 @@ namespace Elevel.Application.Features.AudioFeatures
             }
             public async Task<Response> Handle(Request request, CancellationToken cancelationtoken)
             {
-                request.UpdatedDate = DateTime.Now;
+                request.UpdatedDate = DateTime.UtcNow;
                 var audiotion = await _context.Auditions.FirstOrDefaultAsync(a => a.AudioFilePath == request.AudioFilePath && a.CreationDate == request.UpdatedDate, cancelationtoken);
                 if(audiotion is null)
                 {
