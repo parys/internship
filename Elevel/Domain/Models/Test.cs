@@ -9,7 +9,7 @@ namespace Elevel.Domain.Models
         public Level Level { get; set; }
 
         public DateTimeOffset CreationDate { get; set; }
-        public DateTimeOffset AssignmentStartDate { get; set; }
+        public DateTimeOffset TestPassingDate { get; set; }
         public DateTimeOffset AssignmentEndDate { get; set; }
 
         public int? GrammarMark { get; set; }

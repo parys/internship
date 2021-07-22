@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Elevel.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210720111036_priorityProp")]
-    partial class priorityProp
+    [Migration("20210721135546_RenamedAssignmentStartDateProp")]
+    partial class RenamedAssignmentStartDateProp
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -181,9 +181,6 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     b.Property<DateTimeOffset>("AssignmentEndDate")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<DateTimeOffset>("AssignmentStartDate")
-                        .HasColumnType("datetimeoffset");
-
                     b.Property<Guid?>("AuditionId")
                         .HasColumnType("uniqueidentifier");
 
@@ -228,6 +225,9 @@ namespace Elevel.Infrastructure.Persistence.Migrations
 
                     b.Property<int?>("SpeakingMark")
                         .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("TestPassingDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
