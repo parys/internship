@@ -12,6 +12,8 @@ namespace Elevel.Domain.Models
         public DateTimeOffset AssignmentStartDate { get; set; }
         public DateTimeOffset AssignmentEndDate { get; set; }
 
+        public bool Priority { get; set; }
+
         public int? GrammarMark { get; set; }
         public int? AuditionMark { get; set; }
         public int? EssayMark { get; set; }
@@ -40,7 +42,5 @@ namespace Elevel.Domain.Models
         public Topic Speaking { get; set; }
 
         public ICollection<TestQuestion> TestQuestions { get; set; }
-
-        public TestPriority Priority { get; set; }
     }
 }
