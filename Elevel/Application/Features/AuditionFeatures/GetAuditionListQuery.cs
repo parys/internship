@@ -27,8 +27,7 @@ namespace Elevel.Application.Features.AuditionFeatures
             }
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var audition = _context.Auditions.AsNoTracking()
-                    .OrderBy(x=>x.Id);
+                var audition = _context.Auditions.AsNoTracking();
 
                 return new Response
                 {

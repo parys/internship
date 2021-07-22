@@ -40,6 +40,7 @@ namespace Elevel.Application.Features.AuditionFeatures
                 return audition;
             }
         }
+        [Serializable]
         public class Response
         {
             public Guid Id { get; set; }
