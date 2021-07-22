@@ -2,6 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using Elevel.Application.Infrastructure;
 using Elevel.Application.Pagination;
+using Elevel.Domain.Enums;
 using Elevel.Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -26,25 +27,34 @@ namespace Elevel.Application.Features.ApplicationUserFeatures
 
             private readonly IMapper _mapper;
             private readonly UserManager<ApplicationUser> _userManager;
+            private readonly RoleManager<IdentityRole<Guid>> _roleManager;
 
-            public Handler(IMapper mapper, UserManager<ApplicationUser> userManager)
+            public Handler(IMapper mapper, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole<Guid>> roleManager)
             {
                 _mapper = mapper;
                 _userManager = userManager;
+                _roleManager = roleManager;
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
 
-                var user = await _userManager.Users.ProjectTo<Response>(_mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+                var applicationUser = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
-                if(user == null)
+                var roles = await _userManager.GetRolesAsync(applicationUser);
+
+                var user = _mapper.Map<ApplicationUser,Response>(applicationUser);
+
+                user.Roles = roles;
+
+                if (user == null)
                 {
                     throw new NotFoundException(nameof(ApplicationUser));
                 }
 
                 return user;
             }
+
         }
         public class Response
         {
@@ -54,6 +64,7 @@ namespace Elevel.Application.Features.ApplicationUserFeatures
             public DateTimeOffset CreationDate { get; set; }
             public string Avatar { get; set; }
             public string Email { get; set; }
+            public IList<string> Roles { get; set; }
         }
     }
 }
