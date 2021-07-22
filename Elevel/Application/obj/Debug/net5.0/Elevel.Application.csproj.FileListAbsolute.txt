@@ -1,0 +1,15 @@
+C:\Users\nick\Source\Repos\internship\Elevel\Application\bin\Debug\net5.0\Elevel.Application.deps.json
+C:\Users\nick\Source\Repos\internship\Elevel\Application\bin\Debug\net5.0\Elevel.Application.dll
+C:\Users\nick\Source\Repos\internship\Elevel\Application\bin\Debug\net5.0\ref\Elevel.Application.dll
+C:\Users\nick\Source\Repos\internship\Elevel\Application\bin\Debug\net5.0\Elevel.Application.pdb
+C:\Users\nick\Source\Repos\internship\Elevel\Application\bin\Debug\net5.0\Elevel.Domain.dll
+C:\Users\nick\Source\Repos\internship\Elevel\Application\bin\Debug\net5.0\Elevel.Domain.pdb
+C:\Users\nick\Source\Repos\internship\Elevel\Application\obj\Debug\net5.0\Elevel.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\nick\Source\Repos\internship\Elevel\Application\obj\Debug\net5.0\Elevel.Application.AssemblyInfoInputs.cache
+C:\Users\nick\Source\Repos\internship\Elevel\Application\obj\Debug\net5.0\Elevel.Application.AssemblyInfo.cs
+C:\Users\nick\Source\Repos\internship\Elevel\Application\obj\Debug\net5.0\Elevel.Application.csproj.CoreCompileInputs.cache
+C:\Users\nick\Source\Repos\internship\Elevel\Application\obj\Debug\net5.0\Elevel.Application.csproj.CopyComplete
+C:\Users\nick\Source\Repos\internship\Elevel\Application\obj\Debug\net5.0\Elevel.Application.dll
+C:\Users\nick\Source\Repos\internship\Elevel\Application\obj\Debug\net5.0\ref\Elevel.Application.dll
+C:\Users\nick\Source\Repos\internship\Elevel\Application\obj\Debug\net5.0\Elevel.Application.pdb
+C:\Users\nick\source\repos\internship\Elevel\Application\obj\Debug\net5.0\Elevel.Application.csproj.AssemblyReference.cache

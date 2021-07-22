@@ -1,0 +1,17 @@
+C:\Users\nick\source\repos\internship\Elevel\Elevel.Infrastructure.Services\bin\Debug\net5.0\Elevel.Infrastructure.Services.deps.json
+C:\Users\nick\source\repos\internship\Elevel\Elevel.Infrastructure.Services\bin\Debug\net5.0\Elevel.Infrastructure.Services.dll
+C:\Users\nick\source\repos\internship\Elevel\Elevel.Infrastructure.Services\bin\Debug\net5.0\ref\Elevel.Infrastructure.Services.dll
+C:\Users\nick\source\repos\internship\Elevel\Elevel.Infrastructure.Services\bin\Debug\net5.0\Elevel.Infrastructure.Services.pdb
+C:\Users\nick\source\repos\internship\Elevel\Elevel.Infrastructure.Services\bin\Debug\net5.0\Elevel.Application.dll
+C:\Users\nick\source\repos\internship\Elevel\Elevel.Infrastructure.Services\bin\Debug\net5.0\Elevel.Domain.dll
+C:\Users\nick\source\repos\internship\Elevel\Elevel.Infrastructure.Services\bin\Debug\net5.0\Elevel.Application.pdb
+C:\Users\nick\source\repos\internship\Elevel\Elevel.Infrastructure.Services\bin\Debug\net5.0\Elevel.Domain.pdb
+C:\Users\nick\source\repos\internship\Elevel\Elevel.Infrastructure.Services\obj\Debug\net5.0\Elevel.Infrastructure.Services.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\nick\source\repos\internship\Elevel\Elevel.Infrastructure.Services\obj\Debug\net5.0\Elevel.Infrastructure.Services.AssemblyInfoInputs.cache
+C:\Users\nick\source\repos\internship\Elevel\Elevel.Infrastructure.Services\obj\Debug\net5.0\Elevel.Infrastructure.Services.AssemblyInfo.cs
+C:\Users\nick\source\repos\internship\Elevel\Elevel.Infrastructure.Services\obj\Debug\net5.0\Elevel.Infrastructure.Services.csproj.CoreCompileInputs.cache
+C:\Users\nick\source\repos\internship\Elevel\Elevel.Infrastructure.Services\obj\Debug\net5.0\Elevel.Infrastructure.Services.csproj.CopyComplete
+C:\Users\nick\source\repos\internship\Elevel\Elevel.Infrastructure.Services\obj\Debug\net5.0\Elevel.Infrastructure.Services.dll
+C:\Users\nick\source\repos\internship\Elevel\Elevel.Infrastructure.Services\obj\Debug\net5.0\ref\Elevel.Infrastructure.Services.dll
+C:\Users\nick\source\repos\internship\Elevel\Elevel.Infrastructure.Services\obj\Debug\net5.0\Elevel.Infrastructure.Services.pdb
+C:\Users\nick\source\repos\internship\Elevel\Elevel.Infrastructure.Services\obj\Debug\net5.0\Elevel.Infrastructure.Services.csproj.AssemblyReference.cache

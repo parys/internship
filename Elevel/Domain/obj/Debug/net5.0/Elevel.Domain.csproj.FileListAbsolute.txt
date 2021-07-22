@@ -1,0 +1,12 @@
+C:\Users\nick\Source\Repos\internship\Elevel\Domain\bin\Debug\net5.0\Elevel.Domain.deps.json
+C:\Users\nick\Source\Repos\internship\Elevel\Domain\bin\Debug\net5.0\Elevel.Domain.dll
+C:\Users\nick\Source\Repos\internship\Elevel\Domain\bin\Debug\net5.0\ref\Elevel.Domain.dll
+C:\Users\nick\Source\Repos\internship\Elevel\Domain\bin\Debug\net5.0\Elevel.Domain.pdb
+C:\Users\nick\Source\Repos\internship\Elevel\Domain\obj\Debug\net5.0\Elevel.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\nick\Source\Repos\internship\Elevel\Domain\obj\Debug\net5.0\Elevel.Domain.AssemblyInfoInputs.cache
+C:\Users\nick\Source\Repos\internship\Elevel\Domain\obj\Debug\net5.0\Elevel.Domain.AssemblyInfo.cs
+C:\Users\nick\Source\Repos\internship\Elevel\Domain\obj\Debug\net5.0\Elevel.Domain.csproj.CoreCompileInputs.cache
+C:\Users\nick\Source\Repos\internship\Elevel\Domain\obj\Debug\net5.0\Elevel.Domain.dll
+C:\Users\nick\Source\Repos\internship\Elevel\Domain\obj\Debug\net5.0\ref\Elevel.Domain.dll
+C:\Users\nick\Source\Repos\internship\Elevel\Domain\obj\Debug\net5.0\Elevel.Domain.pdb
+C:\Users\nick\source\repos\internship\Elevel\Domain\obj\Debug\net5.0\Elevel.Domain.csproj.AssemblyReference.cache

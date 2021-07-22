@@ -1,0 +1,17 @@
+C:\Users\nick\Source\Repos\internship\Elevel\Persistence\bin\Debug\net5.0\Elevel.Persistence.deps.json
+C:\Users\nick\Source\Repos\internship\Elevel\Persistence\bin\Debug\net5.0\Elevel.Persistence.dll
+C:\Users\nick\Source\Repos\internship\Elevel\Persistence\bin\Debug\net5.0\ref\Elevel.Persistence.dll
+C:\Users\nick\Source\Repos\internship\Elevel\Persistence\bin\Debug\net5.0\Elevel.Persistence.pdb
+C:\Users\nick\Source\Repos\internship\Elevel\Persistence\bin\Debug\net5.0\Elevel.Application.dll
+C:\Users\nick\Source\Repos\internship\Elevel\Persistence\bin\Debug\net5.0\Elevel.Domain.dll
+C:\Users\nick\Source\Repos\internship\Elevel\Persistence\bin\Debug\net5.0\Elevel.Application.pdb
+C:\Users\nick\Source\Repos\internship\Elevel\Persistence\bin\Debug\net5.0\Elevel.Domain.pdb
+C:\Users\nick\Source\Repos\internship\Elevel\Persistence\obj\Debug\net5.0\Elevel.Persistence.csprojAssemblyReference.cache
+C:\Users\nick\Source\Repos\internship\Elevel\Persistence\obj\Debug\net5.0\Elevel.Persistence.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\nick\Source\Repos\internship\Elevel\Persistence\obj\Debug\net5.0\Elevel.Persistence.AssemblyInfoInputs.cache
+C:\Users\nick\Source\Repos\internship\Elevel\Persistence\obj\Debug\net5.0\Elevel.Persistence.AssemblyInfo.cs
+C:\Users\nick\Source\Repos\internship\Elevel\Persistence\obj\Debug\net5.0\Elevel.Persistence.csproj.CoreCompileInputs.cache
+C:\Users\nick\Source\Repos\internship\Elevel\Persistence\obj\Debug\net5.0\Elevel.Persistence.csproj.CopyComplete
+C:\Users\nick\Source\Repos\internship\Elevel\Persistence\obj\Debug\net5.0\Elevel.Persistence.dll
+C:\Users\nick\Source\Repos\internship\Elevel\Persistence\obj\Debug\net5.0\ref\Elevel.Persistence.dll
+C:\Users\nick\Source\Repos\internship\Elevel\Persistence\obj\Debug\net5.0\Elevel.Persistence.pdb

@@ -27,8 +27,7 @@ namespace Elevel.Application.Features.AudioFeatures
             }
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var audition = _context.Auditions.AsNoTracking()
-                    .Include(x => x.Id);
+                var audition = _context.Auditions.AsNoTracking();
 
                 return new Response
                 {

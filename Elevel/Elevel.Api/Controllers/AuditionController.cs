@@ -13,15 +13,11 @@ namespace Elevel.Api.Controllers
     [Authorize,Route("[controller]/[action]")]
     public class AuditionController : BaseApiController
     {
-        private readonly IMediator _mediator;
-        public AuditionController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
+        
         [HttpPost]
         public async Task<IActionResult> CreateAuditionAsync([FromBody] CreateAuditionCommand.Request request)
         {
-            var res = await _mediator.Send(request);
+            var res = await Mediator.Send(request);
             return Ok(res);
         }
         [HttpPut("{id:Guid}")]
@@ -31,7 +27,7 @@ namespace Elevel.Api.Controllers
             {
                 return BadRequest();
             }
-            var res = await _mediator.Send(request);
+            var res = await Mediator.Send(request);
             return Ok(res);
         }
         [HttpDelete("{id:Guid}")]
@@ -41,7 +37,7 @@ namespace Elevel.Api.Controllers
             {
                 return BadRequest();
             }
-            var res = await _mediator.Send(request);
+            var res = await Mediator.Send(request);
             return Ok(res);
         }
         [HttpGet]
