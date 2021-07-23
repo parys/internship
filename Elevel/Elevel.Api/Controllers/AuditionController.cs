@@ -48,7 +48,8 @@ namespace Elevel.Api.Controllers
         [HttpGet("{id:Guid}")]
         public async Task<IActionResult> GetAuditionById([FromBody] GetAuditionByIdQuery.Request request)
         {
-            return Ok(await Mediator.Send(request));
+            var res = await Mediator.Send(request);
+            return Ok(res);
         }
     }
 }
