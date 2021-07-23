@@ -99,7 +99,7 @@ namespace Elevel.Application.Features.TestCommands
             public Guid? EssayId { get; set; }
             public Guid? SpeakingId { get; set; }
 
-            public TestPriority Priority { get; set; }
+            public bool Priority { get; set; }
         }
     }
 }
