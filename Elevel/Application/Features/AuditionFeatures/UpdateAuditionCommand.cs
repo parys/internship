@@ -35,12 +35,13 @@ namespace Elevel.Application.Features.AuditionFeatures
                 audiotion = _mapper.Map(request, audiotion);
 
                 await _context.SaveChangesAsync(cancelationtoken);
-                return new Response { Id = audiotion.Id };
+                return new Response { Id = audiotion.Id, AuditionFilePath = audiotion.AudioFilePath };
             }
         }
         public class Response
         {
-            public Guid? Id { get; set; }
+            public Guid Id { get; set; }
+            public string AuditionFilePath { get; set; }
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using Elevel.Application.Infrastructure;
 using Elevel.Application.Interfaces;
 using Elevel.Domain.Models;
 using MediatR;
@@ -12,7 +13,6 @@ namespace Elevel.Application.Features.AuditionFeatures
     {
         public class Request : IRequest<Response>
         {
-            public Guid Id { get; set; }
         }
         public class Handler : IRequestHandler<Request, Response>
         {
@@ -25,17 +25,20 @@ namespace Elevel.Application.Features.AuditionFeatures
             }
             public async Task<Response> Handle(Request request, CancellationToken cancelationtoken)
             {
-                var audiotion = _mapper.Map<Audition>(request);
-
-                _context.Auditions.Add(audiotion);
+                var audition = _mapper.Map<Audition>(request);
+                if(audition is null)
+                {
+                    throw new NotFoundException(nameof(Audition));
+                }
+                _context.Auditions.Add(audition);
                 await _context.SaveChangesAsync(cancelationtoken);
 
-                return new Response { Id = audiotion.Id, CreationDate = DateTime.UtcNow };
+                return new Response { Id = audition.Id, CreationDate = DateTime.UtcNow };
             }
         }
         public class Response
         {
-            public Guid? Id { get; set; }
+            public Guid Id { get; set; }
             public DateTimeOffset CreationDate { get; set; }
         }
     }
