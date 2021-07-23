@@ -9,7 +9,7 @@ namespace Elevel.Domain.Models
         public string AudioFilePath { get; set; }
         public Level Level { get; set; }
         public DateTimeOffset CreationDate { get; set; }
-
+        public bool Deleted { get; set; }
         public ICollection<Question> Questions { get; set; }
         public ICollection<Test> Tests { get; set; }
     }

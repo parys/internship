@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Elevel.Application.Infrastructure;
 using Elevel.Application.Interfaces;
+using Elevel.Domain.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,20 +24,25 @@ namespace Elevel.Application.Features.AuditionFeatures
             }
             public async Task<Response> Handle(Request request, CancellationToken cancelationtoken)
             {
-                var audiotion = await _context.Auditions.FirstOrDefaultAsync(a => a.Id == request.Id, cancelationtoken);
-                if (audiotion is null)
+                var audition = await _context.Auditions.FirstOrDefaultAsync(a => a.Id == request.Id, cancelationtoken);
+                if (audition is null)
                 {
-                    return null;
+                    throw new NotFoundException(nameof(Audition));
                 }
-                _context.Auditions.Remove(audiotion);
-
+                audition.Deleted = true;
                 await _context.SaveChangesAsync(cancelationtoken);
-                return new Response { Id = audiotion.Id };
+
+                return new Response
+                {
+                    Id = audition.Id,
+                    Deleted = audition.Deleted
+                };
             }
         }
         public class Response
         {
-            public Guid? Id { get; set; }
+            public Guid Id { get; set; }
+            public bool Deleted { get; set; }
         }
     }
 }

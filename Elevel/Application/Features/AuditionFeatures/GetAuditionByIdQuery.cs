@@ -3,7 +3,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Elevel.Application.Infrastructure;
 using Elevel.Application.Interfaces;
+using Elevel.Domain.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,7 +33,7 @@ namespace Elevel.Application.Features.AuditionFeatures
                     .FirstOrDefaultAsync(m => m.Id == request.Id, cancellationToken);
                 if (audition is null)
                 {
-                    return null;
+                    throw new NotFoundException(nameof(Audition));
                 }
                 return audition;
             }
