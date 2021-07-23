@@ -212,8 +212,8 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     b.Property<byte>("Level")
                         .HasColumnType("tinyint");
 
-                    b.Property<int>("Priority")
-                        .HasColumnType("int");
+                    b.Property<bool>("Priority")
+                        .HasColumnType("bit");
 
                     b.Property<string>("SpeakingAnswerReference")
                         .HasColumnType("nvarchar(max)");

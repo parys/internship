@@ -217,6 +217,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     AssignmentStartDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     AssignmentEndDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    Priority = table.Column<bool>(type: "bit", nullable: false),
                     GrammarMark = table.Column<int>(type: "int", nullable: true),
                     AuditionMark = table.Column<int>(type: "int", nullable: true),
                     EssayMark = table.Column<int>(type: "int", nullable: true),
@@ -229,8 +230,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     CoachId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     AuditionId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     EssayId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    SpeakingId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    Priority = table.Column<int>(type: "int", nullable: false)
+                    SpeakingId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
