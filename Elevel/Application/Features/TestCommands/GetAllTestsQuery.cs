@@ -39,12 +39,12 @@ namespace Elevel.Application.Features.TestCommands
             {
                 var tests = _context.Tests.AsNoTracking();
 
-                if (request.Level!=null)
+                if (request.Level.HasValue)
                 {
                     tests = tests.Where(x => x.Level == request.Level.Value);
                 }
 
-                if (request.TestPassingDate != null)
+                if (request.TestPassingDate.HasValue)
                 {
                     tests = tests.Where(x => x.TestPassingDate == request.TestPassingDate);
                 }
