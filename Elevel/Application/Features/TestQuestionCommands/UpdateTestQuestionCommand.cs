@@ -6,7 +6,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Elevel.Application.Features.TestQuestion
+namespace Elevel.Application.Features.TestQuestionCommands
 {
     public class UpdateTestQuestionCommand
     {

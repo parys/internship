@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
-using Elevel.Application.Features.ApplicationUserFeatures;
 using Elevel.Application.Features.TestCommands;
 using Elevel.Domain.Models;
-using static Elevel.Application.Features.ApplicationUserFeatures.GetAllApplicationUserQuery;
 
 namespace Elevel.Application.Profiles
 {
