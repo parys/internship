@@ -15,10 +15,9 @@ namespace Elevel.Application.Features.TestCommands
         {
             public Level Level { get; set; }
             public DateTimeOffset AssignmentEndDate { get; set; }
-            public DateTimeOffset CreationDate { get; set; }
             public Guid UserId { get; set; }
             public Guid? HrId { get; set; }
-            public TestPriority Priority { get; set; }
+            public bool Priority { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Response>

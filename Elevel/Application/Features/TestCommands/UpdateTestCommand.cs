@@ -17,10 +17,7 @@ namespace Elevel.Application.Features.TestCommands
         {
             public Guid Id { get; set; }
             public Level Level { get; set; }
-
-            public DateTimeOffset CreationDate { get; set; }
             public DateTimeOffset TestPassingDate { get; set; }
-            public DateTimeOffset AssignmentEndDate { get; set; }
 
             public int? GrammarMark { get; set; }
             public int? AuditionMark { get; set; }
@@ -42,7 +39,7 @@ namespace Elevel.Application.Features.TestCommands
             public Guid? EssayId { get; set; }
             public Guid? SpeakingId { get; set; }
 
-            public TestPriority Priority { get; set; }
+            public bool Priority { get; set; }
 
         }
 

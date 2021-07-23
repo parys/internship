@@ -41,7 +41,7 @@ namespace Elevel.Application.Features.TestCommands
 
                 if (request.Level!=null)
                 {
-                    tests = tests.Where(x => x.Level == request.Level);
+                    tests = tests.Where(x => x.Level == request.Level.Value);
                 }
 
                 if (request.TestPassingDate != null)
