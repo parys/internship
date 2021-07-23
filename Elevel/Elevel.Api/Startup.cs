@@ -16,6 +16,7 @@ using System;
 using System.Text;
 using Elevel.Application.Profiles;
 using Microsoft.EntityFrameworkCore;
+using Elevel.Application.Infrastructure;
 
 namespace Elevel.Api
 {
@@ -31,6 +32,7 @@ namespace Elevel.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<EmailNotification>();
             services.AddAutoMapper(typeof(TestQuestionProfile));
             services.AddCors();
             //Configuration from AppSettings
