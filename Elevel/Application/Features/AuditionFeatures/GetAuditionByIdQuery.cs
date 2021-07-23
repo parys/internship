@@ -35,7 +35,7 @@ namespace Elevel.Application.Features.AuditionFeatures
                     .FirstOrDefaultAsync(m => m.Id == request.Id, cancellationToken);
                 if (audition is null)
                 {
-                    return null;
+                    throw new NotFoundException(nameof(Audition));
                 }
                 return audition;
             }

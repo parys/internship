@@ -41,12 +41,10 @@ namespace Elevel.Application.Features.AuditionFeatures
                 };
             }
         }
-        [Serializable]
         public class Response : PagedResult<AuditionDto>
         {
 
         }
-        [Serializable]
         public class AuditionDto
         {
             public Guid Id { get; set; }
