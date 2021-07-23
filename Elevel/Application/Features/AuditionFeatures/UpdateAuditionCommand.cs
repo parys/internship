@@ -31,7 +31,7 @@ namespace Elevel.Application.Features.AuditionFeatures
                 var audition = await _context.Auditions.FirstOrDefaultAsync(a => a.Id == request.Id, cancelationtoken);
                 if (audition is null)
                 {
-                    return null;
+                    throw new NotFoundException(nameof(Audition));
                 }
 
                 audition = _mapper.Map(request, audition);
