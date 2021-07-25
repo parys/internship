@@ -25,7 +25,8 @@ namespace Elevel.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] GetTopicListQuery.Request request)
         {
-            return Ok(await Mediator.Send(request));
+            var response = await Mediator.Send(request);
+            return response == null ? BadRequest() : Ok(response);
         }
 
         [HttpGet("{id:Guid}")]
@@ -37,15 +38,15 @@ namespace Elevel.Api.Controllers
         [HttpDelete("{id:Guid}")]
         public async Task<IActionResult> DeleteAsync([FromRoute] DeleteTopicCommand.Request request)
         {
-            var response = await Mediator.Send(request);
-            return response == null ? BadRequest() : Ok(response);
+            return Ok(await Mediator.Send(request));
         }
 
         [HttpPut("{id:Guid}")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateTopicCommand.Request request)
         {
             request.Id = id;
-            return Ok(await Mediator.Send(request));
+            var response = await Mediator.Send(request);
+            return response == null ? BadRequest() : Ok(response);
         }
     }
 }
