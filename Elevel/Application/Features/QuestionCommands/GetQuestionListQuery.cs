@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using Elevel.Application.Interfaces;
 using Elevel.Application.Pagination;
 using Elevel.Domain;
+using Elevel.Domain.Enums;
 using Elevel.Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -20,7 +21,7 @@ namespace Elevel.Application.Features.QuestionCommands
     {
         public class Request : PagedQueryBase, IRequest<Response>
         {
-            public Guid Id { get; set; }
+            public Level? Level { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Response>
@@ -36,8 +37,11 @@ namespace Elevel.Application.Features.QuestionCommands
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var questions = _context.Questions.AsNoTracking()
-                   .Include(x => x.Id);
+                var questions = _context.Questions.AsNoTracking();
+                if (request.Level != null)
+                {
+                    questions = questions.Where(x => x.Level == request.Level);
+                }
 
                 return new Response
                 {

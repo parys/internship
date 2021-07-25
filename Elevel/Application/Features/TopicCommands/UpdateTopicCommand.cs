@@ -15,7 +15,7 @@ namespace Elevel.Application.Features.TopicCommands
     {
         public class Request : UpsertTopicCommand.Request, IRequest<Response>
         {
-            public Guid Id { get; set; }
+            public Guid? Id { get; set; }
         }
 
         //public class Validator : UpsertTopicCommand.Validator<Request>

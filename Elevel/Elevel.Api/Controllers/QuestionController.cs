@@ -14,41 +14,35 @@ namespace Elevel.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetQuestionList(GetQuestionListQuery.Request request)
+        public async Task<IActionResult> GetQuestionList([FromQuery]GetQuestionListQuery.Request request)
         {
             return Ok(await Mediator.Send(request));
         }
 
         [HttpGet("{id:Guid}")]
-        public async Task<IActionResult> GetQuestionById(GetQuestionDetailQuery.Request request)
+        public async Task<IActionResult> GetQuestionById([FromRoute]GetQuestionDetailQuery.Request request)
         {
             return Ok(await Mediator.Send(request));
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateQuestionAsync(CreateQuestionCommand.Request request)
+        public async Task<IActionResult> CreateQuestionAsync([FromBody] CreateQuestionCommand.Request request)
         {
             return Ok(await Mediator.Send(request));
         }
 
         [HttpPut("{id:Guid}")]
-        public async Task<IActionResult> UpdateQuestionAsync(Guid id, UpdateQuestionCommand.Request request)
+        public async Task<IActionResult> UpdateQuestionAsync([FromRoute] Guid id, [FromBody] UpdateQuestionCommand.Request request)
         {
-            if (id != request.Id)
-            {
-                return BadRequest();
-            }
+            request.Id = id;
             return Ok(await Mediator.Send(request));
         }
 
         [HttpDelete("{id:Guid}")]
-        public async Task<IActionResult> DeleteQuestionAsync(Guid id, DeleteQuestionCommand.Request request)
+        public async Task<IActionResult> DeleteQuestionAsync([FromRoute] DeleteQuestionCommand.Request request)
         {
-            if (id != request.Id)
-            {
-                return BadRequest();
-            }
-            return Ok(await Mediator.Send(request));
+            var response = await Mediator.Send(request);
+            return response == null ? BadRequest() : Ok(response);
         }
     }
 }
