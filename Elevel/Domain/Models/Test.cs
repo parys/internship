@@ -1,4 +1,4 @@
-﻿using Elevel.Domain.Enums;
+using Elevel.Domain.Enums;
 using System;
 using System.Collections.Generic;
 
@@ -9,8 +9,10 @@ namespace Elevel.Domain.Models
         public Level Level { get; set; }
 
         public DateTimeOffset CreationDate { get; set; }
-        public DateTimeOffset AssignmentStartDate { get; set; }
+        public DateTimeOffset TestPassingDate { get; set; }
         public DateTimeOffset AssignmentEndDate { get; set; }
+
+        public bool Priority { get; set; }
 
         public int? GrammarMark { get; set; }
         public int? AuditionMark { get; set; }
@@ -40,7 +42,5 @@ namespace Elevel.Domain.Models
         public Topic Speaking { get; set; }
 
         public ICollection<TestQuestion> TestQuestions { get; set; }
-
-        public TestPriority Priority { get; set; }
     }
 }

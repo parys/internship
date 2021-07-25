@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Elevel.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210720165707_init")]
+    [Migration("20210723082630_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -217,8 +217,8 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     b.Property<byte>("Level")
                         .HasColumnType("tinyint");
 
-                    b.Property<int>("Priority")
-                        .HasColumnType("int");
+                    b.Property<bool>("Priority")
+                        .HasColumnType("bit");
 
                     b.Property<string>("SpeakingAnswerReference")
                         .HasColumnType("nvarchar(max)");

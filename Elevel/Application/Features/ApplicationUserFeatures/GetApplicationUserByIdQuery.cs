@@ -1,14 +1,11 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Elevel.Application.Infrastructure;
-using Elevel.Application.Pagination;
 using Elevel.Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -36,15 +33,24 @@ namespace Elevel.Application.Features.ApplicationUserFeatures
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
 
-                var user = await _userManager.Users.ProjectTo<Response>(_mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+                var applicationUser = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
-                if(user == null)
+                if (applicationUser == null)
                 {
-                    throw new NotFoundException(nameof(ApplicationUser));
+                    throw new NotFoundException(nameof(ApplicationUser), request.Id);
                 }
+
+                var roles = await _userManager.GetRolesAsync(applicationUser);
+
+                var user = _mapper.Map<ApplicationUser,Response>(applicationUser);
+
+                user.Roles = roles;
+
+                
 
                 return user;
             }
+
         }
         public class Response
         {
@@ -54,6 +60,7 @@ namespace Elevel.Application.Features.ApplicationUserFeatures
             public DateTimeOffset CreationDate { get; set; }
             public string Avatar { get; set; }
             public string Email { get; set; }
+            public IList<string> Roles { get; set; }
         }
     }
 }
