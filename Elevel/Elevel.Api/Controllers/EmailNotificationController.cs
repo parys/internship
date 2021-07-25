@@ -1,4 +1,6 @@
 ﻿using Elevel.Application.Infrastructure;
+using Elevel.Application.Interfaces;
+using Elevel.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -13,12 +15,25 @@ namespace Elevel.Api.Controllers
     public class EmailNotificationController : ControllerBase
     {
 
-        [HttpPost]
-        public async Task <IActionResult> SendEmail()
+        private readonly IMailService mailService;
+
+        public EmailNotificationController(IMailService mailService)
         {
-            EmailNotification emailNotification = new EmailNotification();
-            await emailNotification.SendEmailAsync("evgenijj1982@gmail.com", "Body", "Test");
-            return RedirectToAction("Index");
+            this.mailService = mailService;
+        }
+        [HttpPost("send")]
+        public async Task<IActionResult> SendMail([FromForm] MailRequest request)
+        {
+            try
+            {
+                await mailService.SendEmailAsync(request);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
     }
 }
