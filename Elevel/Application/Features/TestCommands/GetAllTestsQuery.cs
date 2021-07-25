@@ -2,16 +2,11 @@
 using AutoMapper.QueryableExtensions;
 using Elevel.Application.Interfaces;
 using Elevel.Application.Pagination;
-using Elevel.Domain;
 using Elevel.Domain.Enums;
-using Elevel.Domain.Models;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -39,12 +34,12 @@ namespace Elevel.Application.Features.TestCommands
             {
                 var tests = _context.Tests.AsNoTracking();
 
-                if (request.Level!=null)
+                if (request.Level.HasValue)
                 {
                     tests = tests.Where(x => x.Level == request.Level.Value);
                 }
 
-                if (request.TestPassingDate != null)
+                if (request.TestPassingDate.HasValue)
                 {
                     tests = tests.Where(x => x.TestPassingDate == request.TestPassingDate);
                 }
@@ -56,13 +51,11 @@ namespace Elevel.Application.Features.TestCommands
                     RowCount = await tests.CountAsync(),
                     Results = await tests.Skip(request.SkipCount()).Take(request.PageSize).ProjectTo<TestDTO>(_mapper.ConfigurationProvider).ToListAsync()
                 };
-
-
             }
         }
 
         public class Response : PagedResult<TestDTO>
-        { 
+        {
         }
         public class TestDTO
         {

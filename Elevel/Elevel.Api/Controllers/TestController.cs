@@ -1,14 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Elevel.Application.Features.TestQuestion;
-using MediatR;
+﻿using Elevel.Application.Features.TestCommands;
 using Microsoft.AspNetCore.Authorization;
-using Elevel.Domain.Enums;
-using Elevel.Application.Features.TestCommands;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Elevel.Api.Controllers
 {

@@ -145,9 +145,6 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("AnswerId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid?>("AuditionId")
                         .HasColumnType("uniqueidentifier");
 

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Elevel.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210723082630_init")]
-    partial class init
+    [Migration("20210724102229_removeAnswerIdFromQuestions")]
+    partial class removeAnswerIdFromQuestions
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -147,9 +147,6 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("AnswerId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid?>("AuditionId")
                         .HasColumnType("uniqueidentifier");
 
@@ -179,9 +176,6 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTimeOffset>("AssignmentEndDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTimeOffset>("AssignmentStartDate")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<Guid?>("AuditionId")
@@ -228,6 +222,9 @@ namespace Elevel.Infrastructure.Persistence.Migrations
 
                     b.Property<int?>("SpeakingMark")
                         .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("TestPassingDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
