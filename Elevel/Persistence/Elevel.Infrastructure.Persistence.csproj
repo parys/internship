@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -13,10 +13,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Application\Elevel.Application.csproj" />
     <ProjectReference Include="..\Elevel.Infrastructure.Services\Elevel.Infrastructure.Services.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>
