@@ -23,13 +23,15 @@ namespace Elevel.Api.Controllers
         [HttpGet("{id:Guid}")]
         public async Task<IActionResult> GetQuestionById([FromRoute]GetQuestionDetailQuery.Request request)
         {
-            return Ok(await Mediator.Send(request));
+            var response = await Mediator.Send(request);
+            return response == null ? BadRequest() : Ok(response);
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateQuestionAsync([FromBody] CreateQuestionCommand.Request request)
         {
-            return Ok(await Mediator.Send(request));
+            var response = await Mediator.Send(request);
+            return response == null ? BadRequest() : Ok(response);
         }
 
         [HttpPut("{id:Guid}")]
