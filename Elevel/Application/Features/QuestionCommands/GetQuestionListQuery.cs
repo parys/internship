@@ -38,7 +38,7 @@ namespace Elevel.Application.Features.QuestionCommands
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
                 var questions = _context.Questions.AsNoTracking();
-                if (request.Level != null)
+                if (request.Level.HasValue)
                 {
                     questions = questions.Where(x => x.Level == request.Level);
                 }

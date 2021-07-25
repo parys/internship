@@ -36,7 +36,7 @@ namespace Elevel.Application.Features.TopicCommands
             {
                 var topic = _context.Topics.AsNoTracking();
 
-                if (request.Level != null) {
+                if (request.Level.HasValue) {
                     topic = topic.Where(x => x.Level == request.Level);
                 }
 
