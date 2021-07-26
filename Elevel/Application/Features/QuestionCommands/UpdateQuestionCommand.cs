@@ -12,7 +12,7 @@ namespace Elevel.Application.Features.QuestionCommands
     {
         public class Request : IRequest<Response>
         {
-            public Guid? Id { get; set; }
+            public Guid Id { get; set; }
             public string NameQuestion { get; set; }
             public DateTimeOffset CreationDate { get; set; }
             public bool Deleted { get; set; }

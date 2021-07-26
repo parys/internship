@@ -26,13 +26,15 @@ namespace Elevel.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] GetTopicListQuery.Request request)
         {
-            return Ok(await Mediator.Send(request));
+            var response = await Mediator.Send(request);
+            return response == null ? BadRequest() : Ok(response);
         }
 
         [HttpGet("{id:Guid}")]
         public async Task<IActionResult> GetById([FromRoute] GetTopicByIdQuery.Request request)
         {
-            return Ok(await Mediator.Send(request));
+            var response = await Mediator.Send(request);
+            return response == null ? BadRequest() : Ok(response);
         }
 
         [HttpDelete("{id:Guid}")]

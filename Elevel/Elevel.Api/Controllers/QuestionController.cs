@@ -16,13 +16,15 @@ namespace Elevel.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetQuestionList([FromQuery]GetQuestionListQuery.Request request)
         {
-            return Ok(await Mediator.Send(request));
+            var response = await Mediator.Send(request);
+            return response == null ? BadRequest() : Ok(response);
         }
 
         [HttpGet("{id:Guid}")]
         public async Task<IActionResult> GetQuestionById([FromRoute]GetQuestionDetailQuery.Request request)
         {
-            return Ok(await Mediator.Send(request));
+            var response = await Mediator.Send(request);
+            return response == null ? BadRequest() : Ok(response);
         }
 
         [HttpPost]
