@@ -106,7 +106,7 @@ namespace Elevel.Application.Features.TestCommands
 
                 var test = _mapper.Map<Test>(request);
 
-                var auditions = await _context.Auditions.AsNoTracking().Where(x => x.Level == request.Level && !x.Deleted).ToListAsync().ConfigureAwait(false);
+                var auditions = await _context.Auditions.AsNoTracking().Where(x => x.Level == request.Level).ToListAsync().ConfigureAwait(false);
 
                 if (auditions.Count() < 1)
                 {
@@ -117,7 +117,7 @@ namespace Elevel.Application.Features.TestCommands
                     };
                 }
 
-                var topics = await _context.Topics.AsNoTracking().Where(x => x.Level == request.Level && !x.Deleted).ToListAsync().ConfigureAwait(false);
+                var topics = await _context.Topics.AsNoTracking().Where(x => x.Level == request.Level).ToListAsync().ConfigureAwait(false);
 
                 if (topics.Count() < 2)
                 {
@@ -182,7 +182,7 @@ namespace Elevel.Application.Features.TestCommands
                 var questions = await _context
                 .Questions
                 .AsNoTracking()
-                .Where(x => x.Level == test.Level && x.AuditionId == null && !x.Deleted).ToListAsync().ConfigureAwait(false);
+                .Where(x => x.Level == test.Level && x.AuditionId == null).ToListAsync().ConfigureAwait(false);
                 if (questions.Count() < 12)
                 {
                     return true;
@@ -215,7 +215,7 @@ namespace Elevel.Application.Features.TestCommands
                 var questions = await _context
                 .Questions
                 .AsNoTracking()
-                .Where(x => x.Level == test.Level && x.AuditionId == test.AuditionId && !x.Deleted).ToListAsync().ConfigureAwait(false);
+                .Where(x => x.Level == test.Level && x.AuditionId == test.AuditionId).ToListAsync().ConfigureAwait(false);
 
                 if (questions.Count() < 10)
                 {

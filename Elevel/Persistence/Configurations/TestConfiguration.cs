@@ -8,7 +8,7 @@ namespace Elevel.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Test> builder)
         {
-            builder.ToTable("Test");
+            builder.ToTable("Tests");
 
             builder.HasOne(x => x.Essay)
                 .WithMany(x => x.EssayTests)
@@ -44,8 +44,6 @@ namespace Elevel.Infrastructure.Persistence.Configurations
 
             builder.Property(x => x.CreationDate)
                 .HasDefaultValueSql("GETUTCDATE()");
-
-
         }
     }
 }

@@ -350,17 +350,17 @@ WHILE @questionCount < 12
 -- 3 answers
 WHILE @currentQuestionNumber < 439
 	BEGIN
-		insert into Answer(Id, NameAnswer, IsRight, QuestionId)
+		insert into Answers(Id, NameAnswer, IsRight, QuestionId)
 		values(NEWID(),'wrong'+CONVERT(CHAR, @answerNumber),0, (SELECT q.Id FROM Questions as q ORDER BY q.NameQuestion OFFSET @currentQuestionNumber ROWS FETCH NEXT 1 ROWS ONLY))
 			
 		SET @answerNumber = @answerNumber + 1
 
-		insert into Answer(Id, NameAnswer, IsRight, QuestionId)
+		insert into Answers(Id, NameAnswer, IsRight, QuestionId)
 		values(NEWID(),'right'+CONVERT(CHAR, @answerNumber),1, (SELECT q.Id FROM Questions as q ORDER BY q.NameQuestion OFFSET @currentQuestionNumber ROWS FETCH NEXT 1 ROWS ONLY))
 			
 		SET @answerNumber = @answerNumber + 1
 
-		insert into Answer(Id, NameAnswer, IsRight, QuestionId)
+		insert into Answers(Id, NameAnswer, IsRight, QuestionId)
 		values(NEWID(),'wrong'+CONVERT(CHAR, @answerNumber),0, (SELECT q.Id FROM Questions as q ORDER BY q.NameQuestion OFFSET @currentQuestionNumber ROWS FETCH NEXT 1 ROWS ONLY))
 			
 		SET @answerNumber = @answerNumber + 1
@@ -373,22 +373,22 @@ SET @currentQuestionNumber = 1
 -- 4 answers
 WHILE @currentQuestionNumber < 439
 	BEGIN
-		insert into Answer(Id, NameAnswer, IsRight, QuestionId)
+		insert into Answers(Id, NameAnswer, IsRight, QuestionId)
 		values(NEWID(),'wrong'+CONVERT(CHAR, @answerNumber),0, (SELECT q.Id FROM Questions as q ORDER BY q.NameQuestion OFFSET @currentQuestionNumber ROWS FETCH NEXT 1 ROWS ONLY))
 			
 		SET @answerNumber = @answerNumber + 1
 
-		insert into Answer(Id, NameAnswer, IsRight, QuestionId)
+		insert into Answers(Id, NameAnswer, IsRight, QuestionId)
 		values(NEWID(),'right'+CONVERT(CHAR, @answerNumber),1, (SELECT q.Id FROM Questions as q ORDER BY q.NameQuestion OFFSET @currentQuestionNumber ROWS FETCH NEXT 1 ROWS ONLY))
 			
 		SET @answerNumber = @answerNumber + 1
 
-		insert into Answer(Id, NameAnswer, IsRight, QuestionId)
+		insert into Answers(Id, NameAnswer, IsRight, QuestionId)
 		values(NEWID(),'wrong'+CONVERT(CHAR, @answerNumber),0, (SELECT q.Id FROM Questions as q ORDER BY q.NameQuestion OFFSET @currentQuestionNumber ROWS FETCH NEXT 1 ROWS ONLY))
 			
 		SET @answerNumber = @answerNumber + 1
 
-		insert into Answer(Id, NameAnswer, IsRight, QuestionId)
+		insert into Answers(Id, NameAnswer, IsRight, QuestionId)
 		values(NEWID(),'wrong'+CONVERT(CHAR, @answerNumber),0, (SELECT q.Id FROM Questions as q ORDER BY q.NameQuestion OFFSET @currentQuestionNumber ROWS FETCH NEXT 1 ROWS ONLY))
 			
 		SET @answerNumber = @answerNumber + 1
@@ -401,22 +401,22 @@ SET @currentQuestionNumber = 2
 -- 4 answers
 WHILE @currentQuestionNumber < 439
 	BEGIN
-		insert into Answer(Id, NameAnswer, IsRight, QuestionId)
+		insert into Answers(Id, NameAnswer, IsRight, QuestionId)
 		values(NEWID(),'wrong'+CONVERT(CHAR, @answerNumber),0, (SELECT q.Id FROM Questions as q ORDER BY q.NameQuestion OFFSET @currentQuestionNumber ROWS FETCH NEXT 1 ROWS ONLY))
 			
 		SET @answerNumber = @answerNumber + 1
 
-		insert into Answer(Id, NameAnswer, IsRight, QuestionId)
+		insert into Answers(Id, NameAnswer, IsRight, QuestionId)
 		values(NEWID(),'right'+CONVERT(CHAR, @answerNumber),1, (SELECT q.Id FROM Questions as q ORDER BY q.NameQuestion OFFSET @currentQuestionNumber ROWS FETCH NEXT 1 ROWS ONLY))
 			
 		SET @answerNumber = @answerNumber + 1
 
-		insert into Answer(Id, NameAnswer, IsRight, QuestionId)
+		insert into Answers(Id, NameAnswer, IsRight, QuestionId)
 		values(NEWID(),'wrong'+CONVERT(CHAR, @answerNumber),0, (SELECT q.Id FROM Questions as q ORDER BY q.NameQuestion OFFSET @currentQuestionNumber ROWS FETCH NEXT 1 ROWS ONLY))
 			
 		SET @answerNumber = @answerNumber + 1
 
-		insert into Answer(Id, NameAnswer, IsRight, QuestionId)
+		insert into Answers(Id, NameAnswer, IsRight, QuestionId)
 		values(NEWID(),'wrong'+CONVERT(CHAR, @answerNumber),0, (SELECT q.Id FROM Questions as q ORDER BY q.NameQuestion OFFSET @currentQuestionNumber ROWS FETCH NEXT 1 ROWS ONLY))
 			
 		SET @answerNumber = @answerNumber + 1
@@ -429,22 +429,22 @@ SET @currentQuestionNumber = 3
 -- 4 answers
 WHILE @currentQuestionNumber < 439
 	BEGIN
-		insert into Answer(Id, NameAnswer, IsRight, QuestionId)
+		insert into Answers(Id, NameAnswer, IsRight, QuestionId)
 		values(NEWID(),'wrong'+CONVERT(CHAR, @answerNumber),0, (SELECT q.Id FROM Questions as q ORDER BY q.NameQuestion OFFSET @currentQuestionNumber ROWS FETCH NEXT 1 ROWS ONLY))
 			
 		SET @answerNumber = @answerNumber + 1
 
-		insert into Answer(Id, NameAnswer, IsRight, QuestionId)
+		insert into Answers(Id, NameAnswer, IsRight, QuestionId)
 		values(NEWID(),'right'+CONVERT(CHAR, @answerNumber),1, (SELECT q.Id FROM Questions as q ORDER BY q.NameQuestion OFFSET @currentQuestionNumber ROWS FETCH NEXT 1 ROWS ONLY))
 			
 		SET @answerNumber = @answerNumber + 1
 
-		insert into Answer(Id, NameAnswer, IsRight, QuestionId)
+		insert into Answers(Id, NameAnswer, IsRight, QuestionId)
 		values(NEWID(),'wrong'+CONVERT(CHAR, @answerNumber),0, (SELECT q.Id FROM Questions as q ORDER BY q.NameQuestion OFFSET @currentQuestionNumber ROWS FETCH NEXT 1 ROWS ONLY))
 			
 		SET @answerNumber = @answerNumber + 1
 
-		insert into Answer(Id, NameAnswer, IsRight, QuestionId)
+		insert into Answers(Id, NameAnswer, IsRight, QuestionId)
 		values(NEWID(),'wrong'+CONVERT(CHAR, @answerNumber),0, (SELECT q.Id FROM Questions as q ORDER BY q.NameQuestion OFFSET @currentQuestionNumber ROWS FETCH NEXT 1 ROWS ONLY))
 			
 		SET @answerNumber = @answerNumber + 1
