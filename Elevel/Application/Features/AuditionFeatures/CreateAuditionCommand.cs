@@ -28,7 +28,7 @@ namespace Elevel.Application.Features.AuditionFeatures
                 var audition = _mapper.Map<Audition>(request);
                 if(audition is null)
                 {
-                    throw new NotFoundException(nameof(Audition));
+                    return null;
                 }
                 _context.Auditions.Add(audition);
                 await _context.SaveChangesAsync(cancelationtoken);

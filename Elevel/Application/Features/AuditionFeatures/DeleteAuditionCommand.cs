@@ -27,7 +27,7 @@ namespace Elevel.Application.Features.AuditionFeatures
                 var audition = await _context.Auditions.FirstOrDefaultAsync(a => a.Id == request.Id, cancelationtoken);
                 if (audition is null)
                 {
-                    throw new NotFoundException(nameof(Audition));
+                    return null;
                 }
                 audition.Deleted = true;
                 await _context.SaveChangesAsync(cancelationtoken);
