@@ -18,14 +18,22 @@ namespace Elevel.Api.Controllers
         //    return Ok();
         //}
 
-        [HttpPost, Authorize(Roles = nameof(UserRole.Coach))]
+        [HttpPost]
         public async Task<IActionResult> CreateTestAsync ([FromBody] CreateTestCommand.Request request)
         {
             var result = await Mediator.Send(request);
-            return Ok(result);
+            if(result.Id == null)
+            {
+                if (result.isHr == true)
+                {
+                    return Forbid();
+                }
+                return BadRequest(result.Message);
+            }
+            return Ok(result.Id);
         }
         
-        [HttpGet, Authorize(Roles = nameof(UserRole.Coach))]
+        [HttpGet]
         public async Task<IActionResult> GetAllTestsAsync([FromQuery] GetAllTestsQuery.Request request)
         {
             var result = await Mediator.Send(request);

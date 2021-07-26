@@ -28,7 +28,9 @@ namespace Elevel.Infrastructure.Persistence.Context
         {
             base.OnModelCreating(modelBuilder);
 
+
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+
 
             foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
             {

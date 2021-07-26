@@ -9,10 +9,7 @@ namespace Elevel.Domain.Models
         public string NameQuestion { get; set; }
         public Level Level { get; set; }
         public DateTimeOffset CreationDate { get; set; }
-        public Guid AnswerId { get; set; }
-
         public bool Deleted { get; set; }
-
 
         public Guid? AuditionId { get; set; }
         public Audition Audition { get; set; }

@@ -18,9 +18,8 @@ namespace Elevel.Infrastructure.Persistence.Configurations
             builder.HasOne(x => x.Question)
                 .WithMany(x => x.Answers)
                 .HasForeignKey(x => x.QuestionId);
-            
-                
-                
+
+
         }
     }
 }

@@ -6,6 +6,7 @@ using Elevel.Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,6 +20,7 @@ namespace Elevel.Application.Features.TestCommands
         {
             public Level? Level { get; set; }
             public DateTimeOffset? TestPassingDate { get; set; }
+            public Guid? UserId { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Response>
@@ -43,26 +45,30 @@ namespace Elevel.Application.Features.TestCommands
                 {
                     tests = tests.Where(x => x.TestPassingDate == request.TestPassingDate);
                 }
+                if (request.UserId.HasValue)
+                {
+                    tests = tests.Where(x => x.UserId == request.UserId);
+                }
+
 
                 return new Response()
                 {
                     CurrentPage = request.CurrentPage,
                     PageSize = request.PageSize,
                     RowCount = await tests.CountAsync(),
-                    Results = await tests.Skip(request.SkipCount()).Take(request.PageSize).ProjectTo<TestDTO>(_mapper.ConfigurationProvider).ToListAsync()
+                    Results = await tests.Skip(request.SkipCount()).Take(request.PageSize).ProjectTo<TestDTO>(_mapper.ConfigurationProvider).OrderBy(x=>x.TestNumber).ToListAsync().ConfigureAwait(false)
                 };
-
-
             }
         }
 
         public class Response : PagedResult<TestDTO>
-        { 
+        {
         }
         public class TestDTO
         {
             public Guid Id { get; set; }
             public Level Level { get; set; }
+            public long TestNumber { get; set; }
             public DateTimeOffset CreationDate { get; set; }
             public DateTimeOffset TestPassingDate { get; set; }
             public DateTimeOffset AssignmentEndDate { get; set; }

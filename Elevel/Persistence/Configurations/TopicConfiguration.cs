@@ -9,6 +9,8 @@ namespace Elevel.Infrastructure.Persistence.Configurations
         public void Configure(EntityTypeBuilder<Topic> builder)
         {
             builder.ToTable("Topic");
+            builder.Property(x => x.CreationDate)
+                .HasDefaultValueSql("GETUTCDATE()");
         }
     }
 }

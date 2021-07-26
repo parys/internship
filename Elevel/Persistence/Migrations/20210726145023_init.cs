@@ -57,7 +57,8 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AudioFilePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Level = table.Column<byte>(type: "tinyint", nullable: false),
-                    CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
+                    CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    Deleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -193,7 +194,6 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     NameQuestion = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Level = table.Column<byte>(type: "tinyint", nullable: false),
                     CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    AnswerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Deleted = table.Column<bool>(type: "bit", nullable: false),
                     AuditionId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
@@ -214,8 +214,10 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Level = table.Column<byte>(type: "tinyint", nullable: false),
-                    CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    AssignmentStartDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    TestNumber = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    TestPassingDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     AssignmentEndDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     Priority = table.Column<bool>(type: "bit", nullable: false),
                     GrammarMark = table.Column<int>(type: "int", nullable: true),

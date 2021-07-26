@@ -14,6 +14,9 @@ namespace Elevel.Infrastructure.Persistence.Configurations
                 .WithMany(x => x.EssayTests)
                 .HasForeignKey(x => x.EssayId);
 
+            builder.Property(x => x.TestNumber)
+                .ValueGeneratedOnAdd();
+
             builder.HasOne(x => x.Speaking)
                 .WithMany(x => x.SpeakingTests)
                 .HasForeignKey(x => x.SpeakingId);
@@ -38,7 +41,11 @@ namespace Elevel.Infrastructure.Persistence.Configurations
 
             builder.HasMany(x => x.TestQuestions)
                 .WithOne(x => x.Test);
-                
+
+            builder.Property(x => x.CreationDate)
+                .HasDefaultValueSql("GETUTCDATE()");
+
+
         }
     }
 }

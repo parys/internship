@@ -16,7 +16,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.7")
+                .HasAnnotation("ProductVersion", "5.0.8")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Elevel.Domain.Models.Answer", b =>
@@ -131,6 +131,9 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     b.Property<DateTimeOffset>("CreationDate")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("bit");
+
                     b.Property<byte>("Level")
                         .HasColumnType("tinyint");
 
@@ -143,9 +146,6 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("AnswerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("AuditionId")
@@ -192,7 +192,9 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset>("CreationDate")
-                        .HasColumnType("datetimeoffset");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<string>("EssayAnswer")
                         .HasColumnType("nvarchar(max)");
@@ -223,6 +225,11 @@ namespace Elevel.Infrastructure.Persistence.Migrations
 
                     b.Property<int?>("SpeakingMark")
                         .HasColumnType("int");
+
+                    b.Property<long>("TestNumber")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTimeOffset>("TestPassingDate")
                         .HasColumnType("datetimeoffset");
