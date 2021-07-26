@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -15,6 +16,7 @@ namespace Elevel.Application.Features.AuditionFeatures
     {
         public class Request : IRequest<Response>
         {
+            [Required]
             public Guid Id { get; set; }
         }
         public class Handler : IRequestHandler<Request, Response>
@@ -33,12 +35,11 @@ namespace Elevel.Application.Features.AuditionFeatures
                     .FirstOrDefaultAsync(m => m.Id == request.Id, cancellationToken);
                 if (audition is null)
                 {
-                    throw new NotFoundException(nameof(Audition));
+                    return null;
                 }
                 return audition;
             }
         }
-        [Serializable]
         public class Response
         {
             public Guid Id { get; set; }

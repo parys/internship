@@ -27,7 +27,8 @@ namespace Elevel.Application.Features.AuditionFeatures
             }
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var audition = _context.Auditions.AsNoTracking();
+                var audition = _context.Auditions.AsNoTracking()
+                    .OrderBy(x=>x.Id);
 
                 return new Response
                 {
@@ -41,10 +42,12 @@ namespace Elevel.Application.Features.AuditionFeatures
                 };
             }
         }
+        [Serializable]
         public class Response : PagedResult<AuditionDto>
         {
 
         }
+        [Serializable]
         public class AuditionDto
         {
             public Guid Id { get; set; }
