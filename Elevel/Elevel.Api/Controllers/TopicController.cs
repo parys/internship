@@ -26,8 +26,7 @@ namespace Elevel.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] GetTopicListQuery.Request request)
         {
-            var response = await Mediator.Send(request);
-            return response == null ? BadRequest() : Ok(response);
+            return Ok(await Mediator.Send(request));
         }
 
         [HttpGet("{id:Guid}")]
