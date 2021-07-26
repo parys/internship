@@ -35,12 +35,11 @@ namespace Elevel.Application.Features.AuditionFeatures
                     .FirstOrDefaultAsync(m => m.Id == request.Id, cancellationToken);
                 if (audition is null)
                 {
-                    throw new NotFoundException(nameof(Audition));
+                    return null;
                 }
                 return audition;
             }
         }
-        [Serializable]
         public class Response
         {
             public Guid Id { get; set; }
