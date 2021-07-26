@@ -40,8 +40,7 @@ namespace Elevel.Api.Controllers
         [HttpDelete("{id:Guid}")]
         public async Task<IActionResult> DeleteAsync([FromRoute] DeleteTopicCommand.Request request)
         {
-            var response = await Mediator.Send(request);
-            return response == null ? BadRequest() : Ok(response);
+            return Ok(await Mediator.Send(request));
         }
 
         [HttpPut("{id:Guid}")]
