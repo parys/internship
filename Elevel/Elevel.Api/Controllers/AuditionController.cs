@@ -41,12 +41,13 @@ namespace Elevel.Api.Controllers
             return Ok(res);
         }
         [HttpGet]
-        public async Task<IActionResult> GetAuditionList([FromBody] GetAuditionListQuery.Request request)
+        public async Task<IActionResult> GetAuditionList([FromQuery] GetAuditionListQuery.Request request)
         {
-            return Ok(await Mediator.Send(request));
+            var res = await Mediator.Send(request);
+            return Ok(res);
         }
-        [HttpGet("{id:Guid}")]
-        public async Task<IActionResult> GetAuditionById([FromBody] GetAuditionByIdQuery.Request request)
+        [HttpGet]
+        public async Task<IActionResult> GetAuditionById([FromQuery] GetAuditionByIdQuery.Request request)
         {
             var res = await Mediator.Send(request);
             return Ok(res);
