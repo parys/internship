@@ -19,8 +19,7 @@ namespace Elevel.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateTopicCommand.Request request)
         {
-            var response = await Mediator.Send(request);
-            return response == null ? BadRequest() : Ok(response);
+            return Ok(await Mediator.Send(request));
         }
 
         [HttpGet]

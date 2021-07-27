@@ -29,8 +29,7 @@ namespace Elevel.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateQuestionAsync([FromBody] CreateQuestionCommand.Request request)
         {
-            var response = await Mediator.Send(request);
-            return response == null ? BadRequest() : Ok(response);
+            return Ok(await Mediator.Send(request));
         }
 
         [HttpPut("{id:Guid}")]
