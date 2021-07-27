@@ -72,7 +72,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TopicName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Level = table.Column<byte>(type: "tinyint", nullable: false),
-                    CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false, defaultValueSql: "GETUTCDATE()"),
                     Deleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -217,8 +217,8 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     TestNumber = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false, defaultValueSql: "GETUTCDATE()"),
-                    TestPassingDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    AssignmentEndDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    TestPassingDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    AssignmentEndDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     Priority = table.Column<bool>(type: "bit", nullable: false),
                     GrammarMark = table.Column<int>(type: "int", nullable: true),
                     AuditionMark = table.Column<int>(type: "int", nullable: true),

@@ -56,7 +56,7 @@ namespace Elevel.Application.Features.TestCommands
                     CurrentPage = request.CurrentPage,
                     PageSize = request.PageSize,
                     RowCount = await tests.CountAsync(),
-                    Results = await tests.Skip(request.SkipCount()).Take(request.PageSize).ProjectTo<TestDTO>(_mapper.ConfigurationProvider).OrderBy(x=>x.TestNumber).ToListAsync().ConfigureAwait(false)
+                    Results = await tests.Skip(request.SkipCount()).Take(request.PageSize).ProjectTo<TestDTO>(_mapper.ConfigurationProvider).OrderBy(x => x.TestNumber).ToListAsync().ConfigureAwait(false)
                 };
             }
         }
@@ -69,17 +69,12 @@ namespace Elevel.Application.Features.TestCommands
             public Guid Id { get; set; }
             public Level Level { get; set; }
             public long TestNumber { get; set; }
-            public DateTimeOffset CreationDate { get; set; }
             public DateTimeOffset TestPassingDate { get; set; }
-            public DateTimeOffset AssignmentEndDate { get; set; }
 
             public int? GrammarMark { get; set; }
             public int? AuditionMark { get; set; }
             public int? EssayMark { get; set; }
             public int? SpeakingMark { get; set; }
-
-            public string EssayAnswer { get; set; }
-            public string SpeakingAnswerReference { get; set; }
             public string Comment { get; set; }
 
             public Guid UserId { get; set; }
@@ -87,11 +82,6 @@ namespace Elevel.Application.Features.TestCommands
             public Guid? HrId { get; set; }
 
             public Guid? CoachId { get; set; }
-
-            public Guid? AuditionId { get; set; }
-
-            public Guid? EssayId { get; set; }
-            public Guid? SpeakingId { get; set; }
 
             public bool Priority { get; set; }
         }

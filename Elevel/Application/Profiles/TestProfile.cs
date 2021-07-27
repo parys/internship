@@ -9,9 +9,13 @@ namespace Elevel.Application.Profiles
         public TestProfile()
         {
             CreateMap<CreateTestCommand.Request, Test>();
+            CreateMap<Test, CreateTestCommand.Response>();
+
             CreateMap<Test, GetAllTestsQuery.TestDTO>();
             CreateMap<Test, UpdateTestCommand.Response>();
             CreateMap<UpdateTestCommand.Request, Test>();
+           // CreateMap<Test, GetTestByIdQuery.Response>();
+            CreateMap<AssignTestCommand.Request, Test>();
         }
     }
 }

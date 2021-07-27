@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Elevel.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210726193239_init")]
+    [Migration("20210727180811_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -182,7 +182,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("AssignmentEndDate")
+                    b.Property<DateTimeOffset?>("AssignmentEndDate")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<Guid?>("AuditionId")
@@ -237,7 +237,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTimeOffset>("TestPassingDate")
+                    b.Property<DateTimeOffset?>("TestPassingDate")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<Guid>("UserId")
@@ -293,7 +293,9 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTimeOffset>("CreationDate")
-                        .HasColumnType("datetimeoffset");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit");

@@ -22,17 +22,23 @@ namespace Elevel.Api.Controllers
         public async Task<IActionResult> CreateTestAsync ([FromBody] CreateTestCommand.Request request)
         {
             var result = await Mediator.Send(request);
-            if(result.Id == null)
-            {
-                if (result.isHr == true)
-                {
-                    return Forbid();
-                }
-                return BadRequest(result.Message);
-            }
-            return Ok(result.Id);
+            return Ok(result);
         }
-        
+
+        [Authorize(Roles = nameof(UserRole.HumanResourceManager)),HttpPost("assign")]
+        public async Task<IActionResult> AssignTestAsync([FromBody] AssignTestCommand.Request request)
+        {
+            var result = await Mediator.Send(request);
+            return Ok(result);
+        }
+
+        //[HttpGet("{id:Guid}")]
+        //public async Task<IActionResult> GetTestByIdAsync([FromRoute] GetTestByIdQuery.Request request)
+        //{
+        //    var result = await Mediator.Send(request);
+        //    return Ok(result);
+        //}
+
         [HttpGet]
         public async Task<IActionResult> GetAllTestsAsync([FromQuery] GetAllTestsQuery.Request request)
         {
