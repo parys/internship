@@ -56,7 +56,11 @@ namespace Elevel.Application.Features.TestCommands
                     CurrentPage = request.CurrentPage,
                     PageSize = request.PageSize,
                     RowCount = await tests.CountAsync(),
-                    Results = await tests.Skip(request.SkipCount()).Take(request.PageSize).ProjectTo<TestDTO>(_mapper.ConfigurationProvider).OrderBy(x => x.TestNumber).ToListAsync().ConfigureAwait(false)
+                    Results = await tests.Skip(request.SkipCount())
+                    .Take(request.PageSize)
+                    .ProjectTo<TestDTO>(_mapper.ConfigurationProvider)
+                    .OrderBy(x => x.TestNumber)
+                    .ToListAsync().ConfigureAwait(false)
                 };
             }
         }
