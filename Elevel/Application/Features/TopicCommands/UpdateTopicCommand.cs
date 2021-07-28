@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
-using Elevel.Application.Infrastructure;
 using Elevel.Application.Interfaces;
-using Elevel.Domain.Models;
-using FluentValidation;
+using Elevel.Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -13,9 +11,11 @@ namespace Elevel.Application.Features.TopicCommands
 {
     public class UpdateTopicCommand
     {
-        public class Request : UpsertTopicCommand.Request, IRequest<Response>
+        public class Request : IRequest<Response>
         {
             public Guid Id { get; set; }
+            public string TopicName { get; set; }
+            public Level Level { get; set; }
         }
 
         //public class Validator : UpsertTopicCommand.Validator<Request>
