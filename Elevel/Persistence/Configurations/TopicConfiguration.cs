@@ -10,7 +10,11 @@ namespace Elevel.Infrastructure.Persistence.Configurations
         {
             builder.ToTable("Topics");
 
-            builder.Property(x => x.CreationDate).HasDefaultValueSql("GETUTCDATE()");
+            builder.Property(x => x.TopicNumber)
+                .ValueGeneratedOnAdd();
+
+            builder.Property(x => x.CreationDate)
+                .HasDefaultValueSql("GETUTCDATE()");
 
             builder.HasQueryFilter(x => !x.Deleted);
         }

@@ -12,9 +12,12 @@ namespace Elevel.Application.Profiles
             CreateMap<Test, CreateTestCommand.Response>();
 
             CreateMap<Test, GetAllTestsQuery.TestDTO>();
+
             CreateMap<Test, UpdateTestCommand.Response>();
             CreateMap<UpdateTestCommand.Request, Test>();
-           // CreateMap<Test, GetTestByIdQuery.Response>();
+
+            CreateMap<Test, GetTestByIdQuery.Response>();
+
             CreateMap<AssignTestCommand.Request, Test>();
         }
     }

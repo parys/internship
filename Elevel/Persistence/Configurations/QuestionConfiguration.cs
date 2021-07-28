@@ -14,8 +14,11 @@ namespace Elevel.Infrastructure.Persistence.Configurations
                 .WithMany(x => x.Questions)
                 .HasForeignKey(x => x.AuditionId)
                 .IsRequired(false);
+            builder.Property(x => x.QuestionNumber)
+                .ValueGeneratedOnAdd();
 
-            builder.Property(x => x.CreationDate).HasDefaultValueSql("GETUTCDATE()");
+            builder.Property(x => x.CreationDate)
+                .HasDefaultValueSql("GETUTCDATE()");
 
             builder.HasQueryFilter(x => !x.Deleted);
         }
