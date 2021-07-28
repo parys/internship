@@ -35,5 +35,19 @@ namespace Elevel.Api.Controllers
                 throw;
             }
         }
+
+        [HttpPost("sendEmailTemplate")]
+        public async Task<IActionResult> SendWelcomeMail([FromForm] MailSource source)
+        {
+            try
+            {
+                await mailService.SendEmailTemplateAsynk(source);
+                return Ok();
+            }
+            catch(Exception ex)
+            {
+                throw;
+            }
+        }
     }
 }

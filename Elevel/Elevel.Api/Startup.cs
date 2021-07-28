@@ -18,6 +18,7 @@ using Elevel.Application.Profiles;
 using Microsoft.EntityFrameworkCore;
 using Elevel.Application.Infrastructure;
 using Elevel.Application.Interfaces;
+using Elevel.Infrastructure.Services.Implementation;
 
 namespace Elevel.Api
 {
@@ -33,8 +34,8 @@ namespace Elevel.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<IMailService, Infrastructure.Services.Implementation.MailService>();
-            services.Configure<MailSettings>(Configuration.GetSection("EmailNotification"));
+            services.AddTransient<IMailService, MailService>();
+            services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
             services.AddAutoMapper(typeof(TestQuestionProfile));
             services.AddCors();
             //Configuration from AppSettings
