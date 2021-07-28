@@ -55,9 +55,13 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AuditionNumber = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     AudioFilePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Level = table.Column<byte>(type: "tinyint", nullable: false),
-                    CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
+                    CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    Deleted = table.Column<bool>(type: "bit", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -69,9 +73,12 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TopicNumber = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     TopicName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Level = table.Column<byte>(type: "tinyint", nullable: false),
-                    CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Deleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -190,11 +197,13 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    QuestionNumber = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     NameQuestion = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Level = table.Column<byte>(type: "tinyint", nullable: false),
-                    CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    AnswerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false, defaultValueSql: "GETUTCDATE()"),
                     Deleted = table.Column<bool>(type: "bit", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AuditionId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
@@ -209,14 +218,16 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Test",
+                name: "Tests",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Level = table.Column<byte>(type: "tinyint", nullable: false),
-                    CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    TestPassingDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    AssignmentEndDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    TestNumber = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    TestPassingDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    AssignmentEndDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     Priority = table.Column<bool>(type: "bit", nullable: false),
                     GrammarMark = table.Column<int>(type: "int", nullable: true),
                     AuditionMark = table.Column<int>(type: "int", nullable: true),
@@ -234,39 +245,39 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Test", x => x.Id);
+                    table.PrimaryKey("PK_Tests", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Test_AspNetUsers_CoachId",
+                        name: "FK_Tests_AspNetUsers_CoachId",
                         column: x => x.CoachId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Test_AspNetUsers_HrId",
+                        name: "FK_Tests_AspNetUsers_HrId",
                         column: x => x.HrId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Test_AspNetUsers_UserId",
+                        name: "FK_Tests_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Test_Auditions_AuditionId",
+                        name: "FK_Tests_Auditions_AuditionId",
                         column: x => x.AuditionId,
                         principalTable: "Auditions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Test_Topics_EssayId",
+                        name: "FK_Tests_Topics_EssayId",
                         column: x => x.EssayId,
                         principalTable: "Topics",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Test_Topics_SpeakingId",
+                        name: "FK_Tests_Topics_SpeakingId",
                         column: x => x.SpeakingId,
                         principalTable: "Topics",
                         principalColumn: "Id",
@@ -274,7 +285,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Answer",
+                name: "Answers",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -284,9 +295,9 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Answer", x => x.Id);
+                    table.PrimaryKey("PK_Answers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Answer_Questions_QuestionId",
+                        name: "FK_Answers_Questions_QuestionId",
                         column: x => x.QuestionId,
                         principalTable: "Questions",
                         principalColumn: "Id",
@@ -306,9 +317,9 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_TestQuestions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TestQuestions_Answer_UserAnswerId",
+                        name: "FK_TestQuestions_Answers_UserAnswerId",
                         column: x => x.UserAnswerId,
-                        principalTable: "Answer",
+                        principalTable: "Answers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -318,16 +329,16 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_TestQuestions_Test_TestId",
+                        name: "FK_TestQuestions_Tests_TestId",
                         column: x => x.TestId,
-                        principalTable: "Test",
+                        principalTable: "Tests",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Answer_QuestionId",
-                table: "Answer",
+                name: "IX_Answers_QuestionId",
+                table: "Answers",
                 column: "QuestionId");
 
             migrationBuilder.CreateIndex(
@@ -375,36 +386,6 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                 column: "AuditionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Test_AuditionId",
-                table: "Test",
-                column: "AuditionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Test_CoachId",
-                table: "Test",
-                column: "CoachId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Test_EssayId",
-                table: "Test",
-                column: "EssayId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Test_HrId",
-                table: "Test",
-                column: "HrId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Test_SpeakingId",
-                table: "Test",
-                column: "SpeakingId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Test_UserId",
-                table: "Test",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_TestQuestions_QuestionId",
                 table: "TestQuestions",
                 column: "QuestionId");
@@ -418,6 +399,36 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                 name: "IX_TestQuestions_UserAnswerId",
                 table: "TestQuestions",
                 column: "UserAnswerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tests_AuditionId",
+                table: "Tests",
+                column: "AuditionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tests_CoachId",
+                table: "Tests",
+                column: "CoachId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tests_EssayId",
+                table: "Tests",
+                column: "EssayId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tests_HrId",
+                table: "Tests",
+                column: "HrId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tests_SpeakingId",
+                table: "Tests",
+                column: "SpeakingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tests_UserId",
+                table: "Tests",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -444,10 +455,10 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Answer");
+                name: "Answers");
 
             migrationBuilder.DropTable(
-                name: "Test");
+                name: "Tests");
 
             migrationBuilder.DropTable(
                 name: "Questions");

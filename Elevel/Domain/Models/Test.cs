@@ -8,9 +8,11 @@ namespace Elevel.Domain.Models
     {
         public Level Level { get; set; }
 
+        public long TestNumber { get; set; }
+
         public DateTimeOffset CreationDate { get; set; }
-        public DateTimeOffset TestPassingDate { get; set; }
-        public DateTimeOffset AssignmentEndDate { get; set; }
+        public DateTimeOffset? TestPassingDate { get; set; }
+        public DateTimeOffset? AssignmentEndDate { get; set; }
 
         public bool Priority { get; set; }
 

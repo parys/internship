@@ -1,14 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Elevel.Application.Features.TestQuestion;
-using MediatR;
-using Microsoft.AspNetCore.Authorization;
+﻿using Elevel.Application.Features.TestCommands;
 using Elevel.Domain.Enums;
-using Elevel.Application.Features.TestCommands;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Elevel.Api.Controllers
 {
@@ -30,7 +24,21 @@ namespace Elevel.Api.Controllers
             var result = await Mediator.Send(request);
             return Ok(result);
         }
-        
+
+        [Authorize(Roles = nameof(UserRole.HumanResourceManager)),HttpPost("assign")]
+        public async Task<IActionResult> AssignTestAsync([FromBody] AssignTestCommand.Request request)
+        {
+            var result = await Mediator.Send(request);
+            return Ok(result);
+        }
+
+        [HttpGet("{id:Guid}")]
+        public async Task<IActionResult> GetTestByIdAsync([FromRoute] GetTestByIdQuery.Request request)
+        {
+            var result = await Mediator.Send(request);
+            return Ok(result);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAllTestsAsync([FromQuery] GetAllTestsQuery.Request request)
         {

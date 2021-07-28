@@ -2,16 +2,12 @@
 using AutoMapper.QueryableExtensions;
 using Elevel.Application.Interfaces;
 using Elevel.Application.Pagination;
-using Elevel.Domain;
 using Elevel.Domain.Enums;
-using Elevel.Domain.Models;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,6 +20,7 @@ namespace Elevel.Application.Features.TestCommands
         {
             public Level? Level { get; set; }
             public DateTimeOffset? TestPassingDate { get; set; }
+            public Guid? UserId { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Response>
@@ -48,37 +45,40 @@ namespace Elevel.Application.Features.TestCommands
                 {
                     tests = tests.Where(x => x.TestPassingDate == request.TestPassingDate);
                 }
+                if (request.UserId.HasValue)
+                {
+                    tests = tests.Where(x => x.UserId == request.UserId);
+                }
+
 
                 return new Response()
                 {
                     CurrentPage = request.CurrentPage,
                     PageSize = request.PageSize,
                     RowCount = await tests.CountAsync(),
-                    Results = await tests.Skip(request.SkipCount()).Take(request.PageSize).ProjectTo<TestDTO>(_mapper.ConfigurationProvider).ToListAsync()
+                    Results = await tests.Skip(request.SkipCount())
+                    .Take(request.PageSize)
+                    .ProjectTo<TestDTO>(_mapper.ConfigurationProvider)
+                    .OrderBy(x => x.TestNumber)
+                    .ToListAsync().ConfigureAwait(false)
                 };
-
-
             }
         }
 
         public class Response : PagedResult<TestDTO>
-        { 
+        {
         }
         public class TestDTO
         {
             public Guid Id { get; set; }
             public Level Level { get; set; }
-            public DateTimeOffset CreationDate { get; set; }
+            public long TestNumber { get; set; }
             public DateTimeOffset TestPassingDate { get; set; }
-            public DateTimeOffset AssignmentEndDate { get; set; }
 
             public int? GrammarMark { get; set; }
             public int? AuditionMark { get; set; }
             public int? EssayMark { get; set; }
             public int? SpeakingMark { get; set; }
-
-            public string EssayAnswer { get; set; }
-            public string SpeakingAnswerReference { get; set; }
             public string Comment { get; set; }
 
             public Guid UserId { get; set; }
@@ -86,11 +86,6 @@ namespace Elevel.Application.Features.TestCommands
             public Guid? HrId { get; set; }
 
             public Guid? CoachId { get; set; }
-
-            public Guid? AuditionId { get; set; }
-
-            public Guid? EssayId { get; set; }
-            public Guid? SpeakingId { get; set; }
 
             public bool Priority { get; set; }
         }

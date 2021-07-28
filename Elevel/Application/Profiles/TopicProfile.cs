@@ -1,8 +1,11 @@
-﻿using AutoMapper;
-using Elevel.Application.Features.ApplicationUserFeatures;
+using AutoMapper;
 using Elevel.Application.Features.TopicCommands;
 using Elevel.Domain.Models;
-using static Elevel.Application.Features.ApplicationUserFeatures.GetAllApplicationUserQuery;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Elevel.Application.Profiles
 {

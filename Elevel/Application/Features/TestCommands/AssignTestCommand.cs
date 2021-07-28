@@ -9,17 +9,21 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Elevel.Application.Features.TestCommands
 {
-    public class CreateTestCommand
+    public class AssignTestCommand
     {
         public class Request : IRequest<Response>
         {
             public Level Level { get; set; }
+            public DateTimeOffset AssignmentEndDate { get; set; }
             public Guid UserId { get; set; }
+            public Guid HrId { get; set; }
+            public bool Priority { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Response>
@@ -44,11 +48,17 @@ namespace Elevel.Application.Features.TestCommands
                 {
                     throw new NotFoundException($"User with {request.UserId}");
                 }
-
-                if (await _context.Tests.AnyAsync(x => x.UserId == request.UserId
-                    && DateTimeOffset.Compare(x.CreationDate.Date, DateTimeOffset.UtcNow.Date) == 0))
+                if (await _userManager.Users.AnyAsync(x => x.Id == request.HrId).ConfigureAwait(false))
                 {
-                    throw new ValidationException($"User: {request.UserId} has already had a test today");
+                    throw new NotFoundException($"Hr with {request.UserId}");
+                }
+                if(request.HrId == request.UserId)
+                {
+                    throw new ValidationException("You can't assign test to yourself");
+                }
+                if (request.AssignmentEndDate.Date < DateTimeOffset.UtcNow.Date)
+                {
+                    throw new ValidationException($"assignmentEndDate can't be in the past ({request.AssignmentEndDate})");
                 }
 
                 var test = _mapper.Map<Test>(request);
@@ -62,15 +72,13 @@ namespace Elevel.Application.Features.TestCommands
                 var topics = await _context.Topics.AsNoTracking().Where(x => x.Level == request.Level).ToListAsync().ConfigureAwait(false);
                 if (topics.Count() < 2)
                 {
-                    throw new ValidationException("Not enough topics");
+                    throw new ValidationException("Not enough topics"); 
                 }
 
                 test.Id = Guid.NewGuid();
                 test.EssayId = FindTopic(topics);
                 test.SpeakingId = FindTopic(topics, test.EssayId);
                 test.AuditionId = FindAudition(auditions);
-                test.TestPassingDate = DateTimeOffset.UtcNow;
-                test.AssignmentEndDate = null;
 
                 _context.Tests.Add(test);
 
@@ -85,9 +93,7 @@ namespace Elevel.Application.Features.TestCommands
 
                 await _context.SaveChangesAsync(cancelationtoken).ConfigureAwait(false);
 
-                var response = _mapper.Map<Response>(test);
-
-                return response;
+                return new Response { Id = test.Id };
             }
 
             /// <summary>
@@ -205,20 +211,6 @@ namespace Elevel.Application.Features.TestCommands
         public class Response
         {
             public Guid Id { get; set; }
-
-            public long TestNumber { get; set; }
-
-            public Level Level { get; set; }
-
-            public Guid UserId { get; set; }
-
-            public DateTimeOffset TestPassingDate { get; set; }
-
-            public Guid AuditionId { get; set; }
-
-            public Guid EssayId { get; set; }
-
-            public Guid SpeakingId { get; set; }
         }
     }
 }

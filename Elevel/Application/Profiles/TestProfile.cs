@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
-using Elevel.Application.Features.ApplicationUserFeatures;
 using Elevel.Application.Features.TestCommands;
 using Elevel.Domain.Models;
-using static Elevel.Application.Features.ApplicationUserFeatures.GetAllApplicationUserQuery;
 
 namespace Elevel.Application.Profiles
 {
@@ -11,9 +9,16 @@ namespace Elevel.Application.Profiles
         public TestProfile()
         {
             CreateMap<CreateTestCommand.Request, Test>();
+            CreateMap<Test, CreateTestCommand.Response>();
+
             CreateMap<Test, GetAllTestsQuery.TestDTO>();
+
             CreateMap<Test, UpdateTestCommand.Response>();
             CreateMap<UpdateTestCommand.Request, Test>();
+
+            CreateMap<Test, GetTestByIdQuery.Response>();
+
+            CreateMap<AssignTestCommand.Request, Test>();
         }
     }
 }
