@@ -42,7 +42,7 @@ namespace Elevel.Application.Features.ApplicationUserFeatures
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
 
-                IQueryable<ApplicationUser> users = _userManager.Users.AsNoTracking();
+                var users = _userManager.Users.AsNoTracking();
 
                 if (!string.IsNullOrWhiteSpace(request.LastName))
                 {

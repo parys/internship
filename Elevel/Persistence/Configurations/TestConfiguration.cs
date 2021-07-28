@@ -8,11 +8,14 @@ namespace Elevel.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Test> builder)
         {
-            builder.ToTable("Test");
+            builder.ToTable("Tests");
 
             builder.HasOne(x => x.Essay)
                 .WithMany(x => x.EssayTests)
                 .HasForeignKey(x => x.EssayId);
+
+            builder.Property(x => x.TestNumber)
+                .ValueGeneratedOnAdd();
 
             builder.HasOne(x => x.Speaking)
                 .WithMany(x => x.SpeakingTests)
@@ -38,7 +41,9 @@ namespace Elevel.Infrastructure.Persistence.Configurations
 
             builder.HasMany(x => x.TestQuestions)
                 .WithOne(x => x.Test);
-                
+
+            builder.Property(x => x.CreationDate)
+                .HasDefaultValueSql("GETUTCDATE()");
         }
     }
 }

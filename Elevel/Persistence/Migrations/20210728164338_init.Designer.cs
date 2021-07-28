@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Elevel.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210720165707_init")]
+    [Migration("20210728164338_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -18,7 +18,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.7")
+                .HasAnnotation("ProductVersion", "5.0.8")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Elevel.Domain.Models.Answer", b =>
@@ -40,7 +40,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Answer");
+                    b.ToTable("Answers");
                 });
 
             modelBuilder.Entity("Elevel.Domain.Models.ApplicationUser", b =>
@@ -130,8 +130,21 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     b.Property<string>("AudioFilePath")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<long>("AuditionNumber")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
                     b.Property<DateTimeOffset>("CreationDate")
-                        .HasColumnType("datetimeoffset");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<Guid>("CreatorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("bit");
 
                     b.Property<byte>("Level")
                         .HasColumnType("tinyint");
@@ -147,14 +160,16 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("AnswerId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid?>("AuditionId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTimeOffset>("CreationDate")
-                        .HasColumnType("datetimeoffset");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<Guid>("CreatorId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit");
@@ -164,6 +179,11 @@ namespace Elevel.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("NameQuestion")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("QuestionNumber")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.HasKey("Id");
 
@@ -178,10 +198,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("AssignmentEndDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTimeOffset>("AssignmentStartDate")
+                    b.Property<DateTimeOffset?>("AssignmentEndDate")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<Guid?>("AuditionId")
@@ -197,7 +214,9 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset>("CreationDate")
-                        .HasColumnType("datetimeoffset");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<string>("EssayAnswer")
                         .HasColumnType("nvarchar(max)");
@@ -217,8 +236,8 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     b.Property<byte>("Level")
                         .HasColumnType("tinyint");
 
-                    b.Property<int>("Priority")
-                        .HasColumnType("int");
+                    b.Property<bool>("Priority")
+                        .HasColumnType("bit");
 
                     b.Property<string>("SpeakingAnswerReference")
                         .HasColumnType("nvarchar(max)");
@@ -228,6 +247,14 @@ namespace Elevel.Infrastructure.Persistence.Migrations
 
                     b.Property<int?>("SpeakingMark")
                         .HasColumnType("int");
+
+                    b.Property<long>("TestNumber")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTimeOffset?>("TestPassingDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -246,7 +273,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Test");
+                    b.ToTable("Tests");
                 });
 
             modelBuilder.Entity("Elevel.Domain.Models.TestQuestion", b =>
@@ -282,7 +309,12 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTimeOffset>("CreationDate")
-                        .HasColumnType("datetimeoffset");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<Guid>("CreatorId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit");
@@ -292,6 +324,11 @@ namespace Elevel.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("TopicName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("TopicNumber")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.HasKey("Id");
 

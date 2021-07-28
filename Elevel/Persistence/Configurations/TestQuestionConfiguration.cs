@@ -8,7 +8,7 @@ namespace Elevel.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<TestQuestion> builder)
         {
-            builder.ToTable("TestQuestion");
+            builder.ToTable("TestQuestions");
 
             builder.HasOne(x => x.UserAnswer)
                 .WithMany(x => x.TestQuestions)
