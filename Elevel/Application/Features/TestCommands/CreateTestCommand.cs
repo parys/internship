@@ -168,7 +168,7 @@ namespace Elevel.Application.Features.TestCommands
             private async Task<bool> CreateTestGrammarQuestionsAsync(Test test, CancellationToken cancelationtoken)
             {
                 var questions = await GetQuestionListAsync(test.Level);
-                if (questions.Count() < 12)
+                if (questions.Count() < GRAMMAR_TEST_COUNT)
                 {
                     return true;
                 }
@@ -189,7 +189,7 @@ namespace Elevel.Application.Features.TestCommands
             {
                 var questions = await GetQuestionListAsync(test.Level, test.AuditionId);
 
-                if (questions.Count() < 10)
+                if (questions.Count() < AUDITION_TEST_COUNT)
                 {
                     return true;
                 }
