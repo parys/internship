@@ -128,10 +128,18 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     b.Property<string>("AudioFilePath")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<long>("AuditionNumber")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
                     b.Property<DateTimeOffset>("CreationDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<Guid>("CreatorId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit");
@@ -158,6 +166,9 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("GETUTCDATE()");
 
+                    b.Property<Guid>("CreatorId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit");
 
@@ -166,6 +177,11 @@ namespace Elevel.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("NameQuestion")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("QuestionNumber")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.HasKey("Id");
 
@@ -295,6 +311,9 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("GETUTCDATE()");
 
+                    b.Property<Guid>("CreatorId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit");
 
@@ -303,6 +322,11 @@ namespace Elevel.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("TopicName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("TopicNumber")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.HasKey("Id");
 

@@ -32,12 +32,12 @@ namespace Elevel.Api.Controllers
             return Ok(result);
         }
 
-        //[HttpGet("{id:Guid}")]
-        //public async Task<IActionResult> GetTestByIdAsync([FromRoute] GetTestByIdQuery.Request request)
-        //{
-        //    var result = await Mediator.Send(request);
-        //    return Ok(result);
-        //}
+        [HttpGet("{id:Guid}")]
+        public async Task<IActionResult> GetTestByIdAsync([FromRoute] GetTestByIdQuery.Request request)
+        {
+            var result = await Mediator.Send(request);
+            return Ok(result);
+        }
 
         [HttpGet]
         public async Task<IActionResult> GetAllTestsAsync([FromQuery] GetAllTestsQuery.Request request)

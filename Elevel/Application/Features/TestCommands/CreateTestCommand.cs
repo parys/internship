@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -41,15 +40,12 @@ namespace Elevel.Application.Features.TestCommands
             }
             public async Task<Response> Handle(Request request, CancellationToken cancelationtoken)
             {
-                if (!_userManager.Users.Any(x => x.Id == request.UserId))
+                if (!await _userManager.Users.AnyAsync(x => x.Id == request.UserId))
                 {
-                    throw new NotFoundException("User");
+                    throw new NotFoundException($"User with {request.UserId}");
                 }
 
-
-
-
-                if (_context.Tests.Any(x => x.UserId == request.UserId
+                if (await _context.Tests.AnyAsync(x => x.UserId == request.UserId
                     && DateTimeOffset.Compare(x.CreationDate.Date, DateTimeOffset.UtcNow.Date) == 0))
                 {
                     throw new ValidationException($"User: {request.UserId} has already had a test today");
@@ -70,9 +66,9 @@ namespace Elevel.Application.Features.TestCommands
                 }
 
                 test.Id = Guid.NewGuid();
-                test.EssayId = SetEssay(topics);
-                test.SpeakingId = SetSpeaking(topics, test);
-                test.AuditionId = SetAudition(auditions);
+                test.EssayId = FindTopic(topics);
+                test.SpeakingId = FindTopic(topics, test.EssayId);
+                test.AuditionId = FindAudition(auditions);
                 test.TestPassingDate = DateTimeOffset.UtcNow;
                 test.AssignmentEndDate = null;
 
@@ -92,46 +88,66 @@ namespace Elevel.Application.Features.TestCommands
                 var response = _mapper.Map<Response>(test);
 
                 return response;
-
             }
 
-            private Guid? SetEssay(IEnumerable<Topic> topics)
+            /// <summary>
+            /// Finds a topic guid
+            /// </summary>
+            /// <param name="topics"></param>
+            /// <param name="test"></param>
+            /// <returns></returns>
+            private Guid? FindTopic(IEnumerable<Topic> topics, Guid? EssayId = null)
             {
-                return topics
-                .ElementAt(_rand.Next(0, topics.Count() - 1))
-                .Id;
-            }
-            private Guid? SetSpeaking(IEnumerable<Topic> topics, Test test)
-            {
-                var filteredTopics = topics.Where(x => x.Id != test.EssayId);
+                var filteredTopics = topics.Where(x => x.Id != EssayId);
                 return filteredTopics.ElementAt(_rand.Next(0, topics.Count() - 1)).Id;
             }
-            private Guid? SetAudition(IEnumerable<Audition> auditions)
+            /// <summary>
+            /// Finds an audition
+            /// </summary>
+            /// <param name="auditions"></param>
+            /// <returns></returns>
+            private Guid? FindAudition(IEnumerable<Audition> auditions)
             {
                 return auditions
                 .ElementAt(_rand.Next(0, auditions.Count() - 1))
                 .Id;
             }
-            private async Task<bool> CreateTestGrammarQuestionsAsync(Test test, CancellationToken cancelationtoken)
+            /// <summary>
+            /// Async method returns a collection of questions based on level
+            /// </summary>
+            /// <param name="level"></param>
+            /// <param name="AuditionId">null default</param>
+            /// <returns>Task<IEnumerable<Question>></returns>
+            private async Task<IEnumerable<Question>> GetQuestionListAsync(Level level, Guid? AuditionId = null)
             {
-                var questions = await _context
+                return await _context
                 .Questions
                 .AsNoTracking()
-                .Where(x => x.Level == test.Level && x.AuditionId == null).ToListAsync().ConfigureAwait(false);
-                if (questions.Count() < 12)
-                {
-                    return true;
-                }
-
+                .Where(x => x.Level == level && x.AuditionId == AuditionId).ToListAsync().ConfigureAwait(false);
+            }
+            /// <summary>
+            /// Returns a list of {count} random QuestionId from received questions
+            /// </summary>
+            /// <param name="questions"> IEnumerable<Question> </param>
+            /// <returns>List<Guid></returns>
+            private List<Guid> GetQuestionIds(IEnumerable<Question> questions, int count)
+            {
                 var questionIds = new List<Guid>();
 
-
-                for (int i = 0; i < GRAMMAR_TEST_COUNT; i++)
+                for (int i = 0; i < count; i++)
                 {
                     var filteredQuestions = questions.Where(x => !questionIds.Contains(x.Id));
                     questionIds.Add(filteredQuestions.ElementAt(_rand.Next(0, filteredQuestions.Count() - 1)).Id); ;
                 }
-
+                return questionIds;
+            }
+            /// <summary>
+            /// Creates test questions for test
+            /// </summary>
+            /// <param name="questionIds"></param>
+            /// <param name="test"></param>
+            private void CreateTestQuestionsForGrammar(List<Guid> questionIds, Test test)
+            {
                 foreach (var question in questionIds)
                 {
                     var testQuestion = new TestQuestion()
@@ -142,39 +158,46 @@ namespace Elevel.Application.Features.TestCommands
                     };
                     _context.TestQuestions.Add(testQuestion);
                 }
-                return false;
             }
-            private async Task<bool> CreateTestAuditionQuestionsAsync(Test test, CancellationToken cancelationtoken)
+            /// <summary>
+            /// Generates Grammar test questions for received test
+            /// </summary>
+            /// <param name="test"></param>
+            /// <param name="cancelationtoken"></param>
+            /// <returns>true if not created, false if created</returns>
+            private async Task<bool> CreateTestGrammarQuestionsAsync(Test test, CancellationToken cancelationtoken)
             {
-                var questions = await _context
-                .Questions
-                .AsNoTracking()
-                .Where(x => x.Level == test.Level && x.AuditionId == test.AuditionId).ToListAsync().ConfigureAwait(false);
-
-                if (questions.Count() < 10)
+                var questions = await GetQuestionListAsync(test.Level);
+                if (questions.Count() < GRAMMAR_TEST_COUNT)
                 {
                     return true;
                 }
 
-                var questionIds = new List<Guid>();
+                var questionIds = GetQuestionIds(questions, GRAMMAR_TEST_COUNT);
 
-                for (int i = 0; i < AUDITION_TEST_COUNT; i++)
+                CreateTestQuestionsForGrammar(questionIds, test);
+
+                return false;
+            }
+            /// <summary>
+            /// Generates Audition test questions for received test
+            /// </summary>
+            /// <param name="test"></param>
+            /// <param name="cancelationtoken"></param>
+            /// <returns></returns>
+            private async Task<bool> CreateTestAuditionQuestionsAsync(Test test, CancellationToken cancelationtoken)
+            {
+                var questions = await GetQuestionListAsync(test.Level, test.AuditionId);
+
+                if (questions.Count() < AUDITION_TEST_COUNT)
                 {
-                    var filteredQuestions = questions
-                        .Where(x => !questionIds.Contains(x.Id));
-                    questionIds.Add(filteredQuestions.ElementAt(_rand.Next(0, filteredQuestions.Count() - 1)).Id);
+                    return true;
                 }
 
-                foreach (var question in questionIds)
-                {
-                    var testQuestion = new TestQuestion()
-                    {
-                        Id = Guid.NewGuid(),
-                        TestId = test.Id,
-                        QuestionId = question
-                    };
-                    _context.TestQuestions.Add(testQuestion);
-                }
+                var questionIds = GetQuestionIds(questions, AUDITION_TEST_COUNT);
+
+                CreateTestQuestionsForGrammar(questionIds, test);
+
                 return false;
             }
         }
