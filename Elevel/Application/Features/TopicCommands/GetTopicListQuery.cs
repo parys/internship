@@ -18,7 +18,7 @@ namespace Elevel.Application.Features.TopicCommands
     {
         public class Request : PagedQueryBase, IRequest<Response>
         {
-            public Guid Id { get; set; }
+            public Level? Level { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Response>
@@ -34,8 +34,11 @@ namespace Elevel.Application.Features.TopicCommands
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var topic = _context.Topics.AsNoTracking()
-                    .OrderBy(x => x.Id);
+                var topic = _context.Topics.AsNoTracking();
+
+                if (request.Level.HasValue) {
+                    topic = topic.Where(x => x.Level == request.Level);
+                }
 
                 return new Response
                 {

@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Elevel.Application.Features.TopicCommands;
 using Elevel.Domain.Models;
 using System;
@@ -13,7 +13,12 @@ namespace Elevel.Application.Profiles
     {
         public TopicProfile()
         {
+            CreateMap<CreateTopicCommand.Request, Topic>();
+            CreateMap<Topic, DeleteTopicCommand.Response>();
+            CreateMap<Topic, GetTopicByIdQuery.Response>();
             CreateMap<Topic, GetTopicListQuery.TopicListDto>();
+            CreateMap<Topic, UpdateTopicCommand.Response>();
+            CreateMap<UpdateTopicCommand.Request, Topic>();
         }
     }
 }
