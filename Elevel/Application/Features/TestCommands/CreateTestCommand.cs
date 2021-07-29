@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Elevel.Application.Infrastructure;
 using Elevel.Application.Interfaces;
 using Elevel.Domain.Enums;
@@ -74,18 +75,22 @@ namespace Elevel.Application.Features.TestCommands
 
                 _context.Tests.Add(test);
 
-                if (await CreateTestGrammarQuestionsAsync(test, cancelationtoken).ConfigureAwait(false))
-                {
-                    throw new ValidationException("Not enough Grammar Questions");
-                }
-                if (await CreateTestAuditionQuestionsAsync(test, cancelationtoken).ConfigureAwait(false))
-                {
-                    throw new ValidationException("Not enough Audition Questions");
-                }
+                var grammarQuestions = await CreateTestGrammarQuestionsAsync(test, cancelationtoken).ConfigureAwait(false);
 
-                await _context.SaveChangesAsync(cancelationtoken).ConfigureAwait(false);
+                var auditionQuestions = await CreateTestAuditionQuestionsAsync(test, cancelationtoken).ConfigureAwait(false);
 
                 var response = _mapper.Map<Response>(test);
+
+                response.GrammarQuestions = await GetQuestionDtosAsync(response.Id, grammarQuestions)
+                    .ConfigureAwait(false);
+                response.Audition = await GetAuditionAsync(response.Id, (Guid)test.AuditionId, auditionQuestions)
+                    .ConfigureAwait(false);
+                response.Essay = await GetTopicAsync((Guid)test.EssayId)
+                    .ConfigureAwait(false);
+                response.Speaking = await GetTopicAsync((Guid)test.SpeakingId)
+                    .ConfigureAwait(false);
+
+                await _context.SaveChangesAsync(cancelationtoken).ConfigureAwait(false);
 
                 return response;
             }
@@ -146,8 +151,9 @@ namespace Elevel.Application.Features.TestCommands
             /// </summary>
             /// <param name="questionIds"></param>
             /// <param name="test"></param>
-            private void CreateTestQuestionsForGrammar(List<Guid> questionIds, Test test)
+            private List<TestQuestion> CreateTestQuestions(List<Guid> questionIds, Test test)
             {
+                var testQuestions = new List<TestQuestion>();
                 foreach (var question in questionIds)
                 {
                     var testQuestion = new TestQuestion()
@@ -157,7 +163,9 @@ namespace Elevel.Application.Features.TestCommands
                         QuestionId = question
                     };
                     _context.TestQuestions.Add(testQuestion);
+                    testQuestions.Add(testQuestion);
                 }
+                return testQuestions;
             }
             /// <summary>
             /// Generates Grammar test questions for received test
@@ -165,19 +173,19 @@ namespace Elevel.Application.Features.TestCommands
             /// <param name="test"></param>
             /// <param name="cancelationtoken"></param>
             /// <returns>true if not created, false if created</returns>
-            private async Task<bool> CreateTestGrammarQuestionsAsync(Test test, CancellationToken cancelationtoken)
+            private async Task<List<TestQuestion>> CreateTestGrammarQuestionsAsync(Test test, CancellationToken cancelationtoken)
             {
                 var questions = await GetQuestionListAsync(test.Level);
                 if (questions.Count() < GRAMMAR_TEST_COUNT)
                 {
-                    return true;
+                    throw new ValidationException("Not Enough questions");
                 }
 
                 var questionIds = GetQuestionIds(questions, GRAMMAR_TEST_COUNT);
 
-                CreateTestQuestionsForGrammar(questionIds, test);
+                var testQuestions = CreateTestQuestions(questionIds, test);
 
-                return false;
+                return testQuestions;
             }
             /// <summary>
             /// Generates Audition test questions for received test
@@ -185,20 +193,88 @@ namespace Elevel.Application.Features.TestCommands
             /// <param name="test"></param>
             /// <param name="cancelationtoken"></param>
             /// <returns></returns>
-            private async Task<bool> CreateTestAuditionQuestionsAsync(Test test, CancellationToken cancelationtoken)
+            private async Task<List<TestQuestion>> CreateTestAuditionQuestionsAsync(Test test, CancellationToken cancelationtoken)
             {
                 var questions = await GetQuestionListAsync(test.Level, test.AuditionId);
 
                 if (questions.Count() < AUDITION_TEST_COUNT)
                 {
-                    return true;
+                    throw new ValidationException("Not Enough questions");
                 }
 
                 var questionIds = GetQuestionIds(questions, AUDITION_TEST_COUNT);
 
-                CreateTestQuestionsForGrammar(questionIds, test);
+                var testQuestions = CreateTestQuestions(questionIds, test);
 
-                return false;
+                return testQuestions;
+            }
+
+            private async Task<IQueryable<Question>> GetQuestionsByAuditionIdAsync(IEnumerable<TestQuestion> testQuestions, Guid? auditionId)
+            {
+                var questions = new List<Question>();
+                foreach (var testQuestion in testQuestions)
+                {
+                    var question = await _context.Questions.FirstOrDefaultAsync(x => x.Id == testQuestion.QuestionId).ConfigureAwait(false);
+                    if (question.AuditionId == auditionId)
+                    {
+                        questions.Add(question);
+                    }
+                }
+                return questions.AsQueryable();
+            }
+            private async Task AddAnswerAsync(List<QuestionDto> questions)
+            {
+                foreach (var question in questions)
+                {
+                    question.Answers = await GetAnswerDtosAsync(question.Id).ConfigureAwait(false);
+                }
+            }
+            private async Task<List<AnswerDto>> GetAnswerDtosAsync(Guid questionId)
+            {
+                var answers = await _context.Answers.Where(x => x.QuestionId == questionId)
+                    .ToListAsync().ConfigureAwait(false);
+                var answerDtos = new List<AnswerDto>();
+                foreach (var answer in answers)
+                {
+                    answerDtos.Add(_mapper.Map<AnswerDto>(answer));
+                }
+
+                return answerDtos;
+            }
+            private List<QuestionDto> MapQuestions(IQueryable<Question> questions)
+            {
+                var questionDtos = new List<QuestionDto>();
+
+                foreach (var question in questions)
+                {
+                    questionDtos.Add(_mapper.Map<QuestionDto>(question));
+                }
+                return questionDtos;
+            }
+            private async Task<IEnumerable<QuestionDto>> GetQuestionDtosAsync(Guid testId, List<TestQuestion> testQuestions, Guid? auditionId = null)
+            {
+                //var testQuestions = await _context.TestQuestions.Where(x => x.TestId == testId).ToListAsync().ConfigureAwait(false);
+
+                var questions = await GetQuestionsByAuditionIdAsync(testQuestions, auditionId).ConfigureAwait(false);
+
+                var questionDtos = MapQuestions(questions);
+
+                await AddAnswerAsync(questionDtos).ConfigureAwait(false);
+
+                return questionDtos;
+            }
+            private async Task<AuditionDto> GetAuditionAsync(Guid testId, Guid auditionId, List<TestQuestion> testQuestions)
+            {
+                var audition = await _context.Auditions
+                    .ProjectTo<AuditionDto>(_mapper.ConfigurationProvider)
+                    .FirstOrDefaultAsync(x => x.Id == auditionId).ConfigureAwait(false);
+                audition.Questions = await GetQuestionDtosAsync(testId, testQuestions, auditionId).ConfigureAwait(false);
+                return audition;
+            }
+            private async Task<TopicDto> GetTopicAsync(Guid topicId)
+            {
+                var topic = await _context.Topics.ProjectTo<TopicDto>(_mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Id == topicId).ConfigureAwait(false);
+                return topic;
             }
         }
 
@@ -214,11 +290,41 @@ namespace Elevel.Application.Features.TestCommands
 
             public DateTimeOffset TestPassingDate { get; set; }
 
-            public Guid AuditionId { get; set; }
+            public AuditionDto Audition { get; set; }
 
-            public Guid EssayId { get; set; }
+            public TopicDto Essay { get; set; }
 
-            public Guid SpeakingId { get; set; }
+            public TopicDto Speaking { get; set; }
+
+            public IEnumerable<QuestionDto> GrammarQuestions { get; set; }
+
+        }
+
+
+        public class QuestionDto
+        {
+            public Guid Id { get; set; }
+            public string NameQuestion { get; set; }
+            public Guid? AuditionId { get; set; }
+            public IEnumerable<AnswerDto> Answers { get; set; }
+        }
+
+        public class AuditionDto
+        {
+            public Guid Id { get; set; }
+            public string AudioFilePath { get; set; }
+            public IEnumerable<QuestionDto> Questions { get; set; }
+        }
+
+        public class AnswerDto
+        {
+            public Guid Id { get; set; }
+            public string NameAnswer { get; set; }
+        }
+        public class TopicDto
+        {
+            public Guid Id { get; set; }
+            public string TopicName { get; set; }
         }
     }
 }

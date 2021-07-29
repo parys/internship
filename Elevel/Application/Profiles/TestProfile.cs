@@ -10,6 +10,10 @@ namespace Elevel.Application.Profiles
         {
             CreateMap<CreateTestCommand.Request, Test>();
             CreateMap<Test, CreateTestCommand.Response>();
+            CreateMap<Question, CreateTestCommand.QuestionDto>();
+            CreateMap<Answer, CreateTestCommand.AnswerDto>();
+            CreateMap<Topic, CreateTestCommand.TopicDto>();
+            CreateMap<Audition, CreateTestCommand.AuditionDto>();
 
             CreateMap<Test, GetAllTestsQuery.TestDTO>();
 
