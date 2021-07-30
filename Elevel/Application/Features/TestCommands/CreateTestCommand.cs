@@ -209,39 +209,41 @@ namespace Elevel.Application.Features.TestCommands
                 return testQuestions;
             }
 
-            private async Task<IQueryable<Question>> GetQuestionsByAuditionIdAsync(IEnumerable<TestQuestion> testQuestions, Guid? auditionId)
+            private async Task<IEnumerable<Question>> GetQuestionsByAuditionIdAsync(IEnumerable<TestQuestion> testQuestions, Guid? auditionId)
             {
-                var questions = new List<Question>();
+                var fileteredQuestions = new List<Question>();
+                var questionsList = await _context.Questions.AsNoTracking().ToListAsync().ConfigureAwait(false);
                 foreach (var testQuestion in testQuestions)
                 {
-                    var question = await _context.Questions.FirstOrDefaultAsync(x => x.Id == testQuestion.QuestionId).ConfigureAwait(false);
+                    var question = questionsList.FirstOrDefault(x => x.Id == testQuestion.QuestionId);
                     if (question.AuditionId == auditionId)
                     {
-                        questions.Add(question);
+                        fileteredQuestions.Add(question);
                     }
                 }
-                return questions.AsQueryable();
+                return fileteredQuestions;
             }
-            private async Task AddAnswerAsync(List<QuestionDto> questions)
+            private async Task AddAnswersAsync(List<QuestionDto> questions)
             {
+                var answerList = _context.Answers.AsNoTracking();
                 foreach (var question in questions)
                 {
-                    question.Answers = await GetAnswerDtosAsync(question.Id).ConfigureAwait(false);
+                    question.Answers = await GetAnswerDtosAsync(question.Id, answerList).ConfigureAwait(false);
                 }
             }
-            private async Task<List<AnswerDto>> GetAnswerDtosAsync(Guid questionId)
+            private async Task<List<AnswerDto>> GetAnswerDtosAsync(Guid questionId, IQueryable<Answer> answerList)
             {
-                var answers = await _context.Answers.Where(x => x.QuestionId == questionId)
+                var filteredAnswers = await answerList.Where(x => x.QuestionId == questionId)
                     .ToListAsync().ConfigureAwait(false);
                 var answerDtos = new List<AnswerDto>();
-                foreach (var answer in answers)
+                foreach (var answer in filteredAnswers)
                 {
                     answerDtos.Add(_mapper.Map<AnswerDto>(answer));
                 }
 
                 return answerDtos;
             }
-            private List<QuestionDto> MapQuestions(IQueryable<Question> questions)
+            private List<QuestionDto> MapQuestions(IEnumerable<Question> questions)
             {
                 var questionDtos = new List<QuestionDto>();
 
@@ -259,7 +261,7 @@ namespace Elevel.Application.Features.TestCommands
 
                 var questionDtos = MapQuestions(questions);
 
-                await AddAnswerAsync(questionDtos).ConfigureAwait(false);
+                await AddAnswersAsync(questionDtos).ConfigureAwait(false);
 
                 return questionDtos;
             }
