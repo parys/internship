@@ -82,14 +82,10 @@ namespace Elevel.Application.Features.TestCommands
 
                 _context.Tests.Add(test);
 
-                if (await CreateTestGrammarQuestionsAsync(test, cancelationtoken).ConfigureAwait(false))
-                {
-                    throw new ValidationException("Not enough Grammar Questions");
-                }
-                if (await CreateTestAuditionQuestionsAsync(test, cancelationtoken).ConfigureAwait(false))
-                {
-                    throw new ValidationException("Not enough Audition Questions");
-                }
+                await CreateTestGrammarQuestionsAsync(test, cancelationtoken).ConfigureAwait(false);
+
+                await CreateTestAuditionQuestionsAsync(test, cancelationtoken).ConfigureAwait(false);
+                
 
                 await _context.SaveChangesAsync(cancelationtoken).ConfigureAwait(false);
 
@@ -154,16 +150,17 @@ namespace Elevel.Application.Features.TestCommands
             /// <param name="test"></param>
             private void CreateTestQuestionsForGrammar(List<Guid> questionIds, Test test)
             {
+                var testQuestions = new List<TestQuestion>();
                 foreach (var question in questionIds)
                 {
-                    var testQuestion = new TestQuestion()
+                    testQuestions.Add(new TestQuestion()
                     {
                         Id = Guid.NewGuid(),
                         TestId = test.Id,
                         QuestionId = question
-                    };
-                    _context.TestQuestions.Add(testQuestion);
+                    });
                 }
+                _context.TestQuestions.AddRange(testQuestions);
             }
             /// <summary>
             /// Generates Grammar test questions for received test
@@ -176,7 +173,7 @@ namespace Elevel.Application.Features.TestCommands
                 var questions = await GetQuestionListAsync(test.Level);
                 if (questions.Count() < GRAMMAR_TEST_COUNT)
                 {
-                    return true;
+                    throw new ValidationException("Not enough Grammar Questions");
                 }
 
                 var questionIds = GetQuestionIds(questions, GRAMMAR_TEST_COUNT);
@@ -197,7 +194,7 @@ namespace Elevel.Application.Features.TestCommands
 
                 if (questions.Count() < AUDITION_TEST_COUNT)
                 {
-                    return true;
+                    throw new ValidationException("Not enough Audition Questions");
                 }
 
                 var questionIds = GetQuestionIds(questions, AUDITION_TEST_COUNT);

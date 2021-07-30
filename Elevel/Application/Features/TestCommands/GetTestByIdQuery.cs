@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using Elevel.Application.Infrastructure;
 using Elevel.Application.Interfaces;
 using Elevel.Domain.Enums;
+using Elevel.Domain.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -39,10 +40,60 @@ namespace Elevel.Application.Features.TestCommands
                 {
                     throw new NotFoundException($"Test with ID: {request.Id}");
                 }
-               
-                return _mapper.Map<Response>(test);
+                var response = _mapper.Map<Response>(test);
+                response.GrammarQuestions = await GetQuestionDtosAsync(response.Id)
+                    .ConfigureAwait(false);
+                response.Audition = await GetAuditionAsync(response.Id, (Guid)test.AuditionId)
+                    .ConfigureAwait(false);
+                response.Essay = await GetTopicAsync((Guid)test.EssayId)
+                    .ConfigureAwait(false);
+                response.Speaking = await GetTopicAsync((Guid)test.SpeakingId)
+                    .ConfigureAwait(false);
+
+                return response;
+            }
+
+            private async Task<IEnumerable<Question>> GetQuestionsByAuditionIdAsync(IEnumerable<TestQuestion> testQuestions, Guid? auditionId)
+            {
+                var testQuestionIds = testQuestions.Select(x => x.QuestionId);
+                return await _context.Questions.Where(x => x.AuditionId == auditionId && testQuestionIds.Contains(x.Id)).ToListAsync().ConfigureAwait(false);
+            }
+            private async Task AddAnswersAsync(List<QuestionDto> questions)
+            {
+                var questionId = questions.Select(x => x.Id);
+                var answerList = await _context.Answers.AsNoTracking().Where(x => questionId.Contains(x.QuestionId)).ToListAsync().ConfigureAwait(false);
+                foreach (var question in questions)
+                {
+                    question.Answers = _mapper.Map<List<AnswerDto>>(answerList.Where(x => x.QuestionId == question.Id));
+                }
+            }
+            private async Task<IEnumerable<QuestionDto>> GetQuestionDtosAsync(Guid testId, Guid? auditionId = null)
+            {
+                var testQuestions = await _context.TestQuestions.Where(x => x.TestId == testId).ToListAsync().ConfigureAwait(false);
+
+                var questions = await GetQuestionsByAuditionIdAsync(testQuestions, auditionId).ConfigureAwait(false);
+
+                var questionDtos = _mapper.Map <List<QuestionDto>>(questions);
+
+                await AddAnswersAsync(questionDtos).ConfigureAwait(false);
+
+                return questionDtos;
+            }
+            private async Task<AuditionDto> GetAuditionAsync(Guid testId, Guid auditionId)
+            {
+                var audition = await _context.Auditions
+                    .ProjectTo<AuditionDto>(_mapper.ConfigurationProvider)
+                    .FirstOrDefaultAsync(x => x.Id == auditionId).ConfigureAwait(false);
+                audition.Questions = await GetQuestionDtosAsync(testId, auditionId).ConfigureAwait(false);
+                return audition;
+            }
+            private async Task<TopicDto> GetTopicAsync(Guid topicId)
+            {
+                return await _context.Topics.ProjectTo<TopicDto>(_mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Id == topicId).ConfigureAwait(false);
             }
         }
+
+        
         public class Response
         {
             public Guid Id { get; set; }
@@ -55,11 +106,41 @@ namespace Elevel.Application.Features.TestCommands
 
             public DateTimeOffset TestPassingDate { get; set; }
 
-            public Guid AuditionId { get; set; }
+            public AuditionDto Audition { get; set; }
 
-            public Guid EssayId { get; set; }
+            public TopicDto Essay { get; set; }
 
-            public Guid SpeakingId { get; set; }
+            public TopicDto Speaking { get; set; }
+
+            public IEnumerable<QuestionDto> GrammarQuestions { get; set; }
+
+        }
+
+
+        public class QuestionDto
+        {
+            public Guid Id { get; set; }
+            public string NameQuestion { get; set; }
+            public Guid? AuditionId { get; set; }
+            public IEnumerable<AnswerDto> Answers { get; set; }
+        }
+
+        public class AuditionDto
+        {
+            public Guid Id { get; set; }
+            public string AudioFilePath { get; set; }
+            public IEnumerable<QuestionDto> Questions { get; set; }
+        }
+
+        public class AnswerDto
+        {
+            public Guid Id { get; set; }
+            public string NameAnswer { get; set; }
+        }
+        public class TopicDto
+        {
+            public Guid Id { get; set; }
+            public string TopicName { get; set; }
         }
     }
 }
