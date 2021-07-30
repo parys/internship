@@ -154,6 +154,7 @@ namespace Elevel.Application.Features.TestCommands
             /// <param name="test"></param>
             private void CreateTestQuestionsForGrammar(List<Guid> questionIds, Test test)
             {
+                var testQuestions = new List<TestQuestion>();
                 foreach (var question in questionIds)
                 {
                     var testQuestion = new TestQuestion()
@@ -162,8 +163,10 @@ namespace Elevel.Application.Features.TestCommands
                         TestId = test.Id,
                         QuestionId = question
                     };
-                    _context.TestQuestions.Add(testQuestion);
+                    testQuestions.Add(testQuestion);
+                    
                 }
+                _context.TestQuestions.AddRange(testQuestions);
             }
             /// <summary>
             /// Generates Grammar test questions for received test

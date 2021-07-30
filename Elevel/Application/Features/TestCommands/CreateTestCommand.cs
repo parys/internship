@@ -162,9 +162,10 @@ namespace Elevel.Application.Features.TestCommands
                         TestId = test.Id,
                         QuestionId = question
                     };
-                    _context.TestQuestions.Add(testQuestion);
+                    
                     testQuestions.Add(testQuestion);
                 }
+                _context.TestQuestions.AddRange(testQuestions);
                 return testQuestions;
             }
             /// <summary>
