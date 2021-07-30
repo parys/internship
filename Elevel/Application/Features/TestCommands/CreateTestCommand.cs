@@ -156,14 +156,12 @@ namespace Elevel.Application.Features.TestCommands
                 var testQuestions = new List<TestQuestion>();
                 foreach (var question in questionIds)
                 {
-                    var testQuestion = new TestQuestion()
+                    testQuestions.Add(new TestQuestion()
                     {
                         Id = Guid.NewGuid(),
                         TestId = test.Id,
                         QuestionId = question
-                    };
-                    
-                    testQuestions.Add(testQuestion);
+                    });
                 }
                 _context.TestQuestions.AddRange(testQuestions);
                 return testQuestions;
@@ -211,56 +209,25 @@ namespace Elevel.Application.Features.TestCommands
             }
 
             private async Task<IEnumerable<Question>> GetQuestionsByAuditionIdAsync(IEnumerable<TestQuestion> testQuestions, Guid? auditionId)
-            {
-                var fileteredQuestions = new List<Question>();
-                var questionsList = await _context.Questions.AsNoTracking().ToListAsync().ConfigureAwait(false);
-                foreach (var testQuestion in testQuestions)
-                {
-                    var question = questionsList.FirstOrDefault(x => x.Id == testQuestion.QuestionId);
-                    if (question.AuditionId == auditionId)
-                    {
-                        fileteredQuestions.Add(question);
-                    }
-                }
-                return fileteredQuestions;
+            { 
+                var testQuestionIds = testQuestions.Select(x => x.QuestionId);
+                return await _context.Questions.Where(x => x.AuditionId == auditionId && testQuestionIds.Contains(x.Id)).ToListAsync().ConfigureAwait(false);
             }
             private async Task AddAnswersAsync(List<QuestionDto> questions)
             {
-                var answerList = _context.Answers.AsNoTracking();
+                var questionId = questions.Select(x => x.Id);
+                var answerList = await _context.Answers.AsNoTracking().Where(x => questionId.Contains(x.QuestionId)).ToListAsync().ConfigureAwait(false);
                 foreach (var question in questions)
                 {
-                    question.Answers = await GetAnswerDtosAsync(question.Id, answerList).ConfigureAwait(false);
+                    question.Answers = _mapper.Map<List<AnswerDto>>(answerList.Where(x => x.QuestionId == question.Id));
                 }
             }
-            private async Task<List<AnswerDto>> GetAnswerDtosAsync(Guid questionId, IQueryable<Answer> answerList)
-            {
-                var filteredAnswers = await answerList.Where(x => x.QuestionId == questionId)
-                    .ToListAsync().ConfigureAwait(false);
-                var answerDtos = new List<AnswerDto>();
-                foreach (var answer in filteredAnswers)
-                {
-                    answerDtos.Add(_mapper.Map<AnswerDto>(answer));
-                }
-
-                return answerDtos;
-            }
-            private List<QuestionDto> MapQuestions(IEnumerable<Question> questions)
-            {
-                var questionDtos = new List<QuestionDto>();
-
-                foreach (var question in questions)
-                {
-                    questionDtos.Add(_mapper.Map<QuestionDto>(question));
-                }
-                return questionDtos;
-            }
+            
             private async Task<IEnumerable<QuestionDto>> GetQuestionDtosAsync(Guid testId, List<TestQuestion> testQuestions, Guid? auditionId = null)
             {
-                //var testQuestions = await _context.TestQuestions.Where(x => x.TestId == testId).ToListAsync().ConfigureAwait(false);
-
                 var questions = await GetQuestionsByAuditionIdAsync(testQuestions, auditionId).ConfigureAwait(false);
 
-                var questionDtos = MapQuestions(questions);
+                var questionDtos = _mapper.Map<List<QuestionDto>>(questions);
 
                 await AddAnswersAsync(questionDtos).ConfigureAwait(false);
 
@@ -276,8 +243,7 @@ namespace Elevel.Application.Features.TestCommands
             }
             private async Task<TopicDto> GetTopicAsync(Guid topicId)
             {
-                var topic = await _context.Topics.ProjectTo<TopicDto>(_mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Id == topicId).ConfigureAwait(false);
-                return topic;
+                return await _context.Topics.ProjectTo<TopicDto>(_mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Id == topicId).ConfigureAwait(false);
             }
         }
 
