@@ -32,6 +32,9 @@ namespace Elevel.Application.Features.TestCommands
 
             private const int GRAMMAR_TEST_COUNT = 12;
             private const int AUDITION_TEST_COUNT = 10;
+            private const int AUDTUION_MIN_COUNT = 1;
+            private const int TOPIC_MIN_COUNT = 2;
+
             public Handler(IApplicationDbContext context, IMapper mapper, UserManager<ApplicationUser> userManager)
             {
                 _context = context;
