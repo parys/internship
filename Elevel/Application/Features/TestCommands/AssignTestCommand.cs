@@ -48,10 +48,6 @@ namespace Elevel.Application.Features.TestCommands
                 {
                     throw new NotFoundException($"User with {request.UserId}");
                 }
-                if (await _userManager.Users.AnyAsync(x => x.Id == request.HrId).ConfigureAwait(false))
-                {
-                    throw new NotFoundException($"Hr with {request.UserId}");
-                }
                 if(request.HrId == request.UserId)
                 {
                     throw new ValidationException("You can't assign test to yourself");
@@ -64,13 +60,13 @@ namespace Elevel.Application.Features.TestCommands
                 var test = _mapper.Map<Test>(request);
 
                 var auditions = await _context.Auditions.AsNoTracking().Where(x => x.Level == request.Level).ToListAsync().ConfigureAwait(false);
-                if (auditions.Count() < 1)
+                if (auditions.Count < 1)
                 {
                     throw new ValidationException("Not enough auditions");
                 }
 
                 var topics = await _context.Topics.AsNoTracking().Where(x => x.Level == request.Level).ToListAsync().ConfigureAwait(false);
-                if (topics.Count() < 2)
+                if (topics.Count < 2)
                 {
                     throw new ValidationException("Not enough topics"); 
                 }
