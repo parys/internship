@@ -21,6 +21,7 @@ namespace Elevel.Application.Features.TestCommands
             public Level? Level { get; set; }
             public DateTimeOffset? TestPassingDate { get; set; }
             public Guid? UserId { get; set; }
+            public Guid? Id { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Response>
@@ -49,6 +50,10 @@ namespace Elevel.Application.Features.TestCommands
                 {
                     tests = tests.Where(x => x.UserId == request.UserId);
                 }
+                if (request.Id.HasValue)
+                {
+                    tests = tests.Where(x => x.Id == request.Id);
+                }
 
 
                 return new Response()
@@ -73,7 +78,9 @@ namespace Elevel.Application.Features.TestCommands
             public Guid Id { get; set; }
             public Level Level { get; set; }
             public long TestNumber { get; set; }
-            public DateTimeOffset TestPassingDate { get; set; }
+            public DateTimeOffset CreationDate { get; set; }
+            public DateTimeOffset? TestPassingDate { get; set; }
+            public DateTimeOffset? AssignmentEndDate { get; set; }
 
             public int? GrammarMark { get; set; }
             public int? AuditionMark { get; set; }

@@ -31,7 +31,6 @@ namespace Elevel.Api.Controllers
         {
             var claims = User.Claims.ToList();
             var userId = claims.FirstOrDefault(x=>x.Type == "uid").Value;
-            var exp = claims.FirstOrDefault(x => x.Type == "exp").Value;
 
             GetApplicationUserByIdQuery.Request request = new GetApplicationUserByIdQuery.Request()
             {

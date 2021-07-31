@@ -54,7 +54,7 @@ namespace Elevel.Application.Features.TestCommands
                 {
                     throw new NotFoundException(nameof(Test), test);
                 }
-                test = _mapper.Map(request, test);
+                test = _mapper.Map<Test>(request);
                 await _context.SaveChangesAsync(cancelationtoken);
                 var testResponse = _mapper.Map<Response>(test);
                 return testResponse;

@@ -2,6 +2,8 @@
 using Elevel.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Elevel.Api.Controllers
@@ -28,12 +30,16 @@ namespace Elevel.Api.Controllers
         [Authorize(Roles = nameof(UserRole.HumanResourceManager)),HttpPost("assign")]
         public async Task<IActionResult> AssignTestAsync([FromBody] AssignTestCommand.Request request)
         {
+            var claims = User.Claims.ToList();
+            var userId = claims.FirstOrDefault(x => x.Type == "uid").Value;
+            request.HrId = Guid.Parse(userId);
+
             var result = await Mediator.Send(request);
             return Ok(result);
         }
 
-        [HttpGet("{id:Guid}")]
-        public async Task<IActionResult> GetTestByIdAsync([FromRoute] GetTestByIdQuery.Request request)
+        [HttpPut("startTest/{id:Guid}")]
+        public async Task<IActionResult> GetTestByIdAsync([FromRoute] StartTestByIdQuery.Request request)
         {
             var result = await Mediator.Send(request);
             return Ok(result);

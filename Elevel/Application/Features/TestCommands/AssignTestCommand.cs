@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,8 +23,9 @@ namespace Elevel.Application.Features.TestCommands
             public Level Level { get; set; }
             public DateTimeOffset AssignmentEndDate { get; set; }
             public Guid UserId { get; set; }
-            public Guid HrId { get; set; }
             public bool Priority { get; set; }
+            [JsonIgnore]
+            public Guid HrId { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Response>
@@ -48,9 +50,9 @@ namespace Elevel.Application.Features.TestCommands
                 {
                     throw new NotFoundException($"User with {request.UserId}");
                 }
-                if (await _userManager.Users.AnyAsync(x => x.Id == request.HrId).ConfigureAwait(false))
+                if (!await _userManager.Users.AnyAsync(x => x.Id == request.HrId).ConfigureAwait(false))
                 {
-                    throw new NotFoundException($"Hr with {request.UserId}");
+                    throw new NotFoundException($"Hr with {request.HrId}");
                 }
                 if(request.HrId == request.UserId)
                 {
