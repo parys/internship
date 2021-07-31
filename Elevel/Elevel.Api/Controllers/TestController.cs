@@ -2,6 +2,8 @@
 using Elevel.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Elevel.Api.Controllers
@@ -10,32 +12,33 @@ namespace Elevel.Api.Controllers
     [Authorize]
     public class TestController : BaseApiController
     {
-
-        //[HttpPut]//To update!!!!!!!!!!!!!
-        //public async Task<IActionResult> SaveUserAnswerAsync([FromBody] UpdateTestQuestionCommand.Request request)
-        //{
-        //    await Mediator.Send(request);
-        //    return Ok();
-        //}
-
         [HttpPost]
         public async Task<IActionResult> CreateTestAsync ([FromBody] CreateTestCommand.Request request)
         {
             var result = await Mediator.Send(request);
+
             return Ok(result);
         }
 
         [Authorize(Roles = nameof(UserRole.HumanResourceManager)),HttpPost("assign")]
         public async Task<IActionResult> AssignTestAsync([FromBody] AssignTestCommand.Request request)
         {
+            var claims = User.Claims.ToList();
+
+            var userId = claims.FirstOrDefault(x => x.Type == "uid").Value;
+
+            request.HrId = Guid.Parse(userId);
+
             var result = await Mediator.Send(request);
+
             return Ok(result);
         }
 
-        [HttpGet("{id:Guid}")]
-        public async Task<IActionResult> GetTestByIdAsync([FromRoute] GetTestByIdQuery.Request request)
+        [HttpPut("startTest/{id:Guid}")]
+        public async Task<IActionResult> StartTestByIdAsync([FromRoute] StartTestByIdQuery.Request request)
         {
             var result = await Mediator.Send(request);
+
             return Ok(result);
         }
 
@@ -43,13 +46,31 @@ namespace Elevel.Api.Controllers
         public async Task<IActionResult> GetAllTestsAsync([FromQuery] GetAllTestsQuery.Request request)
         {
             var result = await Mediator.Send(request);
+
             return Ok(result);
         }
 
         [HttpPut("submit")]
-        public async Task<IActionResult> UpdateTestAsync([FromBody] SubmitTestCommand.Request request)
+        public async Task<IActionResult> SubmitTestAsync([FromBody] SubmitTestCommand.Request request)
         {
             var result = await Mediator.Send(request);
+
+            return Ok(result);
+        }
+
+        [HttpPut("Check/{id:Guid}"), Authorize(Roles = nameof(UserRole.Coach))]
+        public async Task<IActionResult> CheckTestAsync([FromRoute]Guid id, [FromBody] CheckTestCommand.Request request)
+        {
+            var claims = User.Claims.ToList();
+
+            var userId = claims.FirstOrDefault(x => x.Type == "uid").Value;
+
+            request.CoachId = Guid.Parse(userId);
+
+            request.Id = id;
+
+            var result = await Mediator.Send(request);
+
             return Ok(result);
         }
     }

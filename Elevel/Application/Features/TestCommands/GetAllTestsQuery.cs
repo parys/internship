@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,6 +22,7 @@ namespace Elevel.Application.Features.TestCommands
             public Level? Level { get; set; }
             public DateTimeOffset? TestPassingDate { get; set; }
             public Guid? UserId { get; set; }
+            public Guid? Id { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Response>
@@ -49,31 +51,32 @@ namespace Elevel.Application.Features.TestCommands
                 {
                     tests = tests.Where(x => x.UserId == request.UserId);
                 }
+                if (request.Id.HasValue)
+                {
+                    tests = tests.Where(x => x.Id == request.Id);
+                }
 
+                var testsList = _mapper.Map<List<TestDTO>>(tests);
 
                 return new Response()
                 {
-                    CurrentPage = request.CurrentPage,
-                    PageSize = request.PageSize,
-                    RowCount = await tests.CountAsync(),
-                    Results = await tests.Skip(request.SkipCount())
-                    .Take(request.PageSize)
-                    .ProjectTo<TestDTO>(_mapper.ConfigurationProvider)
-                    .OrderBy(x => x.TestNumber)
-                    .ToListAsync().ConfigureAwait(false)
+                    Tests = testsList
                 };
             }
         }
 
-        public class Response : PagedResult<TestDTO>
+        public class Response
         {
+            public List<TestDTO> Tests { get; set; }
         }
         public class TestDTO
         {
             public Guid Id { get; set; }
             public Level Level { get; set; }
             public long TestNumber { get; set; }
-            public DateTimeOffset TestPassingDate { get; set; }
+            public DateTimeOffset CreationDate { get; set; }
+            public DateTimeOffset? TestPassingDate { get; set; }
+            public DateTimeOffset? AssignmentEndDate { get; set; }
 
             public int? GrammarMark { get; set; }
             public int? AuditionMark { get; set; }

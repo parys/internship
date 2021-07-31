@@ -20,14 +20,15 @@ namespace Elevel.Application.Profiles
             CreateMap<Test, SubmitTestCommand.Response>();
             CreateMap<SubmitTestCommand.Request, Test>();
 
-            CreateMap<Test, GetTestByIdQuery.Response>();
-            CreateMap<Test, GetTestByIdQuery.Response>();
-            CreateMap<Question, GetTestByIdQuery.QuestionDto>();
-            CreateMap<Answer, GetTestByIdQuery.AnswerDto>();
-            CreateMap<Topic, GetTestByIdQuery.TopicDto>();
-            CreateMap<Audition, GetTestByIdQuery.AuditionDto>();
+            CreateMap<Test, StartTestByIdQuery.Response>();
+            CreateMap<Test, StartTestByIdQuery.Response>();
+            CreateMap<Question, StartTestByIdQuery.QuestionDto>();
+            CreateMap<Answer, StartTestByIdQuery.AnswerDto>();
+            CreateMap<Topic, StartTestByIdQuery.TopicDto>();
+            CreateMap<Audition, StartTestByIdQuery.AuditionDto>();
 
             CreateMap<AssignTestCommand.Request, Test>();
+
         }
     }
 }
