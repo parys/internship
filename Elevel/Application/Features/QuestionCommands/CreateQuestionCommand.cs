@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using Elevel.Application.Interfaces;
+using Elevel.Domain.Enums;
 using Elevel.Domain.Models;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,9 +16,10 @@ namespace Elevel.Application.Features.QuestionCommands
         public class Request : IRequest<Response>
         {
             public string NameQuestion { get; set; }
-            public DateTimeOffset CreationDate { get; set; }
-            public Guid AnswerId { get; set; }
-            public Guid? AuditionId { get; set; }
+            public Level Level { get; set; }
+            public long QuestionNumber { get; set; }
+            public List<Answer> Answers { get; set; }
+            public Guid CreatorId { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Response>
@@ -30,7 +34,12 @@ namespace Elevel.Application.Features.QuestionCommands
             public async Task<Response> Handle(Request request, CancellationToken cancelationtoken)
             {
                 var question = _mapper.Map<Question>(request);
-
+                 
+                question.NameQuestion = request.NameQuestion;
+                question.Level = request.Level;
+                question.QuestionNumber = request.QuestionNumber;
+                question.Answers = request.Answers;
+                question.CreatorId = request.CreatorId;
                 _context.Questions.Add(question);
                 await _context.SaveChangesAsync(cancelationtoken);
 
