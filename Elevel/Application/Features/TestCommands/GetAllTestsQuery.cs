@@ -34,7 +34,7 @@ namespace Elevel.Application.Features.TestCommands
                 _context = context;
                 _mapper = mapper;
             }
-            public async Task<Response> Handle(Request request, CancellationToken cancelationtoken)
+            public Task<Response> Handle(Request request, CancellationToken cancelationtoken)
             {
                 var tests = _context.Tests.AsNoTracking();
 
@@ -58,10 +58,10 @@ namespace Elevel.Application.Features.TestCommands
 
                 var testsList = _mapper.Map<List<TestDTO>>(tests);
 
-                return new Response()
+                return Task.FromResult(new Response()
                 {
                     Tests = testsList
-                };
+                });
             }
         }
 
