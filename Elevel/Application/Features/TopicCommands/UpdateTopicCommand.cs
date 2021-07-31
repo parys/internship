@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Elevel.Application.Infrastructure;
 using Elevel.Application.Interfaces;
 using Elevel.Domain.Enums;
 using MediatR;
@@ -16,15 +17,8 @@ namespace Elevel.Application.Features.TopicCommands
             public Guid Id { get; set; }
             public string TopicName { get; set; }
             public Level Level { get; set; }
+            public Guid CreatorId { get; set; }
         }
-
-        //public class Validator : UpsertTopicCommand.Validator<Request>
-        //{
-        //    public Validator()
-        //    {
-        //        RuleFor(v => v.Id).NotEmpty();
-        //    }
-        //}
 
         public class Handler : IRequestHandler<Request, Response>
         {
@@ -39,16 +33,27 @@ namespace Elevel.Application.Features.TopicCommands
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
+                if (String.IsNullOrEmpty(request.TopicName))
+                {
+                    throw new ValidationException("The name of topic can't be empty or null!");
+                }
+
+                if ((int)request.Level < 1 || (int)request.Level > 5)
+                {
+                    throw new ValidationException("The level field must be held within the interval [1; 5]!");
+                }
+
                 var topic = await _context.Topics
                     .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
                 if (topic == null)
                 {
-                    return null;
+                    throw new NotFoundException($"The topic with the ID = {request.Id}");
                 }
 
                 topic = _mapper.Map(request, topic);
                 await _context.SaveChangesAsync(cancellationToken);
+
                 return new Response { Id = topic.Id };
             }
         }

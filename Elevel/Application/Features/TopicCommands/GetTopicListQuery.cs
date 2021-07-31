@@ -66,7 +66,7 @@ namespace Elevel.Application.Features.TopicCommands
             public string TopicName { get; set; }
             public Level Level { get; set; }
             public DateTimeOffset CreationDate { get; set; }
-            public bool Deleted { get; set; }
+            public Guid CreatorId { get; set; }
         }
     }
 }
