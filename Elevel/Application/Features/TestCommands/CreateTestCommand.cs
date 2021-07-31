@@ -58,13 +58,13 @@ namespace Elevel.Application.Features.TestCommands
                 var test = _mapper.Map<Test>(request);
 
                 var auditions = await _context.Auditions.AsNoTracking().Where(x => x.Level == request.Level).ToListAsync().ConfigureAwait(false);
-                if (auditions.Count < 1)
+                if (auditions.Count < AUDTUION_MIN_COUNT)
                 {
                     throw new ValidationException("Not enough auditions");
                 }
 
                 var topics = await _context.Topics.AsNoTracking().Where(x => x.Level == request.Level).ToListAsync().ConfigureAwait(false);
-                if (topics.Count < 2)
+                if (topics.Count < TOPIC_MIN_COUNT)
                 {
                     throw new ValidationException("Not enough topics");
                 }
