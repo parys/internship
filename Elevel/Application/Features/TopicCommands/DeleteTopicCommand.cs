@@ -32,7 +32,7 @@ namespace Elevel.Application.Features.TopicCommands
                     .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
                 if (topic == null)
                 {
-                    return null;
+                    throw new NotFoundException($"The topic with the ID = {request.Id}");
                 }
                 topic.Deleted = true;
 
