@@ -90,7 +90,7 @@ namespace Elevel.Application.Features.TestCommands
             }
             private async Task<IEnumerable<QuestionDto>> GetQuestionDtosAsync(Guid testId, Guid? auditionId = null)
             {
-                var testQuestions = await _context.TestQuestions.Where(x => x.TestId == testId).ToListAsync();
+                var testQuestions = await _context.TestQuestions.AsNoTracking().Where(x => x.TestId == testId).ToListAsync();
 
                 var questions = await GetQuestionsByAuditionIdAsync(testQuestions, auditionId);
 
