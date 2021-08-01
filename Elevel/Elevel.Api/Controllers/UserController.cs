@@ -1,4 +1,5 @@
-﻿using Elevel.Application.Features.ApplicationUserFeatures;
+﻿using Elevel.Application.Extensions;
+using Elevel.Application.Features.ApplicationUserFeatures;
 using Elevel.Application.Interfaces;
 using Elevel.Domain.Authentication;
 using Microsoft.AspNetCore.Mvc;
@@ -29,14 +30,12 @@ namespace Elevel.Api.Controllers
         [HttpGet("info")]
         public async Task<IActionResult> UserInfo()
         {
-            var claims = User.Claims.ToList();
-            var userId = claims.FirstOrDefault(x=>x.Type == "uid").Value;
             GetApplicationUserByIdQuery.Request request = new GetApplicationUserByIdQuery.Request()
             {
-                Id = Guid.Parse(userId)
+                Id = User.GetLoggedInUserId()
             };
             var result = await Mediator.Send(request);
-
+            
             return Ok(result);
         }
     }

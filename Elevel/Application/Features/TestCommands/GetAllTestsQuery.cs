@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,20 +20,28 @@ namespace Elevel.Application.Features.TestCommands
         public class Request : PagedQueryBase, IRequest<Response>
         {
             public Level? Level { get; set; }
+
             public DateTimeOffset? TestPassingDate { get; set; }
+
             public Guid? UserId { get; set; }
+
+            public Guid? Id { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IApplicationDbContext _context;
+
             private readonly IMapper _mapper;
+
             public Handler(IApplicationDbContext context, IMapper mapper)
             {
                 _context = context;
+
                 _mapper = mapper;
             }
-            public async Task<Response> Handle(Request request, CancellationToken cancelationtoken)
+
+            public Task<Response> Handle(Request request, CancellationToken cancelationtoken)
             {
                 var tests = _context.Tests.AsNoTracking();
 
@@ -49,36 +58,46 @@ namespace Elevel.Application.Features.TestCommands
                 {
                     tests = tests.Where(x => x.UserId == request.UserId);
                 }
-
-
-                return new Response()
+                if (request.Id.HasValue)
                 {
-                    CurrentPage = request.CurrentPage,
-                    PageSize = request.PageSize,
-                    RowCount = await tests.CountAsync(),
-                    Results = await tests.Skip(request.SkipCount())
-                    .Take(request.PageSize)
-                    .ProjectTo<TestDTO>(_mapper.ConfigurationProvider)
-                    .OrderBy(x => x.TestNumber)
-                    .ToListAsync().ConfigureAwait(false)
-                };
+                    tests = tests.Where(x => x.Id == request.Id);
+                }
+
+                var testsList = _mapper.Map<List<TestDTO>>(tests);
+
+                return Task.FromResult(new Response()
+                {
+                    Tests = testsList
+                });
             }
         }
 
-        public class Response : PagedResult<TestDTO>
+        public class Response
         {
+            public List<TestDTO> Tests { get; set; }
         }
         public class TestDTO
         {
             public Guid Id { get; set; }
+
             public Level Level { get; set; }
+
             public long TestNumber { get; set; }
-            public DateTimeOffset TestPassingDate { get; set; }
+
+            public DateTimeOffset CreationDate { get; set; }
+
+            public DateTimeOffset? TestPassingDate { get; set; }
+
+            public DateTimeOffset? AssignmentEndDate { get; set; }
 
             public int? GrammarMark { get; set; }
+
             public int? AuditionMark { get; set; }
+
             public int? EssayMark { get; set; }
+
             public int? SpeakingMark { get; set; }
+
             public string Comment { get; set; }
 
             public Guid UserId { get; set; }

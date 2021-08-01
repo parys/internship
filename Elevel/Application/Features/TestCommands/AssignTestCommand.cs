@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,25 +20,41 @@ namespace Elevel.Application.Features.TestCommands
         public class Request : IRequest<Response>
         {
             public Level Level { get; set; }
+
             public DateTimeOffset AssignmentEndDate { get; set; }
+
             public Guid UserId { get; set; }
-            public Guid HrId { get; set; }
+
             public bool Priority { get; set; }
+
+            [JsonIgnore]
+            public Guid HrId { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IApplicationDbContext _context;
+
             private readonly IMapper _mapper;
+
             private static Random _rand = new Random();
+
             private readonly UserManager<ApplicationUser> _userManager;
 
             private const int GRAMMAR_TEST_COUNT = 12;
+
             private const int AUDITION_TEST_COUNT = 10;
+
+            private const int AUDTUION_MIN_COUNT = 1;
+
+            private const int TOPIC_MIN_COUNT = 2;
+
             public Handler(IApplicationDbContext context, IMapper mapper, UserManager<ApplicationUser> userManager)
             {
                 _context = context;
+
                 _mapper = mapper;
+
                 _userManager = userManager;
 
             }
@@ -48,14 +64,12 @@ namespace Elevel.Application.Features.TestCommands
                 {
                     throw new NotFoundException($"User with {request.UserId}");
                 }
-                if (await _userManager.Users.AnyAsync(x => x.Id == request.HrId).ConfigureAwait(false))
-                {
-                    throw new NotFoundException($"Hr with {request.UserId}");
-                }
-                if(request.HrId == request.UserId)
+
+                if (request.HrId == request.UserId)
                 {
                     throw new ValidationException("You can't assign test to yourself");
                 }
+
                 if (request.AssignmentEndDate.Date < DateTimeOffset.UtcNow.Date)
                 {
                     throw new ValidationException($"assignmentEndDate can't be in the past ({request.AssignmentEndDate})");
@@ -64,32 +78,32 @@ namespace Elevel.Application.Features.TestCommands
                 var test = _mapper.Map<Test>(request);
 
                 var auditions = await _context.Auditions.AsNoTracking().Where(x => x.Level == request.Level).ToListAsync().ConfigureAwait(false);
-                if (auditions.Count() < 1)
+
+                if (auditions.Count < AUDTUION_MIN_COUNT)
                 {
                     throw new ValidationException("Not enough auditions");
                 }
 
                 var topics = await _context.Topics.AsNoTracking().Where(x => x.Level == request.Level).ToListAsync().ConfigureAwait(false);
-                if (topics.Count() < 2)
+                if (topics.Count < TOPIC_MIN_COUNT)
                 {
-                    throw new ValidationException("Not enough topics"); 
+                    throw new ValidationException("Not enough topics");
                 }
 
                 test.Id = Guid.NewGuid();
+
                 test.EssayId = FindTopic(topics);
+
                 test.SpeakingId = FindTopic(topics, test.EssayId);
+
                 test.AuditionId = FindAudition(auditions);
 
                 _context.Tests.Add(test);
 
-                if (await CreateTestGrammarQuestionsAsync(test, cancelationtoken).ConfigureAwait(false))
-                {
-                    throw new ValidationException("Not enough Grammar Questions");
-                }
-                if (await CreateTestAuditionQuestionsAsync(test, cancelationtoken).ConfigureAwait(false))
-                {
-                    throw new ValidationException("Not enough Audition Questions");
-                }
+                await CreateTestGrammarQuestionsAsync(test, cancelationtoken).ConfigureAwait(false);
+
+                await CreateTestAuditionQuestionsAsync(test, cancelationtoken).ConfigureAwait(false);
+
 
                 await _context.SaveChangesAsync(cancelationtoken).ConfigureAwait(false);
 
@@ -105,6 +119,7 @@ namespace Elevel.Application.Features.TestCommands
             private Guid? FindTopic(IEnumerable<Topic> topics, Guid? EssayId = null)
             {
                 var filteredTopics = topics.Where(x => x.Id != EssayId);
+
                 return filteredTopics.ElementAt(_rand.Next(0, topics.Count() - 1)).Id;
             }
             /// <summary>
@@ -143,6 +158,7 @@ namespace Elevel.Application.Features.TestCommands
                 for (int i = 0; i < count; i++)
                 {
                     var filteredQuestions = questions.Where(x => !questionIds.Contains(x.Id));
+
                     questionIds.Add(filteredQuestions.ElementAt(_rand.Next(0, filteredQuestions.Count() - 1)).Id); ;
                 }
                 return questionIds;
@@ -154,16 +170,20 @@ namespace Elevel.Application.Features.TestCommands
             /// <param name="test"></param>
             private void CreateTestQuestionsForGrammar(List<Guid> questionIds, Test test)
             {
+                var testQuestions = new List<TestQuestion>();
+
                 foreach (var question in questionIds)
                 {
-                    var testQuestion = new TestQuestion()
+                    testQuestions.Add(new TestQuestion()
                     {
                         Id = Guid.NewGuid(),
+
                         TestId = test.Id,
+
                         QuestionId = question
-                    };
-                    _context.TestQuestions.Add(testQuestion);
+                    });
                 }
+                _context.TestQuestions.AddRange(testQuestions);
             }
             /// <summary>
             /// Generates Grammar test questions for received test
@@ -174,9 +194,10 @@ namespace Elevel.Application.Features.TestCommands
             private async Task<bool> CreateTestGrammarQuestionsAsync(Test test, CancellationToken cancelationtoken)
             {
                 var questions = await GetQuestionListAsync(test.Level);
+
                 if (questions.Count() < GRAMMAR_TEST_COUNT)
                 {
-                    return true;
+                    throw new ValidationException("Not enough Grammar Questions");
                 }
 
                 var questionIds = GetQuestionIds(questions, GRAMMAR_TEST_COUNT);
@@ -197,7 +218,7 @@ namespace Elevel.Application.Features.TestCommands
 
                 if (questions.Count() < AUDITION_TEST_COUNT)
                 {
-                    return true;
+                    throw new ValidationException("Not enough Audition Questions");
                 }
 
                 var questionIds = GetQuestionIds(questions, AUDITION_TEST_COUNT);

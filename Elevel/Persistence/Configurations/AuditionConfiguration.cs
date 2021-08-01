@@ -11,7 +11,7 @@ namespace Elevel.Infrastructure.Persistence.Configurations
             builder.ToTable("Auditions");
 
             builder.Property(x => x.CreationDate)
-                .HasDefaultValueSql("GETUTCDATE()");
+                .HasDefaultValueSql("SYSDATETIMEOFFSET()");
 
             builder.HasQueryFilter(x => !x.Deleted);
 

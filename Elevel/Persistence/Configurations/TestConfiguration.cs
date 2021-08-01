@@ -43,7 +43,7 @@ namespace Elevel.Infrastructure.Persistence.Configurations
                 .WithOne(x => x.Test);
 
             builder.Property(x => x.CreationDate)
-                .HasDefaultValueSql("GETUTCDATE()");
+                .HasDefaultValueSql("SYSDATETIMEOFFSET()");
         }
     }
 }
