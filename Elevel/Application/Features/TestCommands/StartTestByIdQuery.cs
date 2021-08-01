@@ -17,7 +17,6 @@ namespace Elevel.Application.Features.TestCommands
 {
     public class StartTestByIdQuery
     {
-        public class Request: IRequest<Response>
         public class Request : IRequest<Response>
         {
             public Guid Id { get; set; }
@@ -36,21 +35,16 @@ namespace Elevel.Application.Features.TestCommands
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var test = await _context.Tests.AsNoTracking().FirstOrDefaultAsync(x => x.Id == request.Id).ConfigureAwait(false);
-                if(test == null)
-                var test = await _context.Tests.FirstOrDefaultAsync(x => x.Id == request.Id);
+                var test = await _context.Tests.FirstOrDefaultAsync(x => x.Id == request.Id).ConfigureAwait(false);
 
                 if (test == null)
                 {
                     throw new NotFoundException($"Test with ID: {request.Id}");
                 }
-                if(!test.HrId.HasValue){
-
                 if (!test.HrId.HasValue)
                 {
                     throw new ValidationException("This test is not assigned");
                 }
-                if(DateTimeOffset.Compare(((DateTimeOffset)test.AssignmentEndDate).Date, DateTimeOffset.UtcNow.Date) < 0)
 
                 if (DateTimeOffset.Compare(((DateTimeOffset)test.AssignmentEndDate).Date, DateTimeOffset.UtcNow.Date) < 0)
                 {
@@ -119,6 +113,7 @@ namespace Elevel.Application.Features.TestCommands
                 return await _context.Topics.ProjectTo<TopicDto>(_mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Id == topicId);
             }
         }
+
 
 
         public class Response
