@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,6 +18,7 @@ namespace Elevel.Application.Features.TestCommands
     {
         public class Request : IRequest<Response>
         {
+            [JsonIgnore]
             public Guid Id { get; set; }
 
             public IEnumerable<Guid> GrammarAnswers { get; set; }
@@ -32,21 +34,27 @@ namespace Elevel.Application.Features.TestCommands
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IApplicationDbContext _context;
+
             private readonly IMapper _mapper;
+
             private const int GRAMMAR_QUESTION_COUNT = 12;
+
             private const int AUDITION_QUESTION_COUNT = 10;
+
             private const int ESSAY_MAX_LENGTH = 512;
+
             private const int TEST_DURATION = 60; //minutes
 
             public Handler(IApplicationDbContext context, IMapper mapper)
             {
                 _context = context;
+
                 _mapper = mapper;
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancelationtoken)
             {
-                var test = await _context.Tests.FirstOrDefaultAsync(a => a.Id == request.Id, cancelationtoken).ConfigureAwait(false);
+                var test = await _context.Tests.FirstOrDefaultAsync(a => a.Id == request.Id, cancelationtoken);
 
                 if (test is null)
                 {
@@ -67,11 +75,11 @@ namespace Elevel.Application.Features.TestCommands
 
                 await CheckAnswersForUniqueQuestionAsync(request.AuditionAnswers, AUDITION_QUESTION_COUNT);
 
-                test = _mapper.Map<Test>(request);
+                test = _mapper.Map(request, test);
 
-                test.GrammarMark = await EvaluateTestAsync(request.GrammarAnswers).ConfigureAwait(false);
+                test.GrammarMark = await EvaluateTestAsync(request.GrammarAnswers);
 
-                test.AuditionMark = await EvaluateTestAsync(request.AuditionAnswers).ConfigureAwait(false);
+                test.AuditionMark = await EvaluateTestAsync(request.AuditionAnswers);
 
                 await _context.SaveChangesAsync(cancelationtoken).ConfigureAwait(false);
 
@@ -113,11 +121,13 @@ namespace Elevel.Application.Features.TestCommands
         public class Response
         {
             public Guid Id { get; set; }
+
             public Level Level { get; set; }
 
             public DateTimeOffset TestPassingDate { get; set; }
 
             public int GrammarMark { get; set; }
+
             public int AuditionMark { get; set; }
 
             public Guid UserId { get; set; }

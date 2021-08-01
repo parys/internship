@@ -20,9 +20,13 @@ namespace Elevel.Application.Features.TestCommands
         public class Request : IRequest<Response>
         {
             public Level Level { get; set; }
+
             public DateTimeOffset AssignmentEndDate { get; set; }
+
             public Guid UserId { get; set; }
+
             public bool Priority { get; set; }
+
             [JsonIgnore]
             public Guid HrId { get; set; }
         }
@@ -30,19 +34,27 @@ namespace Elevel.Application.Features.TestCommands
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IApplicationDbContext _context;
+
             private readonly IMapper _mapper;
+
             private static Random _rand = new Random();
+
             private readonly UserManager<ApplicationUser> _userManager;
 
             private const int GRAMMAR_TEST_COUNT = 12;
+
             private const int AUDITION_TEST_COUNT = 10;
+
             private const int AUDTUION_MIN_COUNT = 1;
+
             private const int TOPIC_MIN_COUNT = 2;
 
             public Handler(IApplicationDbContext context, IMapper mapper, UserManager<ApplicationUser> userManager)
             {
                 _context = context;
+
                 _mapper = mapper;
+
                 _userManager = userManager;
 
             }
@@ -66,6 +78,7 @@ namespace Elevel.Application.Features.TestCommands
                 var test = _mapper.Map<Test>(request);
 
                 var auditions = await _context.Auditions.AsNoTracking().Where(x => x.Level == request.Level).ToListAsync().ConfigureAwait(false);
+
                 if (auditions.Count < AUDTUION_MIN_COUNT)
                 {
                     throw new ValidationException("Not enough auditions");
@@ -78,8 +91,11 @@ namespace Elevel.Application.Features.TestCommands
                 }
 
                 test.Id = Guid.NewGuid();
+
                 test.EssayId = FindTopic(topics);
+
                 test.SpeakingId = FindTopic(topics, test.EssayId);
+
                 test.AuditionId = FindAudition(auditions);
 
                 _context.Tests.Add(test);
@@ -103,6 +119,7 @@ namespace Elevel.Application.Features.TestCommands
             private Guid? FindTopic(IEnumerable<Topic> topics, Guid? EssayId = null)
             {
                 var filteredTopics = topics.Where(x => x.Id != EssayId);
+
                 return filteredTopics.ElementAt(_rand.Next(0, topics.Count() - 1)).Id;
             }
             /// <summary>
@@ -141,6 +158,7 @@ namespace Elevel.Application.Features.TestCommands
                 for (int i = 0; i < count; i++)
                 {
                     var filteredQuestions = questions.Where(x => !questionIds.Contains(x.Id));
+
                     questionIds.Add(filteredQuestions.ElementAt(_rand.Next(0, filteredQuestions.Count() - 1)).Id); ;
                 }
                 return questionIds;
@@ -153,12 +171,15 @@ namespace Elevel.Application.Features.TestCommands
             private void CreateTestQuestionsForGrammar(List<Guid> questionIds, Test test)
             {
                 var testQuestions = new List<TestQuestion>();
+
                 foreach (var question in questionIds)
                 {
                     testQuestions.Add(new TestQuestion()
                     {
                         Id = Guid.NewGuid(),
+
                         TestId = test.Id,
+
                         QuestionId = question
                     });
                 }
@@ -173,6 +194,7 @@ namespace Elevel.Application.Features.TestCommands
             private async Task<bool> CreateTestGrammarQuestionsAsync(Test test, CancellationToken cancelationtoken)
             {
                 var questions = await GetQuestionListAsync(test.Level);
+
                 if (questions.Count() < GRAMMAR_TEST_COUNT)
                 {
                     throw new ValidationException("Not enough Grammar Questions");

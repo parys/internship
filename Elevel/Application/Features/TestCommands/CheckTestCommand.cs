@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Elevel.Application.Infrastructure;
 using Elevel.Application.Interfaces;
+using Elevel.Domain.Enums;
+using Elevel.Domain.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -17,10 +19,14 @@ namespace Elevel.Application.Features.TestCommands
         {
 
             public int SpeakingMark { get; set; }
+
             public int EssayMark { get; set; }
+
             public string Comment { get; set; }
+
             [JsonIgnore]
             public Guid Id { get; set; }
+
             [JsonIgnore]
             public Guid CoachId { get; set; }
         }
@@ -47,7 +53,8 @@ namespace Elevel.Application.Features.TestCommands
                     throw new NotFoundException($"Test with Id {request.Id}");
                 }
 
-                if (test.CoachId != request.CoachId)
+                if (test.CoachId != request.CoachId 
+                    || test.UserId == request.CoachId)
                 {
                     throw new ValidationException("You can't check this test");
                 }
@@ -74,11 +81,23 @@ namespace Elevel.Application.Features.TestCommands
 
                 await _context.SaveChangesAsync();
 
-                return new Response();
+
+                return _mapper.Map<Response>(test);
             }
         }
         public class Response
         {
+            public Level Level { get; set; }
+
+            public long TestNumber { get; set; }
+
+            public int? EssayMark { get; set; }
+
+            public int? SpeakingMark { get; set; }
+
+            public string Comment { get; set; }
+
+            public Guid? CoachId { get; set; }
         }
     }
 }

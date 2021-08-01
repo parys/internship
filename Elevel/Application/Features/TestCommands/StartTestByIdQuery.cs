@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,11 +25,13 @@ namespace Elevel.Application.Features.TestCommands
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IApplicationDbContext _context;
+
             private readonly IMapper _mapper;
 
             public Handler(IApplicationDbContext context, IMapper mapper)
             {
                 _mapper = mapper;
+
                 _context = context;
             }
 
@@ -36,17 +39,16 @@ namespace Elevel.Application.Features.TestCommands
             {
                 var test = await _context.Tests.FirstOrDefaultAsync(x => x.Id == request.Id);
 
-                if (test == null)
+                if(test == null)
                 {
                     throw new NotFoundException($"Test with ID: {request.Id}");
                 }
 
-                if (!test.HrId.HasValue)
-                {
+                if(!test.HrId.HasValue){
                     throw new ValidationException("This test is not assigned");
                 }
 
-                if (DateTimeOffset.Compare(((DateTimeOffset)test.AssignmentEndDate).Date, DateTimeOffset.UtcNow.Date) < 0)
+                if(DateTimeOffset.Compare(((DateTimeOffset)test.AssignmentEndDate).Date, DateTimeOffset.UtcNow.Date) < 0)
                 {
                     throw new ValidationException("Assignment end date has alredy passed");
                 }
@@ -59,7 +61,6 @@ namespace Elevel.Application.Features.TestCommands
                 test.TestPassingDate = DateTimeOffset.UtcNow;
 
                 await _context.SaveChangesAsync(cancellationToken);
-
 
                 var response = _mapper.Map<Response>(test);
 
@@ -82,7 +83,9 @@ namespace Elevel.Application.Features.TestCommands
             private async Task AddAnswersAsync(List<QuestionDto> questions)
             {
                 var questionId = questions.Select(x => x.Id);
+
                 var answerList = await _context.Answers.AsNoTracking().Where(x => questionId.Contains(x.QuestionId)).ToListAsync();
+
                 foreach (var question in questions)
                 {
                     question.Answers = _mapper.Map<List<AnswerDto>>(answerList.Where(x => x.QuestionId == question.Id));
@@ -105,7 +108,9 @@ namespace Elevel.Application.Features.TestCommands
                 var audition = await _context.Auditions
                     .ProjectTo<AuditionDto>(_mapper.ConfigurationProvider)
                     .FirstOrDefaultAsync(x => x.Id == auditionId);
+
                 audition.Questions = await GetQuestionDtosAsync(testId, auditionId);
+
                 return audition;
             }
             private async Task<TopicDto> GetTopicAsync(Guid topicId)
@@ -113,6 +118,7 @@ namespace Elevel.Application.Features.TestCommands
                 return await _context.Topics.ProjectTo<TopicDto>(_mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.Id == topicId);
             }
         }
+
 
 
         public class Response
@@ -140,26 +146,33 @@ namespace Elevel.Application.Features.TestCommands
         public class QuestionDto
         {
             public Guid Id { get; set; }
+
             public string NameQuestion { get; set; }
+
             public Guid? AuditionId { get; set; }
+
             public IEnumerable<AnswerDto> Answers { get; set; }
         }
 
         public class AuditionDto
         {
             public Guid Id { get; set; }
+
             public string AudioFilePath { get; set; }
+
             public IEnumerable<QuestionDto> Questions { get; set; }
         }
 
         public class AnswerDto
         {
             public Guid Id { get; set; }
+
             public string NameAnswer { get; set; }
         }
         public class TopicDto
         {
             public Guid Id { get; set; }
+
             public string TopicName { get; set; }
         }
     }
