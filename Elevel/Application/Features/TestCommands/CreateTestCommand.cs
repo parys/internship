@@ -212,7 +212,7 @@ namespace Elevel.Application.Features.TestCommands
             }
 
             private async Task<IEnumerable<Question>> GetQuestionsByAuditionIdAsync(IEnumerable<TestQuestion> testQuestions, Guid? auditionId)
-            { 
+            {
                 var testQuestionIds = testQuestions.Select(x => x.QuestionId);
                 return await _context.Questions.Where(x => x.AuditionId == auditionId && testQuestionIds.Contains(x.Id)).ToListAsync().ConfigureAwait(false);
             }
@@ -225,7 +225,7 @@ namespace Elevel.Application.Features.TestCommands
                     question.Answers = _mapper.Map<List<AnswerDto>>(answerList.Where(x => x.QuestionId == question.Id));
                 }
             }
-            
+
             private async Task<IEnumerable<QuestionDto>> GetQuestionDtosAsync(Guid testId, List<TestQuestion> testQuestions, Guid? auditionId = null)
             {
                 var questions = await GetQuestionsByAuditionIdAsync(testQuestions, auditionId).ConfigureAwait(false);

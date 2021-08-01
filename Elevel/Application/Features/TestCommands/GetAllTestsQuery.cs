@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -33,7 +34,7 @@ namespace Elevel.Application.Features.TestCommands
                 _context = context;
                 _mapper = mapper;
             }
-            public async Task<Response> Handle(Request request, CancellationToken cancelationtoken)
+            public Task<Response> Handle(Request request, CancellationToken cancelationtoken)
             {
                 var tests = _context.Tests.AsNoTracking();
 
@@ -55,23 +56,18 @@ namespace Elevel.Application.Features.TestCommands
                     tests = tests.Where(x => x.Id == request.Id);
                 }
 
+                var testsList = _mapper.Map<List<TestDTO>>(tests);
 
-                return new Response()
+                return Task.FromResult(new Response()
                 {
-                    CurrentPage = request.CurrentPage,
-                    PageSize = request.PageSize,
-                    RowCount = await tests.CountAsync(),
-                    Results = await tests.Skip(request.SkipCount())
-                    .Take(request.PageSize)
-                    .ProjectTo<TestDTO>(_mapper.ConfigurationProvider)
-                    .OrderBy(x => x.TestNumber)
-                    .ToListAsync().ConfigureAwait(false)
-                };
+                    Tests = testsList
+                });
             }
         }
 
-        public class Response : PagedResult<TestDTO>
+        public class Response
         {
+            public List<TestDTO> Tests { get; set; }
         }
         public class TestDTO
         {

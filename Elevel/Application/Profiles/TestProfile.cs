@@ -28,6 +28,7 @@ namespace Elevel.Application.Profiles
             CreateMap<Audition, StartTestByIdQuery.AuditionDto>();
 
             CreateMap<AssignTestCommand.Request, Test>();
+
         }
     }
 }

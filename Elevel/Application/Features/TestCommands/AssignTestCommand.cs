@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,8 +22,9 @@ namespace Elevel.Application.Features.TestCommands
             public Level Level { get; set; }
             public DateTimeOffset AssignmentEndDate { get; set; }
             public Guid UserId { get; set; }
-            public Guid HrId { get; set; }
             public bool Priority { get; set; }
+            [JsonIgnore]
+            public Guid HrId { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Response>
@@ -51,10 +52,12 @@ namespace Elevel.Application.Features.TestCommands
                 {
                     throw new NotFoundException($"User with {request.UserId}");
                 }
-                if(request.HrId == request.UserId)
+
+                if (request.HrId == request.UserId)
                 {
                     throw new ValidationException("You can't assign test to yourself");
                 }
+
                 if (request.AssignmentEndDate.Date < DateTimeOffset.UtcNow.Date)
                 {
                     throw new ValidationException($"assignmentEndDate can't be in the past ({request.AssignmentEndDate})");
@@ -71,7 +74,7 @@ namespace Elevel.Application.Features.TestCommands
                 var topics = await _context.Topics.AsNoTracking().Where(x => x.Level == request.Level).ToListAsync().ConfigureAwait(false);
                 if (topics.Count < TOPIC_MIN_COUNT)
                 {
-                    throw new ValidationException("Not enough topics"); 
+                    throw new ValidationException("Not enough topics");
                 }
 
                 test.Id = Guid.NewGuid();
@@ -84,7 +87,7 @@ namespace Elevel.Application.Features.TestCommands
                 await CreateTestGrammarQuestionsAsync(test, cancelationtoken).ConfigureAwait(false);
 
                 await CreateTestAuditionQuestionsAsync(test, cancelationtoken).ConfigureAwait(false);
-                
+
 
                 await _context.SaveChangesAsync(cancelationtoken).ConfigureAwait(false);
 
