@@ -2,10 +2,8 @@
 using Elevel.Application.Interfaces;
 using Elevel.Domain.Enums;
 using Elevel.Domain.Models;
-using Elevel.Domain.Validators;
 using FluentValidation;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,23 +18,30 @@ namespace Elevel.Application.Features.TopicCommands
             public Level Level { get; set; }
         }
 
+        public class Validator : AbstractValidator<Topic>
+        {
+            public Validator()
+            {
+                RuleFor(x => x.TopicName).NotEmpty().WithMessage("The topic title can't be empty or null!");
+                RuleFor(x => x.Level).IsInEnum().WithMessage("The level must be between 1 and 5!");
+            }
+        }
+
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IApplicationDbContext _context;
             private readonly IMapper _mapper;
-            private readonly IHttpContextAccessor _httpContextAccessor;
 
-            public Handler(IApplicationDbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+            public Handler(IApplicationDbContext context, IMapper mapper)
             {
                 _context = context;
                 _mapper = mapper;
-                _httpContextAccessor = httpContextAccessor;
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
                 var topic = _mapper.Map<Topic>(request);
-                var validator = new TopicValidator(_httpContextAccessor);
+                var validator = new Validator();
 
                 validator.Validate(topic, options =>
                 {
