@@ -1,15 +1,15 @@
 ﻿using AutoMapper;
+using Elevel.Application.Infrastructure;
 using Elevel.Application.Interfaces;
 using Elevel.Domain.Enums;
 using Elevel.Domain.Models;
-using System.Linq;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Elevel.Application.Infrastructure;
-using System.Collections.Generic;
 
 namespace Elevel.Application.Features.TestCommands
 {
@@ -64,7 +64,7 @@ namespace Elevel.Application.Features.TestCommands
                 }
 
                 await CheckAnswersForUniqueQuestionAsync(request.GrammarAnswers, GRAMMAR_QUESTION_COUNT);
-                                                   
+
                 await CheckAnswersForUniqueQuestionAsync(request.AuditionAnswers, AUDITION_QUESTION_COUNT);
 
                 test = _mapper.Map<Test>(request);
