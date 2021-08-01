@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Elevel.Application.Features.TestCommands
 {
-    public class GetTestByIdQuery
+    public class StartTestByIdQuery
     {
         public class Request: IRequest<Response>
         {
@@ -40,6 +40,20 @@ namespace Elevel.Application.Features.TestCommands
                 {
                     throw new NotFoundException($"Test with ID: {request.Id}");
                 }
+                if(!test.HrId.HasValue){
+                    throw new ValidationException("This test is not assigned");
+                }
+                if(DateTimeOffset.Compare(((DateTimeOffset)test.AssignmentEndDate).Date, DateTimeOffset.UtcNow.Date) < 0)
+                {
+                    throw new ValidationException("Assignment end date has alredy passed");
+                }
+
+                test.TestPassingDate = (DateTimeOffset?)DateTimeOffset.UtcNow;
+
+                _context.Tests.Update(test);
+
+                await _context.SaveChangesAsync(cancellationToken);
+
                 var response = _mapper.Map<Response>(test);
                 response.GrammarQuestions = await GetQuestionDtosAsync(response.Id)
                     .ConfigureAwait(false);
