@@ -77,12 +77,12 @@ namespace Elevel.Application.Features.TestCommands
             private async Task<IEnumerable<Question>> GetQuestionsByAuditionIdAsync(IEnumerable<TestQuestion> testQuestions, Guid? auditionId)
             {
                 var testQuestionIds = testQuestions.Select(x => x.QuestionId);
-                return await _context.Questions.Where(x => x.AuditionId == auditionId && testQuestionIds.Contains(x.Id)).ToListAsync();
+                return await _context.Questions.AsNoTracking().Where(x => x.AuditionId == auditionId && testQuestionIds.Contains(x.Id)).ToListAsync();
             }
             private async Task AddAnswersAsync(List<QuestionDto> questions)
             {
                 var questionId = questions.Select(x => x.Id);
-                var answerList = await _context.Answers.AsNoTracking().Where(x => questionId.Contains(x.QuestionId)).ToListAsync();
+                var answerList = await _context.Answers.Where(x => questionId.Contains(x.QuestionId)).ToListAsync();
                 foreach (var question in questions)
                 {
                     question.Answers = _mapper.Map<List<AnswerDto>>(answerList.Where(x => x.QuestionId == question.Id));
@@ -90,7 +90,7 @@ namespace Elevel.Application.Features.TestCommands
             }
             private async Task<IEnumerable<QuestionDto>> GetQuestionDtosAsync(Guid testId, Guid? auditionId = null)
             {
-                var testQuestions = await _context.TestQuestions.Where(x => x.TestId == testId).ToListAsync();
+                var testQuestions = await _context.TestQuestions.AsNoTracking().Where(x => x.TestId == testId).ToListAsync();
 
                 var questions = await GetQuestionsByAuditionIdAsync(testQuestions, auditionId);
 
