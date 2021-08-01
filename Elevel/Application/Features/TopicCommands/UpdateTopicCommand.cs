@@ -42,13 +42,6 @@ namespace Elevel.Application.Features.TopicCommands
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var validator = new Validator();
-                validator.Validate(request, options =>
-                {
-                    options.ThrowOnFailures();
-                    options.IncludeProperties(x => x.TopicName);
-                    options.IncludeProperties(x => x.Level);
-                });
 
                 var topic = await _context.Topics
                     .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
