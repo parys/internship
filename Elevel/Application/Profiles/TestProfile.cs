@@ -28,6 +28,8 @@ namespace Elevel.Application.Profiles
 
             CreateMap<AssignTestCommand.Request, Test>();
 
+            CreateMap<Test, CheckTestCommand.Response>();
+
         }
     }
 }

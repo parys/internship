@@ -35,18 +35,18 @@ namespace Elevel.Application.Features.TestCommands
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var test = await _context.Tests.FirstOrDefaultAsync(x => x.Id == request.Id).ConfigureAwait(false);
+                var test = await _context.Tests.FirstOrDefaultAsync(x => x.Id == request.Id);
 
-                if (test == null)
+                if(test == null)
                 {
                     throw new NotFoundException($"Test with ID: {request.Id}");
                 }
-                if (!test.HrId.HasValue)
-                {
+
+                if(!test.HrId.HasValue){
                     throw new ValidationException("This test is not assigned");
                 }
 
-                if (DateTimeOffset.Compare(((DateTimeOffset)test.AssignmentEndDate).Date, DateTimeOffset.UtcNow.Date) < 0)
+                if(DateTimeOffset.Compare(((DateTimeOffset)test.AssignmentEndDate).Date, DateTimeOffset.UtcNow.Date) < 0)
                 {
                     throw new ValidationException("Assignment end date has alredy passed");
                 }
@@ -59,7 +59,6 @@ namespace Elevel.Application.Features.TestCommands
                 test.TestPassingDate = DateTimeOffset.UtcNow;
 
                 await _context.SaveChangesAsync(cancellationToken);
-
 
                 var response = _mapper.Map<Response>(test);
 
@@ -82,7 +81,9 @@ namespace Elevel.Application.Features.TestCommands
             private async Task AddAnswersAsync(List<QuestionDto> questions)
             {
                 var questionId = questions.Select(x => x.Id);
+
                 var answerList = await _context.Answers.AsNoTracking().Where(x => questionId.Contains(x.QuestionId)).ToListAsync();
+
                 foreach (var question in questions)
                 {
                     question.Answers = _mapper.Map<List<AnswerDto>>(answerList.Where(x => x.QuestionId == question.Id));

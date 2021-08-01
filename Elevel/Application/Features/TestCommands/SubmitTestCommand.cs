@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,6 +18,7 @@ namespace Elevel.Application.Features.TestCommands
     {
         public class Request : IRequest<Response>
         {
+            [JsonIgnore]
             public Guid Id { get; set; }
 
             public IEnumerable<Guid> GrammarAnswers { get; set; }
@@ -67,7 +69,7 @@ namespace Elevel.Application.Features.TestCommands
 
                 await CheckAnswersForUniqueQuestionAsync(request.AuditionAnswers, AUDITION_QUESTION_COUNT);
 
-                test = _mapper.Map<Test>(request);
+                test = _mapper.Map(request, test);
 
                 test.GrammarMark = await EvaluateTestAsync(request.GrammarAnswers).ConfigureAwait(false);
 

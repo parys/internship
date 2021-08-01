@@ -47,9 +47,10 @@ namespace Elevel.Api.Controllers
             return Ok(result);
         }
 
-        [HttpPut("submit")]
-        public async Task<IActionResult> SubmitTestAsync([FromBody] SubmitTestCommand.Request request)
+        [HttpPut("{id:Guid}/submit")]
+        public async Task<IActionResult> SubmitTestAsync([FromRoute]Guid id, [FromBody] SubmitTestCommand.Request request)
         {
+            request.Id = id;
             var result = await Mediator.Send(request);
 
             return Ok(result);
