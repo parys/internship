@@ -50,13 +50,18 @@ namespace Elevel.Application.Features.TestCommands
             public async Task<Response> Handle(Request request, CancellationToken cancelationtoken)
             {
                 var test = await _context.Tests.FirstOrDefaultAsync(a => a.Id == request.Id, cancelationtoken);
+
                 if (test is null)
                 {
                     throw new NotFoundException(nameof(Test), test);
                 }
-                test = _mapper.Map<Test>(request);
+
+                test = _mapper.Map(request,test);
+
                 await _context.SaveChangesAsync(cancelationtoken);
+
                 var testResponse = _mapper.Map<Response>(test);
+
                 return testResponse;
             }
 

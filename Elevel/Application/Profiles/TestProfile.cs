@@ -21,7 +21,6 @@ namespace Elevel.Application.Profiles
             CreateMap<UpdateTestCommand.Request, Test>();
 
             CreateMap<Test, StartTestByIdQuery.Response>();
-            CreateMap<Test, StartTestByIdQuery.Response>();
             CreateMap<Question, StartTestByIdQuery.QuestionDto>();
             CreateMap<Answer, StartTestByIdQuery.AnswerDto>();
             CreateMap<Topic, StartTestByIdQuery.TopicDto>();
