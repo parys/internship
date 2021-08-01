@@ -38,7 +38,7 @@ namespace Elevel.Api.Controllers
             return Ok(result);
         }
 
-        [HttpPut("{id:Guid}/startTest")]
+        [HttpPut("{id:Guid}/start")]
         public async Task<IActionResult> StartTestByIdAsync([FromRoute] StartTestByIdQuery.Request request)
         {
             var result = await Mediator.Send(request);
