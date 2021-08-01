@@ -18,7 +18,6 @@ namespace Elevel.Application.Features.QuestionCommands
             public Guid Id { get; set; }
             public string NameQuestion { get; set; }
             public Level Level { get; set; }
-            public long QuestionNumber { get; set; }
             public List<Answer> Answers { get; set; }
         }
 
@@ -38,12 +37,6 @@ namespace Elevel.Application.Features.QuestionCommands
                 {
                     return null;
                 }
-                question.NameQuestion = request.NameQuestion;
-                question.Level = request.Level;
-                question.QuestionNumber = request.QuestionNumber;
-                question.Answers = request.Answers;
-                question = _mapper.Map(request, question);
-
                 await _context.SaveChangesAsync(cancelationtoken);
                 return new Response { Id = question.Id };
             }
