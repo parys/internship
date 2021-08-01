@@ -1,7 +1,5 @@
-﻿using AutoMapper;
-using Elevel.Application.Infrastructure;
+﻿using Elevel.Application.Infrastructure;
 using Elevel.Application.Interfaces;
-using Elevel.Domain.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;

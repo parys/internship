@@ -15,7 +15,9 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Text;
 using Elevel.Application.Profiles;
-using Microsoft.EntityFrameworkCore;
+using FluentValidation.AspNetCore;
+using Elevel.Domain.Validators;
+using FluentValidation;
 
 namespace Elevel.Api
 {
@@ -93,6 +95,9 @@ namespace Elevel.Api
             });
             
             services.AddControllers();
+            services.AddHttpContextAccessor();
+            services.AddMvc().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<TopicValidator>());
+            services.AddTransient<IValidator<Topic>, TopicValidator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
