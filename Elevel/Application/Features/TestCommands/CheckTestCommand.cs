@@ -19,10 +19,14 @@ namespace Elevel.Application.Features.TestCommands
         {
 
             public int SpeakingMark { get; set; }
+
             public int EssayMark { get; set; }
+
             public string Comment { get; set; }
+
             [JsonIgnore]
             public Guid Id { get; set; }
+
             [JsonIgnore]
             public Guid CoachId { get; set; }
         }
@@ -84,9 +88,13 @@ namespace Elevel.Application.Features.TestCommands
         public class Response
         {
             public Level Level { get; set; }
+
             public long TestNumber { get; set; }
+
             public int? EssayMark { get; set; }
+
             public int? SpeakingMark { get; set; }
+
             public string Comment { get; set; }
 
             public Guid? CoachId { get; set; }

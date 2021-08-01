@@ -4,8 +4,6 @@ using Elevel.Domain.Enums;
 using MediatR;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,7 +12,7 @@ namespace Elevel.Application.Features.TestCommands
 {
     public class GetTestsForCoachQuery
     {
-        public class Request: IRequest<Response>
+        public class Request : IRequest<Response>
         {
             [JsonIgnore]
             public Guid CoachId { get; set; }
@@ -23,7 +21,7 @@ namespace Elevel.Application.Features.TestCommands
 
             public DateTimeOffset? MyProperty { get; set; }
 
-            public Level? Level{ get; set; }
+            public Level? Level { get; set; }
 
             public bool? Priority { get; set; }
         }

@@ -25,11 +25,13 @@ namespace Elevel.Application.Features.TestCommands
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IApplicationDbContext _context;
+
             private readonly IMapper _mapper;
 
             public Handler(IApplicationDbContext context, IMapper mapper)
             {
                 _mapper = mapper;
+
                 _context = context;
             }
 
@@ -106,7 +108,9 @@ namespace Elevel.Application.Features.TestCommands
                 var audition = await _context.Auditions
                     .ProjectTo<AuditionDto>(_mapper.ConfigurationProvider)
                     .FirstOrDefaultAsync(x => x.Id == auditionId);
+
                 audition.Questions = await GetQuestionDtosAsync(testId, auditionId);
+
                 return audition;
             }
             private async Task<TopicDto> GetTopicAsync(Guid topicId)
@@ -142,26 +146,33 @@ namespace Elevel.Application.Features.TestCommands
         public class QuestionDto
         {
             public Guid Id { get; set; }
+
             public string NameQuestion { get; set; }
+
             public Guid? AuditionId { get; set; }
+
             public IEnumerable<AnswerDto> Answers { get; set; }
         }
 
         public class AuditionDto
         {
             public Guid Id { get; set; }
+
             public string AudioFilePath { get; set; }
+
             public IEnumerable<QuestionDto> Questions { get; set; }
         }
 
         public class AnswerDto
         {
             public Guid Id { get; set; }
+
             public string NameAnswer { get; set; }
         }
         public class TopicDto
         {
             public Guid Id { get; set; }
+
             public string TopicName { get; set; }
         }
     }
