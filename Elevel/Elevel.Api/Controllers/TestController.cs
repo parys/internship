@@ -1,4 +1,5 @@
-﻿using Elevel.Application.Features.TestCommands;
+﻿using Elevel.Application.Extensions;
+using Elevel.Application.Features.TestCommands;
 using Elevel.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,18 +24,14 @@ namespace Elevel.Api.Controllers
         [Authorize(Roles = nameof(UserRole.HumanResourceManager)),HttpPost("assign")]
         public async Task<IActionResult> AssignTestAsync([FromBody] AssignTestCommand.Request request)
         {
-            var claims = User.Claims.ToList();
-
-            var userId = claims.FirstOrDefault(x => x.Type == "uid").Value;
-
-            request.HrId = Guid.Parse(userId);
+            request.HrId = User.GetLoggedInUserId();
 
             var result = await Mediator.Send(request);
 
             return Ok(result);
         }
 
-        [HttpPut("startTest/{id:Guid}")]
+        [HttpPut("{id:Guid}/start")]
         public async Task<IActionResult> StartTestByIdAsync([FromRoute] StartTestByIdQuery.Request request)
         {
             var result = await Mediator.Send(request);
@@ -58,14 +55,10 @@ namespace Elevel.Api.Controllers
             return Ok(result);
         }
 
-        [HttpPut("Check/{id:Guid}"), Authorize(Roles = nameof(UserRole.Coach))]
+        [HttpPut("{id:Guid}/check"), Authorize(Roles = nameof(UserRole.Coach))]
         public async Task<IActionResult> CheckTestAsync([FromRoute]Guid id, [FromBody] CheckTestCommand.Request request)
         {
-            var claims = User.Claims.ToList();
-
-            var userId = claims.FirstOrDefault(x => x.Type == "uid").Value;
-
-            request.CoachId = Guid.Parse(userId);
+            request.CoachId = User.GetLoggedInUserId();
 
             request.Id = id;
 

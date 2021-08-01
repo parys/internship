@@ -77,7 +77,7 @@ namespace Elevel.Application.Features.TestCommands
             private async Task<IEnumerable<Question>> GetQuestionsByAuditionIdAsync(IEnumerable<TestQuestion> testQuestions, Guid? auditionId)
             {
                 var testQuestionIds = testQuestions.Select(x => x.QuestionId);
-                return await _context.Questions.Where(x => x.AuditionId == auditionId && testQuestionIds.Contains(x.Id)).ToListAsync();
+                return await _context.Questions.AsNoTracking().Where(x => x.AuditionId == auditionId && testQuestionIds.Contains(x.Id)).ToListAsync();
             }
             private async Task AddAnswersAsync(List<QuestionDto> questions)
             {
