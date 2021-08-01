@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -37,6 +36,9 @@ namespace Elevel.Application.Features.TestCommands
 
             private const int GRAMMAR_TEST_COUNT = 12;
             private const int AUDITION_TEST_COUNT = 10;
+            private const int AUDTUION_MIN_COUNT = 1;
+            private const int TOPIC_MIN_COUNT = 2;
+
             public Handler(IApplicationDbContext context, IMapper mapper, UserManager<ApplicationUser> userManager)
             {
                 _context = context;
@@ -50,14 +52,12 @@ namespace Elevel.Application.Features.TestCommands
                 {
                     throw new NotFoundException($"User with {request.UserId}");
                 }
-                if (!await _userManager.Users.AnyAsync(x => x.Id == request.HrId).ConfigureAwait(false))
-                {
-                    throw new NotFoundException($"Hr with {request.HrId}");
-                }
-                if(request.HrId == request.UserId)
+
+                if (request.HrId == request.UserId)
                 {
                     throw new ValidationException("You can't assign test to yourself");
                 }
+
                 if (request.AssignmentEndDate.Date < DateTimeOffset.UtcNow.Date)
                 {
                     throw new ValidationException($"assignmentEndDate can't be in the past ({request.AssignmentEndDate})");
@@ -66,15 +66,15 @@ namespace Elevel.Application.Features.TestCommands
                 var test = _mapper.Map<Test>(request);
 
                 var auditions = await _context.Auditions.AsNoTracking().Where(x => x.Level == request.Level).ToListAsync().ConfigureAwait(false);
-                if (auditions.Count() < 1)
+                if (auditions.Count < AUDTUION_MIN_COUNT)
                 {
                     throw new ValidationException("Not enough auditions");
                 }
 
                 var topics = await _context.Topics.AsNoTracking().Where(x => x.Level == request.Level).ToListAsync().ConfigureAwait(false);
-                if (topics.Count() < 2)
+                if (topics.Count < TOPIC_MIN_COUNT)
                 {
-                    throw new ValidationException("Not enough topics"); 
+                    throw new ValidationException("Not enough topics");
                 }
 
                 test.Id = Guid.NewGuid();
@@ -87,7 +87,7 @@ namespace Elevel.Application.Features.TestCommands
                 await CreateTestGrammarQuestionsAsync(test, cancelationtoken).ConfigureAwait(false);
 
                 await CreateTestAuditionQuestionsAsync(test, cancelationtoken).ConfigureAwait(false);
-                
+
 
                 await _context.SaveChangesAsync(cancelationtoken).ConfigureAwait(false);
 
