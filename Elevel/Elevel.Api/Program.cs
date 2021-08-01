@@ -21,14 +21,18 @@ namespace Elevel.Api
             {
                 var services = scope.ServiceProvider;
                 var loggerFactory = services.GetRequiredService<ILoggerFactory>();
+                var context = services.GetService<ApplicationDbContext>();
+                context.Database.Migrate();
 
-                services.GetService<ApplicationDbContext>().Database.Migrate();
                 try
                 {
                     //Seed Default Users
                     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
                     var roleManager = services.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+
                     await ApplicationDbContextSeed.SeedEssentialsAsync(userManager, roleManager);
+                    
+                    await ApplicationDbContextSeed.SeedDatabaseDataAsync(userManager, context);
                 }
                 catch (Exception ex)
                 {

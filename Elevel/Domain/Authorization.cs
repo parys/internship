@@ -59,6 +59,17 @@ namespace Elevel.Domain
                         Email = "ElevelCoach@gmail.com",
                         CreationDate = DateTimeOffset.Now,
                         Avatar = @"\wwwroot\default_avatar.jpg"
+                    },
+                    new ApplicationUser()
+                    {
+                        UserName = "CoachCoachev1",
+                        EmailConfirmed = true,
+                        PhoneNumberConfirmed = true,
+                        FirstName = "Coach1",
+                        LastName = "Coachev1",
+                        Email = "ElevelCoach1@gmail.com",
+                        CreationDate = DateTimeOffset.Now,
+                        Avatar = @"\wwwroot\default_avatar1.jpg"
                     }
                 }
             },
