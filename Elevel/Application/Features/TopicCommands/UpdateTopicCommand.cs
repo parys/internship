@@ -2,7 +2,11 @@
 using Elevel.Application.Infrastructure;
 using Elevel.Application.Interfaces;
 using Elevel.Domain.Enums;
+using Elevel.Domain.Models;
+using Elevel.Domain.Validators;
+using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading;
@@ -23,24 +27,26 @@ namespace Elevel.Application.Features.TopicCommands
         {
             private readonly IApplicationDbContext _context;
             private readonly IMapper _mapper;
+            private readonly IHttpContextAccessor _httpContextAccessor;
 
-            public Handler(IApplicationDbContext context, IMapper mapper)
+            public Handler(IApplicationDbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor)
             {
                 _context = context;
                 _mapper = mapper;
+                _httpContextAccessor = httpContextAccessor;
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                if (String.IsNullOrEmpty(request.TopicName))
-                {
-                    throw new ValidationException("The name of topic can't be empty or null!");
-                }
+                var topic_to_change = _mapper.Map<Topic>(request);
+                var validator = new TopicValidator(_httpContextAccessor);
 
-                if ((int)request.Level < 1 || (int)request.Level > 5)
+                validator.Validate(topic_to_change, options =>
                 {
-                    throw new ValidationException("The level field must be held within the interval [1; 5]!");
-                }
+                    options.ThrowOnFailures();
+                    options.IncludeProperties(x => x.TopicName);
+                    options.IncludeProperties(x => x.Level);
+                });
 
                 var topic = await _context.Topics
                     .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
