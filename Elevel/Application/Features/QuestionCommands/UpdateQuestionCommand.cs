@@ -17,7 +17,7 @@ namespace Elevel.Application.Features.QuestionCommands
         {
             public Guid Id { get; set; }
             public string NameQuestion { get; set; }
-            public long Questionnumber { get; set; }
+            public long QuestionNumber { get; set; }
             public Level Level { get; set; }
             public List<AnswerDto> Answers { get; set; }
         }
