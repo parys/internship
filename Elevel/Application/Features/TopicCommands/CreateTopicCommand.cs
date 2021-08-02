@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
+using Elevel.Application.Infrastructure;
 using Elevel.Application.Interfaces;
+using Elevel.Domain.Enums;
 using Elevel.Domain.Models;
+using FluentValidation;
 using MediatR;
 using System;
 using System.Threading;
@@ -10,18 +13,20 @@ namespace Elevel.Application.Features.TopicCommands
 {
     public class CreateTopicCommand
     {
-        public class Request : UpsertTopicCommand.Request, IRequest<Response>
+        public class Request : IRequest<Response>
         {
-
+            public string TopicName {get; set;}
+            public Level Level { get; set; }
         }
 
-        //public class Validator : UpsertTopicCommand.Validator<Request>
-        //{
-        //    public Validator()
-        //    {
-
-        //    }
-        //}
+        public class Validator : AbstractValidator<Request>
+        {
+            public Validator()
+            {
+                RuleFor(x => x.TopicName).NotEmpty().WithMessage("The topic title can't be empty or null!");
+                RuleFor(x => x.Level).IsInEnum().WithMessage("The level must be between 1 and 5!");
+            }
+        }
 
         public class Handler : IRequestHandler<Request, Response>
         {
@@ -37,6 +42,7 @@ namespace Elevel.Application.Features.TopicCommands
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
                 var topic = _mapper.Map<Topic>(request);
+
                 _context.Topics.Add(topic);
                 await _context.SaveChangesAsync(cancellationToken);
                 return new Response { Id = topic.Id };

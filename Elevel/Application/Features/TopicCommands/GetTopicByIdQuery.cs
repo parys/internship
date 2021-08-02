@@ -3,7 +3,6 @@ using AutoMapper.QueryableExtensions;
 using Elevel.Application.Infrastructure;
 using Elevel.Application.Interfaces;
 using Elevel.Domain.Enums;
-using Elevel.Domain.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -38,7 +37,7 @@ namespace Elevel.Application.Features.TopicCommands
 
                 if (topic == null)
                 {
-                    return null;
+                    throw new NotFoundException($"The topic with the ID = {request.Id}");
                 }
 
                 return topic;
@@ -51,8 +50,8 @@ namespace Elevel.Application.Features.TopicCommands
             public Guid Id { get; set; }
             public string TopicName { get; set; }
             public Level Level { get; set; }
+            public Guid CreatorId { get; set; }
             public DateTimeOffset CreationDate { get; set; }
-            public bool Deleted { get; set; }
         }
     }
 }

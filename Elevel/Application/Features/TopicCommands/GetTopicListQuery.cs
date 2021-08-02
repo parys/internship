@@ -6,9 +6,7 @@ using Elevel.Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -66,7 +64,7 @@ namespace Elevel.Application.Features.TopicCommands
             public string TopicName { get; set; }
             public Level Level { get; set; }
             public DateTimeOffset CreationDate { get; set; }
-            public bool Deleted { get; set; }
+            public Guid CreatorId { get; set; }
         }
     }
 }
