@@ -1,7 +1,5 @@
-﻿using AutoMapper;
-using Elevel.Application.Infrastructure;
+﻿using Elevel.Application.Infrastructure;
 using Elevel.Application.Interfaces;
-using Elevel.Domain.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -32,7 +30,7 @@ namespace Elevel.Application.Features.TopicCommands
                     .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
                 if (topic == null)
                 {
-                    return null;
+                    throw new NotFoundException($"The topic with the ID = {request.Id}");
                 }
                 topic.Deleted = true;
 

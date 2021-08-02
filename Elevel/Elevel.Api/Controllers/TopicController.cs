@@ -31,22 +31,19 @@ namespace Elevel.Api.Controllers
         [HttpGet("{id:Guid}")]
         public async Task<IActionResult> GetById([FromRoute] GetTopicByIdQuery.Request request)
         {
-            var response = await Mediator.Send(request);
-            return response == null ? BadRequest() : Ok(response);
+            return Ok(await Mediator.Send(request));
         }
 
         [HttpDelete("{id:Guid}")]
         public async Task<IActionResult> DeleteAsync([FromRoute] DeleteTopicCommand.Request request)
         {
-            var response = await Mediator.Send(request);
-            return response == null ? BadRequest() : Ok(response);
+            return Ok(await Mediator.Send(request));
         }
 
         [HttpPut("{id:Guid}")]
         public async Task<IActionResult> Update([FromBody] UpdateTopicCommand.Request request)
         {
-            var response = await Mediator.Send(request);
-            return response == null ? BadRequest() : Ok(response);
+            return Ok(await Mediator.Send(request));
         }
     }
 }

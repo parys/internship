@@ -15,7 +15,10 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Text;
 using Elevel.Application.Profiles;
-using Microsoft.EntityFrameworkCore;
+using FluentValidation.AspNetCore;
+using FluentValidation;
+using MediatR;
+using Elevel.Application.Infrastructure;
 
 namespace Elevel.Api
 {
@@ -93,6 +96,8 @@ namespace Elevel.Api
             });
             
             services.AddControllers();
+            services.AddMediatR();
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
