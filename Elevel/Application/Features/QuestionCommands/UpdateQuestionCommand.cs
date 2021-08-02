@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using Elevel.Application.Interfaces;
+using Elevel.Domain.Enums;
+using Elevel.Domain.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,10 +17,9 @@ namespace Elevel.Application.Features.QuestionCommands
         {
             public Guid Id { get; set; }
             public string NameQuestion { get; set; }
-            public DateTimeOffset CreationDate { get; set; }
-            public bool Deleted { get; set; }
-            public Guid AnswerId { get; set; }
-            public Guid? AuditionId { get; set; }
+            public long QuestionNumber { get; set; }
+            public Level Level { get; set; }
+            public List<AnswerDto> Answers { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Response>
@@ -37,7 +39,6 @@ namespace Elevel.Application.Features.QuestionCommands
                     return null;
                 }
                 question = _mapper.Map(request, question);
-
                 await _context.SaveChangesAsync(cancelationtoken);
                 return new Response { Id = question.Id };
             }
@@ -45,6 +46,13 @@ namespace Elevel.Application.Features.QuestionCommands
         public class Response
         {
             public Guid Id { get; set; }
+        }
+
+        public class AnswerDto
+        {
+            public Guid Id { get; set; }
+            public string NameAnswer { get; set; }
+            public bool IsRight { get; set; }
         }
     }
 }
