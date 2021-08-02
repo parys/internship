@@ -16,10 +16,9 @@ namespace Elevel.Application.Features.QuestionCommands
         public class Request : IRequest<Response>
         {
             public string NameQuestion { get; set; }
+            public long Questionnumber { get; set; }
             public Level Level { get; set; }
             public List<Answer> Answers { get; set; }
-            public bool IsRight { get; set; }
-            public string NameAnswer { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Response>
