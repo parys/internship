@@ -14,7 +14,7 @@ namespace Elevel.Infrastructure.Persistence.Configurations
                 .ValueGeneratedOnAdd();
 
             builder.Property(x => x.CreationDate)
-                .HasDefaultValueSql("GETUTCDATE()");
+                .HasDefaultValueSql("SYSDATETIMEOFFSET()");
 
             builder.HasQueryFilter(x => !x.Deleted);
         }
