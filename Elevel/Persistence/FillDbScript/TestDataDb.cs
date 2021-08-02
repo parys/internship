@@ -49,87 +49,95 @@ namespace Elevel.Infrastructure.Persistence.FillDbScript
             {
                 for (int level = 1; level <= LEVEL_COUNT; level++)
                 {
-                    var audition = new Audition
+                    for (int i = 0; i < 2; i++)
                     {
-                        Id = Guid.NewGuid(),
-                        AudioFilePath = "FilePath",
-                        Level = (Level)level,
-                        Deleted = deleted,
-                        CreatorId = creatorId
-                    };
-
-                    Auditions.Add(audition);
-
-                    for (int questionNumber = 0; questionNumber < AUDITION_QUESTION_COUNT; questionNumber++)
-                    {
-                        var question = new Question
+                        var audition = new Audition
                         {
                             Id = Guid.NewGuid(),
-                            NameQuestion = $"Qusetion {del}{level}{questionNumber}",
-                            Level = (Level)level,
-                            Deleted = deleted,
-                            CreatorId = creatorId,
-                            AuditionId = audition.Id
-                        };
-
-                        Questions.Add(question);
-
-                        for (int answerNumber = 0; answerNumber < ANSWER_COUNT; answerNumber++)
-                        {
-                            var qusetionAnswer = new Answer
-                            {
-                                Id = Guid.NewGuid(),
-                                NameAnswer = $"{(rightNumber == answerNumber ? "Right" : "Wrong")} answer {del}{level}{questionNumber}{answerNumber}",
-                                IsRight = rightNumber == answerNumber ? true : false,
-                                QuestionId = question.Id
-                            };
-
-                            Answers.Add(qusetionAnswer);
-                        }
-
-                        ++rightNumber;
-                        rightNumber = rightNumber % 4;
-                    }
-
-                    var topic = new Topic
-                    {
-                        Id = Guid.NewGuid(),
-                        TopicName = $"topic {del}{level}",
-                        Level = (Level)level,
-                        CreatorId = creatorId,
-                        Deleted = deleted
-                    };
-
-                    Topics.Add(topic);
-
-                    for (int questionNumber = 0; questionNumber < GRAMMAR_QUESTION_COUNT; questionNumber++)
-                    {
-                        var question = new Question
-                        {
-                            Id = Guid.NewGuid(),
-                            NameQuestion = $"Qusetion {del}{level}{questionNumber}",
+                            AudioFilePath = "FilePath",
                             Level = (Level)level,
                             Deleted = deleted,
                             CreatorId = creatorId
                         };
 
-                        Questions.Add(question);
+                        Auditions.Add(audition);
 
-                        for (int answerNumber = 0; answerNumber < ANSWER_COUNT; answerNumber++)
+                        for (int questionNumber = 0; questionNumber < AUDITION_QUESTION_COUNT; questionNumber++)
                         {
-                            var qusetionAnswer = new Answer
+                            var question = new Question
                             {
-                                Id = Guid.NewGuid(), 
-                                NameAnswer = $"{(rightNumber == answerNumber ? "Right" : "Wrong")} answer {del}{level}{questionNumber}{answerNumber}",
-                                IsRight = rightNumber == answerNumber ? true : false,
-                                QuestionId = question.Id
+                                Id = Guid.NewGuid(),
+                                NameQuestion = $"Qusetion {i}{del}{level}{questionNumber}",
+                                Level = (Level)level,
+                                Deleted = deleted,
+                                CreatorId = creatorId,
+                                AuditionId = audition.Id
                             };
 
-                            Answers.Add(qusetionAnswer);
-                        }
+                            Questions.Add(question);
 
-                        ++rightNumber;
-                        rightNumber = rightNumber % 4;
+                            for (int answerNumber = 0; answerNumber < ANSWER_COUNT; answerNumber++)
+                            {
+                                var qusetionAnswer = new Answer
+                                {
+                                    Id = Guid.NewGuid(),
+                                    NameAnswer = $"{(rightNumber == answerNumber ? "Right" : "Wrong")} answer {i}{del}{level}{questionNumber}{answerNumber}",
+                                    IsRight = rightNumber == answerNumber ? true : false,
+                                    QuestionId = question.Id
+                                };
+
+                                Answers.Add(qusetionAnswer);
+                            }
+
+                            ++rightNumber;
+                            rightNumber = rightNumber % 4;
+                        }
+                    }
+
+                    for (int i = 0; i < 3; i++)
+                    {
+                        var topic = new Topic
+                        {
+                            Id = Guid.NewGuid(),
+                            TopicName = $"topic {i}{del}{level}",
+                            Level = (Level)level,
+                            CreatorId = creatorId,
+                            Deleted = deleted
+                        };
+
+                        Topics.Add(topic);
+                    }
+                    for (int i = 0; i < 3; i++)
+                    {
+                        for (int questionNumber = 0; questionNumber < GRAMMAR_QUESTION_COUNT; questionNumber++)
+                        {
+                            var question = new Question
+                            {
+                                Id = Guid.NewGuid(),
+                                NameQuestion = $"Qusetion {i}{del}{level}{questionNumber}",
+                                Level = (Level)level,
+                                Deleted = deleted,
+                                CreatorId = creatorId
+                            };
+
+                            Questions.Add(question);
+
+                            for (int answerNumber = 0; answerNumber < ANSWER_COUNT; answerNumber++)
+                            {
+                                var qusetionAnswer = new Answer
+                                {
+                                    Id = Guid.NewGuid(),
+                                    NameAnswer = $"{(rightNumber == answerNumber ? "Right" : "Wrong")} answer {i}{del}{level}{questionNumber}{answerNumber}",
+                                    IsRight = rightNumber == answerNumber ? true : false,
+                                    QuestionId = question.Id
+                                };
+
+                                Answers.Add(qusetionAnswer);
+                            }
+
+                            ++rightNumber;
+                            rightNumber = rightNumber % 4;
+                        }
                     }
                 }
 
