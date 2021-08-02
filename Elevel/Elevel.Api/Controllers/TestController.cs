@@ -13,6 +13,24 @@ namespace Elevel.Api.Controllers
     [Authorize]
     public class TestController : BaseApiController
     {
+
+        /// <summary>
+        /// Create test for "Start test" button without assignment. Recieves test level form body, UserId from token
+        /// </summary>
+        /// <param name="request">UserId (from token), Level</param>
+        /// <returns>
+        /// The whole test information 
+        /// Such as: 
+        ///  * Id
+        ///  * TestNumber
+        ///  * Level
+        ///  * UserId
+        ///  * TestPassingDate
+        ///  * Audition with List of Questions with List of Answers
+        ///  * Essay
+        ///  * Speaking
+        ///  * List of GrammarQuestions with List of Answers
+        /// </returns>
         [HttpPost]
         public async Task<IActionResult> CreateTestAsync ([FromBody] CreateTestCommand.Request request)
         {

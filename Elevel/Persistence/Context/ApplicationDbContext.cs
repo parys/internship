@@ -34,7 +34,7 @@ namespace Elevel.Infrastructure.Persistence.Context
             {
                 relationship.DeleteBehavior = DeleteBehavior.Restrict;
             }
-
+            
         }
     }
 }
