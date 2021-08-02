@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using FluentValidation;
 using MediatR;
 
-namespace MyLfc.Application.Infrastructure.Pipelines
+namespace Elevel.Application.Infrastructure
 {
     public class RequestValidationBehavior<Request, Response> : IPipelineBehavior<Request, Response>
         where Request : IRequest<Response>

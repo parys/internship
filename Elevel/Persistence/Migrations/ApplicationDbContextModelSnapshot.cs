@@ -136,7 +136,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     b.Property<DateTimeOffset>("CreationDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("SYSDATETIMEOFFSET()");
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<Guid>("CreatorId")
                         .HasColumnType("uniqueidentifier");
@@ -164,7 +164,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     b.Property<DateTimeOffset>("CreationDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("SYSDATETIMEOFFSET()");
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<Guid>("CreatorId")
                         .HasColumnType("uniqueidentifier");
@@ -214,7 +214,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     b.Property<DateTimeOffset>("CreationDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("SYSDATETIMEOFFSET()");
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<string>("EssayAnswer")
                         .HasColumnType("nvarchar(max)");
@@ -309,7 +309,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     b.Property<DateTimeOffset>("CreationDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("SYSDATETIMEOFFSET()");
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<Guid>("CreatorId")
                         .HasColumnType("uniqueidentifier");
