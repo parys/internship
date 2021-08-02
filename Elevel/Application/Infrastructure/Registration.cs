@@ -12,10 +12,6 @@ namespace Elevel.Application.Infrastructure
         {
             AssemblyScanner.FindValidatorsInAssembly(typeof(RequestValidationBehavior<,>).Assembly)
                 .ForEach(result => services.AddScoped(result.InterfaceType, result.ValidatorType));
-
-            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));
-            services.AddMediatR(typeof(CreateTopicCommand).Assembly);
-            services.AddMediatR(typeof(UpdateTopicCommand).Assembly);
         }
     }
 }
