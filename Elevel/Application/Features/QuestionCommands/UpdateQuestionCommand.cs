@@ -37,6 +37,7 @@ namespace Elevel.Application.Features.QuestionCommands
                 {
                     return null;
                 }
+                question = _mapper.Map(request, question);
                 await _context.SaveChangesAsync(cancelationtoken);
                 return new Response { Id = question.Id };
             }
