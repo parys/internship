@@ -7,8 +7,8 @@
         <member name="M:Elevel.Api.Controllers.TestController.CreateTestAsync(Elevel.Application.Features.TestCommands.CreateTestCommand.Request)">
             <summary>
             For "Start test" button without assignment. 
-            Receives test level form body, UserId from token
-            returns the whole test
+            Receives test level form body, UserId from token.
+            Returns the whole test
             </summary>
             <param name="request">UserId (from token), Level</param>
             <returns>
