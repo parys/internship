@@ -73,7 +73,6 @@ namespace Elevel.Application.Features.QuestionCommands
 
         public class Response : PagedResult<QuestionsDTO>
         {
-            public IEnumerable<QuestionsDTO> questions { get; set; }
         }
 
         public class QuestionsDTO
