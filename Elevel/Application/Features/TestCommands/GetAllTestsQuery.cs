@@ -41,7 +41,7 @@ namespace Elevel.Application.Features.TestCommands
                 _mapper = mapper;
             }
 
-            public Task<Response> Handle(Request request, CancellationToken cancelationtoken)
+            public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
                 var tests = _context.Tests.AsNoTracking();
 
@@ -63,18 +63,22 @@ namespace Elevel.Application.Features.TestCommands
                     tests = tests.Where(x => x.Id == request.Id);
                 }
 
-                var testsList = _mapper.Map<List<TestDTO>>(tests);
 
-                return Task.FromResult(new Response()
+                return new Response()
                 {
-                    Tests = testsList
-                });
+                    PageSize = request.PageSize,
+                    CurrentPage = request.CurrentPage,
+                    RowCount = await tests.CountAsync(cancellationToken),
+                    Results = await tests.Skip(request.SkipCount())
+                    .Take(request.PageSize)
+                    .ProjectTo<TestDTO>(_mapper.ConfigurationProvider)
+                    .ToListAsync(cancellationToken),
+                };
             }
         }
 
-        public class Response
+        public class Response : PagedResult<TestDTO>
         {
-            public List<TestDTO> Tests { get; set; }
         }
         public class TestDTO
         {

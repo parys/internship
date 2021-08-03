@@ -58,14 +58,20 @@ namespace Elevel.Application.Features.QuestionCommands
                     questions = questions.Where(x => x.CreatorId == request.CreatorId);
                 }
 
-                return new Response
+                return new Response()
                 {
-                    questions = await questions.ProjectTo<QuestionsDTO>(_mapper.ConfigurationProvider).ToListAsync()
+                    PageSize = request.PageSize,
+                    CurrentPage = request.CurrentPage,
+                    RowCount = await questions.CountAsync(cancellationToken),
+                    Results = await questions.Skip(request.SkipCount())
+                    .Take(request.PageSize)
+                    .ProjectTo<QuestionsDTO>(_mapper.ConfigurationProvider)
+                    .ToListAsync(cancellationToken)
                 };
             }
         }
 
-        public class Response 
+        public class Response : PagedResult<QuestionsDTO>
         {
             public IEnumerable<QuestionsDTO> questions { get; set; }
         }

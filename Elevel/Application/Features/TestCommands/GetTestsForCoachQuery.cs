@@ -42,6 +42,16 @@ namespace Elevel.Application.Features.TestCommands
             public Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
+                //return new Response()
+                //{
+                //    PageSize = request.PageSize,
+                //    CurrentPage = request.CurrentPage,
+                //    RowCount = await tests.CountAsync(cancellationToken),
+                //    Results = await tests.Skip(request.SkipCount())
+                //    .Take(request.PageSize)
+                //    .ProjectTo<TestDTO>(_mapper.ConfigurationProvider)
+                //    .ToListAsync(cancellationToken)
+                //};
             }
         }
         public class Response
