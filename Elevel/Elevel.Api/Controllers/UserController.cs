@@ -20,6 +20,20 @@ namespace Elevel.Api.Controllers
             _userService = userService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAllUsersAsync([FromQuery] GetUserListQuery.Request request)
+        {
+            var result = Mediator.Send(request);
+            return Ok(await result);
+        }
+
+        [HttpGet("{Id:Guid}")]
+        public async Task<IActionResult> GetUsersByIdAsync([FromRoute] GetUserByIdQuery.Request request)
+        {
+            var result = Mediator.Send(request);
+            return Ok(await result);
+        }
+
         [HttpPost("token")]
         public async Task<IActionResult> GetTokenAsync(TokenRequestModel model)
         {
@@ -30,7 +44,7 @@ namespace Elevel.Api.Controllers
         [HttpGet("info")]
         public async Task<IActionResult> UserInfo()
         {
-            GetApplicationUserByIdQuery.Request request = new GetApplicationUserByIdQuery.Request()
+            GetUserByIdQuery.Request request = new GetUserByIdQuery.Request()
             {
                 Id = User.GetLoggedInUserId()
             };

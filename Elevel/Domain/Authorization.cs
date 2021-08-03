@@ -9,13 +9,13 @@ namespace Elevel.Domain
     {
         public const string DefaultPassword = "Pa$$w0rd.";
 
-        public static Dictionary<UserRole, List<ApplicationUser>> DefaultUsers = new Dictionary<UserRole, List<ApplicationUser>>()
+        public static Dictionary<UserRole, List<User>> DefaultUsers = new Dictionary<UserRole, List<User>>()
         {
             {
                 UserRole.Administrator,
-                new List<ApplicationUser>()
+                new List<User>()
                 {
-                    new ApplicationUser()
+                    new User()
                     {
                         EmailConfirmed = true,
                         PhoneNumberConfirmed = true,
@@ -26,7 +26,7 @@ namespace Elevel.Domain
                         CreationDate = DateTimeOffset.Now,
                         Avatar = @"\wwwroot\default_avatar.jpg"
                     },
-                    new ApplicationUser()
+                    new User()
                     {
                         EmailConfirmed = true,
                         PhoneNumberConfirmed = true,
@@ -37,7 +37,7 @@ namespace Elevel.Domain
                         CreationDate = DateTimeOffset.Now,
                         Avatar = @"\wwwroot\default_avatar1.jpg"
                     },
-                    new ApplicationUser()
+                    new User()
                     {
                         EmailConfirmed = true,
                         PhoneNumberConfirmed = true,
@@ -52,9 +52,9 @@ namespace Elevel.Domain
             },
             {
                 UserRole.User,
-                new List<ApplicationUser>()
+                new List<User>()
                 {
-                    new ApplicationUser()
+                    new User()
                     {
                         UserName = "UserUserov",
                         EmailConfirmed = true,
@@ -65,7 +65,7 @@ namespace Elevel.Domain
                         CreationDate = DateTimeOffset.Now,
                         Avatar = @"\wwwroot\default_avatar.jpg"
                     },
-                    new ApplicationUser()
+                    new User()
                     {
                         UserName = "UserUserov1",
                         EmailConfirmed = true,
@@ -76,7 +76,7 @@ namespace Elevel.Domain
                         CreationDate = DateTimeOffset.Now,
                         Avatar = @"\wwwroot\default_avatar1.jpg"
                     },
-                    new ApplicationUser()
+                    new User()
                     {
                         UserName = "UserUserov2",
                         EmailConfirmed = true,
@@ -87,7 +87,7 @@ namespace Elevel.Domain
                         CreationDate = DateTimeOffset.Now,
                         Avatar = @"\wwwroot\default_avatar2.jpg"
                     },
-                    new ApplicationUser()
+                    new User()
                     {
                         UserName = "UserUserov3",
                         EmailConfirmed = true,
@@ -98,7 +98,7 @@ namespace Elevel.Domain
                         CreationDate = DateTimeOffset.Now,
                         Avatar = @"\wwwroot\default_avatar3.jpg"
                     },
-                    new ApplicationUser()
+                    new User()
                     {
                         UserName = "UserUserov4",
                         EmailConfirmed = true,
@@ -109,7 +109,7 @@ namespace Elevel.Domain
                         CreationDate = DateTimeOffset.Now,
                         Avatar = @"\wwwroot\default_avatar4.jpg"
                     },
-                    new ApplicationUser()
+                    new User()
                     {
                         UserName = "UserUserov5",
                         EmailConfirmed = true,
@@ -124,9 +124,9 @@ namespace Elevel.Domain
             },
             {
                 UserRole.Coach,
-                new List<ApplicationUser>()
+                new List<User>()
                 {
-                    new ApplicationUser()
+                    new User()
                     {
                         UserName = "CoachCoachev",
                         EmailConfirmed = true,
@@ -137,7 +137,7 @@ namespace Elevel.Domain
                         CreationDate = DateTimeOffset.Now,
                         Avatar = @"\wwwroot\default_avatar.jpg"
                     },
-                    new ApplicationUser()
+                    new User()
                     {
                         UserName = "CoachCoachev1",
                         EmailConfirmed = true,
@@ -152,9 +152,9 @@ namespace Elevel.Domain
             },
             {
                 UserRole.HumanResourceManager,
-                new List<ApplicationUser>()
+                new List<User>()
                 {
-                    new ApplicationUser()
+                    new User()
                     {
                         UserName = "ManagerManagerov",
                         EmailConfirmed = true,
@@ -165,7 +165,7 @@ namespace Elevel.Domain
                         CreationDate = DateTimeOffset.Now,
                         Avatar = @"\wwwroot\default_avatar.jpg"
                     },
-                    new ApplicationUser()
+                    new User()
                     {
                         UserName = "ManagerManagerov1",
                         EmailConfirmed = true,
@@ -176,7 +176,7 @@ namespace Elevel.Domain
                         CreationDate = DateTimeOffset.Now,
                         Avatar = @"\wwwroot\default_avatar1.jpg"
                     },
-                    new ApplicationUser()
+                    new User()
                     {
                         UserName = "ManagerManagerov2",
                         EmailConfirmed = true,

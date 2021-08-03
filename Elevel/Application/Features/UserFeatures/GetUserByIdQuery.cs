@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Elevel.Application.Features.ApplicationUserFeatures
 {
-    public class GetApplicationUserByIdQuery
+    public class GetUserByIdQuery
     {
         public class Request : IRequest<Response>
         {
@@ -22,9 +22,9 @@ namespace Elevel.Application.Features.ApplicationUserFeatures
         {
 
             private readonly IMapper _mapper;
-            private readonly UserManager<ApplicationUser> _userManager;
+            private readonly UserManager<User> _userManager;
 
-            public Handler(IMapper mapper, UserManager<ApplicationUser> userManager)
+            public Handler(IMapper mapper, UserManager<User> userManager)
             {
                 _mapper = mapper;
                 _userManager = userManager;
@@ -37,12 +37,12 @@ namespace Elevel.Application.Features.ApplicationUserFeatures
 
                 if (applicationUser == null)
                 {
-                    throw new NotFoundException(nameof(ApplicationUser), request.Id);
+                    throw new NotFoundException(nameof(User), request.Id);
                 }
 
                 var roles = await _userManager.GetRolesAsync(applicationUser);
 
-                var user = _mapper.Map<ApplicationUser,Response>(applicationUser);
+                var user = _mapper.Map<User,Response>(applicationUser);
 
                 user.Roles = roles;
 

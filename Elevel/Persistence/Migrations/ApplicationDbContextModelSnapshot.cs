@@ -41,84 +41,6 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     b.ToTable("Answers");
                 });
 
-            modelBuilder.Entity("Elevel.Domain.Models.ApplicationUser", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Avatar")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset>("CreationDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasDatabaseName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasDatabaseName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.ToTable("AspNetUsers");
-                });
-
             modelBuilder.Entity("Elevel.Domain.Models.Audition", b =>
                 {
                     b.Property<Guid>("Id")
@@ -136,7 +58,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     b.Property<DateTimeOffset>("CreationDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("GETUTCDATE()");
+                        .HasDefaultValueSql("SYSDATETIMEOFFSET()");
 
                     b.Property<Guid>("CreatorId")
                         .HasColumnType("uniqueidentifier");
@@ -164,7 +86,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     b.Property<DateTimeOffset>("CreationDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("GETUTCDATE()");
+                        .HasDefaultValueSql("SYSDATETIMEOFFSET()");
 
                     b.Property<Guid>("CreatorId")
                         .HasColumnType("uniqueidentifier");
@@ -214,7 +136,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     b.Property<DateTimeOffset>("CreationDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("GETUTCDATE()");
+                        .HasDefaultValueSql("SYSDATETIMEOFFSET()");
 
                     b.Property<string>("EssayAnswer")
                         .HasColumnType("nvarchar(max)");
@@ -309,7 +231,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     b.Property<DateTimeOffset>("CreationDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("GETUTCDATE()");
+                        .HasDefaultValueSql("SYSDATETIMEOFFSET()");
 
                     b.Property<Guid>("CreatorId")
                         .HasColumnType("uniqueidentifier");
@@ -331,6 +253,84 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Topics");
+                });
+
+            modelBuilder.Entity("Elevel.Domain.Models.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Avatar")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("CreationDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
@@ -490,7 +490,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         .HasForeignKey("AuditionId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Elevel.Domain.Models.ApplicationUser", "Coach")
+                    b.HasOne("Elevel.Domain.Models.User", "Coach")
                         .WithMany("CoachTests")
                         .HasForeignKey("CoachId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -500,7 +500,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         .HasForeignKey("EssayId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Elevel.Domain.Models.ApplicationUser", "Hr")
+                    b.HasOne("Elevel.Domain.Models.User", "Hr")
                         .WithMany("HrTests")
                         .HasForeignKey("HrId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -510,7 +510,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         .HasForeignKey("SpeakingId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Elevel.Domain.Models.ApplicationUser", "User")
+                    b.HasOne("Elevel.Domain.Models.User", "User")
                         .WithMany("UserTests")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -566,7 +566,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
-                    b.HasOne("Elevel.Domain.Models.ApplicationUser", null)
+                    b.HasOne("Elevel.Domain.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -575,7 +575,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
-                    b.HasOne("Elevel.Domain.Models.ApplicationUser", null)
+                    b.HasOne("Elevel.Domain.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -590,7 +590,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Elevel.Domain.Models.ApplicationUser", null)
+                    b.HasOne("Elevel.Domain.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -599,7 +599,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.HasOne("Elevel.Domain.Models.ApplicationUser", null)
+                    b.HasOne("Elevel.Domain.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -609,15 +609,6 @@ namespace Elevel.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("Elevel.Domain.Models.Answer", b =>
                 {
                     b.Navigation("TestQuestions");
-                });
-
-            modelBuilder.Entity("Elevel.Domain.Models.ApplicationUser", b =>
-                {
-                    b.Navigation("CoachTests");
-
-                    b.Navigation("HrTests");
-
-                    b.Navigation("UserTests");
                 });
 
             modelBuilder.Entity("Elevel.Domain.Models.Audition", b =>
@@ -644,6 +635,15 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     b.Navigation("EssayTests");
 
                     b.Navigation("SpeakingTests");
+                });
+
+            modelBuilder.Entity("Elevel.Domain.Models.User", b =>
+                {
+                    b.Navigation("CoachTests");
+
+                    b.Navigation("HrTests");
+
+                    b.Navigation("UserTests");
                 });
 #pragma warning restore 612, 618
         }

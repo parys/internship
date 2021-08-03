@@ -39,7 +39,7 @@ namespace Elevel.Application.Features.TestCommands
 
             private static Random _rand = new Random();
 
-            private readonly UserManager<ApplicationUser> _userManager;
+            private readonly UserManager<User> _userManager;
 
             private const int GRAMMAR_TEST_COUNT = 12;
 
@@ -49,7 +49,7 @@ namespace Elevel.Application.Features.TestCommands
 
             private const int TOPIC_MIN_COUNT = 2;
 
-            public Handler(IApplicationDbContext context, IMapper mapper, UserManager<ApplicationUser> userManager)
+            public Handler(IApplicationDbContext context, IMapper mapper, UserManager<User> userManager)
             {
                 _context = context;
 

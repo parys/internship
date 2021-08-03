@@ -16,10 +16,10 @@ namespace Elevel.Infrastructure.Services.Implementation
 {
     public class UserService : IUserService
     {
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole<Guid>> _roleManager;
         private readonly TokenConfiguration _jwt;
-        public UserService(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole<Guid>> roleManager, IOptions<TokenConfiguration> jwt)
+        public UserService(UserManager<User> userManager, RoleManager<IdentityRole<Guid>> roleManager, IOptions<TokenConfiguration> jwt)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -53,7 +53,7 @@ namespace Elevel.Infrastructure.Services.Implementation
             authenticationModel.Message = $"Incorrect Credentials for user {user.Email}.";
             return authenticationModel;
         }
-        private async Task<JwtSecurityToken> CreateJwtToken(ApplicationUser user)
+        private async Task<JwtSecurityToken> CreateJwtToken(User user)
         {
             var userClaims = await _userManager.GetClaimsAsync(user);
             var roles = await _userManager.GetRolesAsync(user);

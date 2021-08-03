@@ -41,7 +41,7 @@ namespace Elevel.Infrastructure.Persistence.FillDbScript
             rightNumber = 0;
         }
 
-        public static async Task FillDB(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public static async Task FillDB(ApplicationDbContext context, UserManager<User> userManager)
         {
             Guid creatorId = (await userManager.Users.FirstOrDefaultAsync(x => x.FirstName == "Coach")).Id;
 

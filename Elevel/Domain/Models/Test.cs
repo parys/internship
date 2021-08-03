@@ -26,13 +26,13 @@ namespace Elevel.Domain.Models
         public string Comment { get; set; }
 
         public Guid UserId { get; set; }
-        public ApplicationUser User { get; set; }
+        public User User { get; set; }
 
         public Guid? HrId { get; set; }
-        public ApplicationUser Hr { get; set; }
+        public User Hr { get; set; }
 
         public Guid? CoachId { get; set; }
-        public ApplicationUser Coach { get; set; }
+        public User Coach { get; set; }
 
         public Guid? AuditionId { get; set; }
         public Audition Audition { get; set; }

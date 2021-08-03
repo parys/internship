@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Elevel.Application.Features.ApplicationUserFeatures
 {
-    public class GetAllApplicationUserQuery
+    public class GetUserListQuery
     {
 
         public class Request : PagedQueryBase, IRequest<Response>
@@ -31,9 +31,9 @@ namespace Elevel.Application.Features.ApplicationUserFeatures
 
             private readonly IMapper _mapper;
 
-            private readonly UserManager<ApplicationUser> _userManager;
+            private readonly UserManager<User> _userManager;
 
-            public Handler(IMapper mapper, UserManager<ApplicationUser> userManager)
+            public Handler(IMapper mapper, UserManager<User> userManager)
             {
                 _mapper = mapper;
                 _userManager = userManager;
