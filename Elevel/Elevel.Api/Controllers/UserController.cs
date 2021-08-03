@@ -1,5 +1,5 @@
 ﻿using Elevel.Application.Extensions;
-using Elevel.Application.Features.ApplicationUserFeatures;
+using Elevel.Application.Features.UserFeatures;
 using Elevel.Application.Interfaces;
 using Elevel.Domain.Authentication;
 using Microsoft.AspNetCore.Mvc;

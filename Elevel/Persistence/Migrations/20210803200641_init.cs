@@ -59,7 +59,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AudioFilePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Level = table.Column<byte>(type: "tinyint", nullable: false),
-                    CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false, defaultValueSql: "SYSDATETIMEOFFSET()"),
                     Deleted = table.Column<bool>(type: "bit", nullable: false),
                     CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
@@ -77,7 +77,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TopicName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Level = table.Column<byte>(type: "tinyint", nullable: false),
-                    CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false, defaultValueSql: "SYSDATETIMEOFFSET()"),
                     CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Deleted = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -201,7 +201,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     NameQuestion = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Level = table.Column<byte>(type: "tinyint", nullable: false),
-                    CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false, defaultValueSql: "SYSDATETIMEOFFSET()"),
                     Deleted = table.Column<bool>(type: "bit", nullable: false),
                     CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AuditionId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
@@ -225,7 +225,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     Level = table.Column<byte>(type: "tinyint", nullable: false),
                     TestNumber = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    CreationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false, defaultValueSql: "SYSDATETIMEOFFSET()"),
                     TestPassingDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     AssignmentEndDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     Priority = table.Column<bool>(type: "bit", nullable: false),

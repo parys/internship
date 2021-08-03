@@ -14,7 +14,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Elevel.Application.Features.ApplicationUserFeatures
+namespace Elevel.Application.Features.UserFeatures
 {
     public class GetUserListQuery
     {
