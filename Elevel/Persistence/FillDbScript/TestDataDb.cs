@@ -1,4 +1,5 @@
-﻿using Elevel.Domain.Enums;
+﻿using Elevel.Application.Infrastructure;
+using Elevel.Domain.Enums;
 using Elevel.Domain.Models;
 using Elevel.Infrastructure.Persistence.Context;
 using Microsoft.AspNetCore.Identity;
@@ -21,15 +22,7 @@ namespace Elevel.Infrastructure.Persistence.FillDbScript
 
         public static List<Answer> Answers { get; set; }
 
-        private const int LEVEL_COUNT = 5;
-
         private static bool deleted = false;
-
-        const int GRAMMAR_QUESTION_COUNT = 10;
-
-        const int AUDITION_QUESTION_COUNT = 12;
-
-        const int ANSWER_COUNT = 4;
 
         public static int rightNumber;
         static TestDataDb()
@@ -47,7 +40,7 @@ namespace Elevel.Infrastructure.Persistence.FillDbScript
 
             for (int del = 0; del < 2; del++)
             {
-                for (int level = 1; level <= LEVEL_COUNT; level++)
+                for (int level = 1; level <= Constants.LEVEL_COUNT; level++)
                 {
                     for (int i = 0; i < 2; i++)
                     {
@@ -62,7 +55,7 @@ namespace Elevel.Infrastructure.Persistence.FillDbScript
 
                         Auditions.Add(audition);
 
-                        for (int questionNumber = 0; questionNumber < AUDITION_QUESTION_COUNT; questionNumber++)
+                        for (int questionNumber = 0; questionNumber < Constants.AUDITION_QUESTION_COUNT; questionNumber++)
                         {
                             var question = new Question
                             {
@@ -76,7 +69,7 @@ namespace Elevel.Infrastructure.Persistence.FillDbScript
 
                             Questions.Add(question);
 
-                            for (int answerNumber = 0; answerNumber < ANSWER_COUNT; answerNumber++)
+                            for (int answerNumber = 0; answerNumber < Constants.ANSWER_COUNT; answerNumber++)
                             {
                                 var qusetionAnswer = new Answer
                                 {
@@ -109,7 +102,7 @@ namespace Elevel.Infrastructure.Persistence.FillDbScript
                     }
                     for (int i = 0; i < 3; i++)
                     {
-                        for (int questionNumber = 0; questionNumber < GRAMMAR_QUESTION_COUNT; questionNumber++)
+                        for (int questionNumber = 0; questionNumber < Constants.GRAMMAR_QUESTION_COUNT; questionNumber++)
                         {
                             var question = new Question
                             {
@@ -122,7 +115,7 @@ namespace Elevel.Infrastructure.Persistence.FillDbScript
 
                             Questions.Add(question);
 
-                            for (int answerNumber = 0; answerNumber < ANSWER_COUNT; answerNumber++)
+                            for (int answerNumber = 0; answerNumber < Constants.ANSWER_COUNT; answerNumber++)
                             {
                                 var qusetionAnswer = new Answer
                                 {

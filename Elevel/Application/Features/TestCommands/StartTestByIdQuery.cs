@@ -37,14 +37,6 @@ namespace Elevel.Application.Features.TestCommands
 
             private static Random _rand = new Random();
 
-            private const int GRAMMAR_TEST_COUNT = 12;
-
-            private const int AUDITION_TEST_COUNT = 10;
-
-            private const int AUDTUION_MIN_COUNT = 1;
-
-            private const int TOPIC_MIN_COUNT = 2;
-
             public Handler(IApplicationDbContext context, IMapper mapper)
             {
                 _mapper = mapper;
@@ -85,14 +77,14 @@ namespace Elevel.Application.Features.TestCommands
 
                 var auditions = await _context.Auditions.AsNoTracking().Where(x => x.Level == request.Level).ToListAsync();
 
-                if (auditions.Count < AUDTUION_MIN_COUNT)
+                if (auditions.Count < Constants.AUDTUION_MIN_COUNT)
                 {
                     throw new ValidationException("Not enough auditions");
                 }
 
                 var topics = await _context.Topics.AsNoTracking().Where(x => x.Level == request.Level).ToListAsync();
 
-                if (topics.Count < TOPIC_MIN_COUNT)
+                if (topics.Count < Constants.TOPIC_MIN_COUNT)
                 {
                     throw new ValidationException("Not enough topics");
                 }
@@ -210,12 +202,12 @@ namespace Elevel.Application.Features.TestCommands
             {
                 var questions = await GetQuestionListAsync(test.Level);
 
-                if (questions.Count() < GRAMMAR_TEST_COUNT)
+                if (questions.Count() < Constants.GRAMMAR_TEST_COUNT)
                 {
                     throw new ValidationException("Not enough Grammar Questions");
                 }
 
-                var questionIds = GetQuestionIds(questions, GRAMMAR_TEST_COUNT);
+                var questionIds = GetQuestionIds(questions, Constants.GRAMMAR_TEST_COUNT);
 
                 CreateTestQuestionsForGrammar(questionIds, test);
 
@@ -231,12 +223,12 @@ namespace Elevel.Application.Features.TestCommands
             {
                 var questions = await GetQuestionListAsync(test.Level, test.AuditionId);
 
-                if (questions.Count() < AUDITION_TEST_COUNT)
+                if (questions.Count() < Constants.AUDITION_TEST_COUNT)
                 {
                     throw new ValidationException("Not enough Audition Questions");
                 }
 
-                var questionIds = GetQuestionIds(questions, AUDITION_TEST_COUNT);
+                var questionIds = GetQuestionIds(questions, Constants.AUDITION_TEST_COUNT);
 
                 CreateTestQuestionsForGrammar(questionIds, test);
 
