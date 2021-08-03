@@ -15,7 +15,9 @@ namespace Elevel.Api.Controllers
     {
 
         /// <summary>
-        /// Create test for "Start test" button without assignment. Recieves test level form body, UserId from token
+        /// For "Start test" button without assignment. 
+        /// Receives test level form body, UserId from token.
+        /// Returns the whole test
         /// </summary>
         /// <param name="request">UserId (from token), Level</param>
         /// <returns>
@@ -34,11 +36,19 @@ namespace Elevel.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateTestAsync ([FromBody] CreateTestCommand.Request request)
         {
+            request.UserId = User.GetLoggedInUserId();
             var result = await Mediator.Send(request);
 
             return Ok(result);
         }
 
+        /// <summary>
+        /// Can only be done by HR from "Assign test". 
+        /// Receives AssignmentEndDate, UserId, Priority from body, and HrId from token. 
+        /// Returns test id
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [Authorize(Roles = nameof(UserRole.HumanResourceManager)),HttpPost("assign")]
         public async Task<IActionResult> AssignTestAsync([FromBody] AssignTestCommand.Request request)
         {
@@ -49,14 +59,32 @@ namespace Elevel.Api.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Can only be done dy assigned for this test user. 
+        /// Receives level from body, UserId from token, and TestId from route
+        /// Returns the whole test
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPut("{id:Guid}/start")]
-        public async Task<IActionResult> StartTestByIdAsync([FromRoute] StartTestByIdQuery.Request request)
+        public async Task<IActionResult> StartTestByIdAsync([FromRoute] Guid id, [FromBody] StartTestByIdQuery.Request request)
         {
+            request.Id = id;
+
+            request.UserId = User.GetLoggedInUserId();
+
             var result = await Mediator.Send(request);
 
             return Ok(result);
         }
 
+        /// <summary>
+        /// Get all test test. 
+        /// May receive Id, UserId, TestPassingDate, and Level from query
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetAllTestsAsync([FromQuery] GetAllTestsQuery.Request request)
         {
@@ -65,6 +93,14 @@ namespace Elevel.Api.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Can be only done by assigned for this user. 
+        /// Receives Id from route, UserId from token, List of GrammarAnswers, List of AuditionAnswers, EssayAnswer, and SpeakingAnswerReference from body. 
+        /// Returns Id, Level, TestPassingDate, GrammarMark, AuditionMark, and UserId
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPut("{id:Guid}/submit")]
         public async Task<IActionResult> SubmitTestAsync([FromRoute]Guid id, [FromBody] SubmitTestCommand.Request request)
         {
@@ -74,6 +110,14 @@ namespace Elevel.Api.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Can only be done by Coach.
+        /// Receives TestId from route, coachId from token, SpeakingMark, EssayMark, and Comment from body.
+        /// Returns Level, TestNumber, EssayMark, SpeakingMark, Comment, CoachId
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPut("{id:Guid}/check"), Authorize(Roles = nameof(UserRole.Coach))]
         public async Task<IActionResult> CheckTestAsync([FromRoute]Guid id, [FromBody] CheckTestCommand.Request request)
         {

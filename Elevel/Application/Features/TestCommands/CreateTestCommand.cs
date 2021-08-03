@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,6 +21,8 @@ namespace Elevel.Application.Features.TestCommands
         public class Request : IRequest<Response>
         {
             public Level Level { get; set; }
+
+            [JsonIgnore]
             public Guid UserId { get; set; }
         }
 

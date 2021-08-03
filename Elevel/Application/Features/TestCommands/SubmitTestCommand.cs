@@ -21,6 +21,9 @@ namespace Elevel.Application.Features.TestCommands
             [JsonIgnore]
             public Guid Id { get; set; }
 
+            [JsonIgnore]
+            public Guid UserId { get; set; }
+
             public IEnumerable<Guid> GrammarAnswers { get; set; }
 
             public IEnumerable<Guid> AuditionAnswers { get; set; }
@@ -37,9 +40,6 @@ namespace Elevel.Application.Features.TestCommands
 
             private readonly IMapper _mapper;
 
-            private const int GRAMMAR_QUESTION_COUNT = 12;
-
-            private const int AUDITION_QUESTION_COUNT = 10;
 
             private const int ESSAY_MAX_LENGTH = 512;
 
@@ -61,6 +61,11 @@ namespace Elevel.Application.Features.TestCommands
                     throw new NotFoundException($"test with {request.Id}", test);
                 }
 
+                if(request.UserId != test.UserId)
+                {
+                    throw new ValidationException("You can't submit this test");
+                }
+
                 if (request.EssayAnswer.Length > ESSAY_MAX_LENGTH)
                 {
                     throw new ValidationException("Essay Answer is too long");
@@ -71,9 +76,9 @@ namespace Elevel.Application.Features.TestCommands
                     throw new ValidationException("Test time has passed");
                 }
 
-                await CheckAnswersForUniqueQuestionAsync(request.GrammarAnswers, GRAMMAR_QUESTION_COUNT);
+                await CheckAnswersForUniqueQuestionAsync(request.GrammarAnswers);
 
-                await CheckAnswersForUniqueQuestionAsync(request.AuditionAnswers, AUDITION_QUESTION_COUNT);
+                await CheckAnswersForUniqueQuestionAsync(request.AuditionAnswers);
 
                 test = _mapper.Map(request, test);
 
@@ -88,7 +93,7 @@ namespace Elevel.Application.Features.TestCommands
                 return testResponse;
             }
 
-            private async Task CheckAnswersForUniqueQuestionAsync(IEnumerable<Guid> answers, int count)
+            private async Task CheckAnswersForUniqueQuestionAsync(IEnumerable<Guid> answers)
             {
                 var answerList = _context.Answers.AsNoTracking();
 
@@ -105,10 +110,6 @@ namespace Elevel.Application.Features.TestCommands
                     .Select(x => x.QuestionId).Distinct()
                     .ToListAsync().ConfigureAwait(false);
 
-                if (questionIds.Count != count)
-                {
-                    throw new ValidationException("You wrote several answers from one question");
-                }
             }
 
             private Task<int> EvaluateTestAsync(IEnumerable<Guid> answers)
@@ -131,12 +132,6 @@ namespace Elevel.Application.Features.TestCommands
             public int AuditionMark { get; set; }
 
             public Guid UserId { get; set; }
-        }
-
-
-        public class AnswersDto
-        {
-            public Guid AnswerId { get; set; }
         }
     }
 }
