@@ -6,7 +6,9 @@
     <members>
         <member name="M:Elevel.Api.Controllers.TestController.CreateTestAsync(Elevel.Application.Features.TestCommands.CreateTestCommand.Request)">
             <summary>
-            Create test for "Start test" button without assignment. Recieves test level form body, UserId from token
+            For "Start test" button without assignment. 
+            Receives test level form body, UserId from token.
+            Returns the whole test
             </summary>
             <param name="request">UserId (from token), Level</param>
             <returns>
@@ -22,6 +24,53 @@
              * Speaking
              * List of GrammarQuestions with List of Answers
             </returns>
+        </member>
+        <member name="M:Elevel.Api.Controllers.TestController.AssignTestAsync(Elevel.Application.Features.TestCommands.AssignTestCommand.Request)">
+            <summary>
+            Can only be done by HR from "Assign test". 
+            Receives AssignmentEndDate, UserId, Priority from body, and HrId from token. 
+            Returns test id
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Elevel.Api.Controllers.TestController.StartTestByIdAsync(System.Guid,Elevel.Application.Features.TestCommands.StartTestByIdQuery.Request)">
+            <summary>
+            Can only be done dy assigned for this test user. 
+            Receives level from body, UserId from token, and TestId from route
+            Returns the whole test
+            </summary>
+            <param name="id"></param>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Elevel.Api.Controllers.TestController.GetAllTestsAsync(Elevel.Application.Features.TestCommands.GetAllTestsQuery.Request)">
+            <summary>
+            Get all test test. 
+            May receive Id, UserId, TestPassingDate, and Level from query
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Elevel.Api.Controllers.TestController.SubmitTestAsync(System.Guid,Elevel.Application.Features.TestCommands.SubmitTestCommand.Request)">
+            <summary>
+            Can be only done by assigned for this user. 
+            Receives Id from route, UserId from token, List of GrammarAnswers, List of AuditionAnswers, EssayAnswer, and SpeakingAnswerReference from body. 
+            Returns Id, Level, TestPassingDate, GrammarMark, AuditionMark, and UserId
+            </summary>
+            <param name="id"></param>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Elevel.Api.Controllers.TestController.CheckTestAsync(System.Guid,Elevel.Application.Features.TestCommands.CheckTestCommand.Request)">
+            <summary>
+            Can only be done by Coach.
+            Receives TestId from route, coachId from token, SpeakingMark, EssayMark, and Comment from body.
+            Returns Level, TestNumber, EssayMark, SpeakingMark, Comment, CoachId
+            </summary>
+            <param name="id"></param>
+            <param name="request"></param>
+            <returns></returns>
         </member>
     </members>
 </doc>

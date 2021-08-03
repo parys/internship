@@ -83,7 +83,7 @@ namespace Elevel.Domain
                         PhoneNumberConfirmed = true,
                         FirstName = "User2",
                         LastName = "Userov2",
-                        Email = "ElevelUser1@gmail.com",
+                        Email = "ElevelUser2@gmail.com",
                         CreationDate = DateTimeOffset.Now,
                         Avatar = @"\wwwroot\default_avatar2.jpg"
                     },
