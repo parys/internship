@@ -39,7 +39,7 @@ namespace Elevel.Application.Features.QuestionCommands
                 _mapper = mapper;
             }
 
-            public Task<Response> Handle(Request request, CancellationToken cancellationToken)
+            public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
                 var questions = _context.Questions.AsNoTracking();
 
@@ -58,20 +58,18 @@ namespace Elevel.Application.Features.QuestionCommands
                     questions = questions.Where(x => x.CreatorId == request.CreatorId);
                 }
 
-                return Task.FromResult(new Response
+                return new Response
                 {
-                    questions = _mapper.Map<List<QuestionsDTO>>(questions)
-                });
+                    questions = await questions.ProjectTo<QuestionsDTO>(_mapper.ConfigurationProvider).ToListAsync()
+                };
             }
         }
 
-        [Serializable]
         public class Response 
         {
             public IEnumerable<QuestionsDTO> questions { get; set; }
         }
 
-        [Serializable]
         public class QuestionsDTO
         {
             public Guid Id { get; set; }

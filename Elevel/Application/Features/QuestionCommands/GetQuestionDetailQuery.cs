@@ -41,12 +41,6 @@ namespace Elevel.Application.Features.QuestionCommands
                     throw new NotFoundException($"Question with id {request.Id}");
                 }
 
-                var answerList = await _context.Answers.AsNoTracking()
-                    .ProjectTo<AnswerDto>(_mapper.ConfigurationProvider)
-                    .Where(x => x.QuestionId == question.Id).ToListAsync();
-
-                question.Answers = answerList;
-
                 return question;
             }
         }

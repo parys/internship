@@ -3,6 +3,7 @@ using Elevel.Application.Infrastructure;
 using Elevel.Application.Interfaces;
 using Elevel.Domain.Enums;
 using Elevel.Domain.Models;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -27,12 +28,25 @@ namespace Elevel.Application.Features.QuestionCommands
             public List<AnswerDto> Answers { get; set; }
         }
 
+        public class Validator : AbstractValidator<Request>
+        {
+
+            private const int ANSWER_COUNT = 4;
+            public Validator()
+            {
+                RuleFor(x => x.NameQuestion).NotEmpty().WithMessage("The question name can't be empty or null!");
+
+                RuleFor(x => x.Level).IsInEnum().WithMessage("The level must be between 1 and 5!");
+
+                RuleFor(x => x.Answers).Must(x => x.Count == ANSWER_COUNT).WithMessage("The amount of answers must be 4");
+            }
+        }
+
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IApplicationDbContext _context;
             private readonly IMapper _mapper;
 
-            private const int ANSWER_COUNT = 4;
             public Handler(IApplicationDbContext context, IMapper mapper)
             {
                 _context = context;
@@ -40,11 +54,7 @@ namespace Elevel.Application.Features.QuestionCommands
             }
             public async Task<Response> Handle(Request request, CancellationToken cancelationtoken)
             {
-                if(request.Answers.Count != ANSWER_COUNT)
-                {
-                    throw new ValidationException("Not valid answers amount");
-                }
-
+                
                 var question = _mapper.Map<Question>(request);
                 question.Id = Guid.NewGuid();
 

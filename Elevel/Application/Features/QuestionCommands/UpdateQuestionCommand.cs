@@ -3,6 +3,7 @@ using Elevel.Application.Infrastructure;
 using Elevel.Application.Interfaces;
 using Elevel.Domain.Enums;
 using Elevel.Domain.Models;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -21,12 +22,21 @@ namespace Elevel.Application.Features.QuestionCommands
             [JsonIgnore]
             public Guid Id { get; set; }
 
-            [Required()]
             public string NameQuestion { get; set; }
 
             public Level? Level { get; set; }
 
             public List<AnswerDto> Answers { get; set; }
+        }
+
+        public class Validator: AbstractValidator<Request>
+        {
+            public Validator()
+            {
+                RuleFor(x => x.NameQuestion).NotEmpty().WithMessage("The question name can't be empty or null!");
+
+                RuleFor(x => x.Level).IsInEnum().WithMessage("The level must be between 1 and 5!");
+            }
         }
 
         public class Handler : IRequestHandler<Request, Response>
