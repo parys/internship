@@ -59,7 +59,10 @@ namespace Elevel.Api.Controllers
         [HttpPut("{id:Guid}")]
         public async Task<IActionResult> UpdateQuestionAsync([FromRoute] Guid id, [FromBody] UpdateQuestionCommand.Request request)
         {
-            request.Id = id;
+            if(request.Id == id)
+            {
+                return BadRequest("Ids from url and from body are different");
+            }
 
             var response = await Mediator.Send(request);
 
