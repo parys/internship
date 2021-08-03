@@ -9,11 +9,20 @@ namespace Elevel.Application.Profiles
         public QuestionProfile()
         {
             CreateMap<CreateQuestionCommand.Request, Question>();
+            CreateMap<CreateQuestionCommand.AnswerDto, Answer>();
+            CreateMap<Question, CreateQuestionCommand.Response>();
+
             CreateMap<Question, DeleteQuestionCommand.Response>();
+
             CreateMap<Question, GetQuestionDetailQuery.Response>();
+            CreateMap<Answer, GetQuestionDetailQuery.AnswerDto>();
+
             CreateMap<Question, GetQuestionListQuery.QuestionsDTO>();
+
             CreateMap<Question, UpdateQuestionCommand.Response>();
+            CreateMap<Answer, UpdateQuestionCommand.AnswerDto>();
             CreateMap<UpdateQuestionCommand.Request, Question>();
+            CreateMap<UpdateQuestionCommand.AnswerDto, Answer>();
         }
     }
 }

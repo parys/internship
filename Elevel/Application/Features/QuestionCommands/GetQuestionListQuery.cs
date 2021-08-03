@@ -22,6 +22,10 @@ namespace Elevel.Application.Features.QuestionCommands
         public class Request : PagedQueryBase, IRequest<Response>
         {
             public Level? Level { get; set; }
+
+            public long? QuestionNumber { get; set; }
+
+            public Guid? CreatorId { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Response>
@@ -35,42 +39,52 @@ namespace Elevel.Application.Features.QuestionCommands
                 _mapper = mapper;
             }
 
-            public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
+            public Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
                 var questions = _context.Questions.AsNoTracking();
+
                 if (request.Level.HasValue)
                 {
                     questions = questions.Where(x => x.Level == request.Level);
                 }
 
-                return new Response
+                if (request.QuestionNumber.HasValue)
                 {
-                    PageSize = request.PageSize,
-                    CurrentPage = request.CurrentPage,
-                    Results = await questions.Skip(request.SkipCount())
-                    .Take(request.PageSize)
-                    .ProjectTo<QuestionsDTO>(_mapper.ConfigurationProvider)
-                    .ToListAsync(cancellationToken),
-                    RowCount = await questions.CountAsync(cancellationToken)
-                };
+                    questions = questions.Where(x => x.QuestionNumber == (long)request.QuestionNumber);
+                }
+
+                if (request.CreatorId.HasValue)
+                {
+                    questions = questions.Where(x => x.CreatorId == request.CreatorId);
+                }
+
+                return Task.FromResult(new Response
+                {
+                    questions = _mapper.Map<List<QuestionsDTO>>(questions)
+                });
             }
         }
 
         [Serializable]
-        public class Response : PagedResult<QuestionsDTO>
+        public class Response 
         {
-
+            public IEnumerable<QuestionsDTO> questions { get; set; }
         }
 
         [Serializable]
         public class QuestionsDTO
         {
             public Guid Id { get; set; }
+
+            public long QuestionNumber { get; set; }
+
+            public byte Level { get; set; }
+
+            public Guid CreatorId { get; set; }
+
             public string NameQuestion { get; set; }
-            public bool Deleted { get; set; }
+
             public DateTimeOffset CreationDate { get; set; }
-            public Guid AnswerId { get; set; }
-            public Guid? AuditionId { get; set; }
         }
     }
 }
