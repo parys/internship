@@ -4,6 +4,47 @@
         <name>Elevel.Api</name>
     </assembly>
     <members>
+        <member name="M:Elevel.Api.Controllers.QuestionController.GetQuestionList(Elevel.Application.Features.QuestionCommands.GetQuestionListQuery.Request)">
+            <summary>
+            Receive CreatorId, QuestionNumber, and Level from query.
+            Returns all not deleted questions without answers.
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Elevel.Api.Controllers.QuestionController.GetQuestionById(Elevel.Application.Features.QuestionCommands.GetQuestionDetailQuery.Request)">
+            <summary>
+            Receives id from route.
+            Returns Question Id, Question Nuber, Level, Question Text, List of Answers(Id, QuestionId, Answer text, IsRight)
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Elevel.Api.Controllers.QuestionController.CreateQuestionAsync(Elevel.Application.Features.QuestionCommands.CreateQuestionCommand.Request)">
+            <summary>
+            Receives Level, Question Text, List of Answers(Answer text, IsRight) from body
+            Returns test id 
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Elevel.Api.Controllers.QuestionController.UpdateQuestionAsync(System.Guid,Elevel.Application.Features.QuestionCommands.UpdateQuestionCommand.Request)">
+            <summary>
+            Receives id from route; Level, Question Text, List of Answers(Answer text, IsRight) from body
+            Returns test id 
+            </summary>
+            <param name="id"></param>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Elevel.Api.Controllers.QuestionController.DeleteQuestionAsync(Elevel.Application.Features.QuestionCommands.DeleteQuestionCommand.Request)">
+            <summary>
+            Receives id from route
+            Returns id and Deleted flag
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="M:Elevel.Api.Controllers.TestController.CreateTestAsync(Elevel.Application.Features.TestCommands.CreateTestCommand.Request)">
             <summary>
             For "Start test" button without assignment. 
