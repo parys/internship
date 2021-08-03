@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Elevel.Application.Infrastructure;
 using Elevel.Application.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,12 +14,12 @@ namespace Elevel.Application.Features.QuestionCommands
 {
     public class GetQuestionDetailQuery
     {
-        public class Request: IRequest<Response>
+        public class Request : IRequest<Response>
         {
             public Guid Id { get; set; }
         }
 
-        public class Handler: IRequestHandler<Request, Response>
+        public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IApplicationDbContext _context;
             private readonly IMapper _mapper;
@@ -38,7 +38,7 @@ namespace Elevel.Application.Features.QuestionCommands
 
                 if (question == null)
                 {
-                    return null;
+                    throw new NotFoundException($"Question with id {request.Id}");
                 }
 
                 return question;
@@ -48,11 +48,29 @@ namespace Elevel.Application.Features.QuestionCommands
         public class Response
         {
             public Guid Id { get; set; }
+
+            public byte Level { get; set; }
+
+            public long QuestionNumber { get; set; }
+
+            public Guid CreatorId { get; set; }
+
             public string NameQuestion { get; set; }
+
             public DateTimeOffset CreationDate { get; set; }
-            public bool Deleted { get; set; }
-            public Guid AnswerId { get; set; }
-            public Guid? AuditionId { get; set; }
+
+            public IEnumerable<AnswerDto> Answers { get; set; }
+        }
+
+        public class AnswerDto
+        {
+            public Guid Id { get; set; }
+
+            public Guid QuestionId { get; set; }
+
+            public string NameAnswer { get; set; }
+
+            public bool IsRight { get; set; }
         }
     }
 }
