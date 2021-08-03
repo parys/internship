@@ -14,6 +14,10 @@ namespace Elevel.Infrastructure.Persistence.Configurations
         public void Configure(EntityTypeBuilder<Answer> builder)
         {
             builder.ToTable("Answers");
+
+            builder.HasOne(x => x.Question)
+                .WithMany(x => x.Answers)
+                .HasForeignKey(x => x.QuestionId);
         }
     }
 }
