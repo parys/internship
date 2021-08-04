@@ -17,7 +17,6 @@ namespace Elevel.Application.Features.QuestionCommands
     {
         public class Request : IRequest<Response>
         {
-            [JsonIgnore]
             public Guid Id { get; set; }
 
             public string NameQuestion { get; set; }
