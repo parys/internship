@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
 using Elevel.Application.Interfaces;
 using Elevel.Domain.Enums;
-using Elevel.Domain.Models;
-using FluentValidation;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,19 +13,20 @@ using System.Threading.Tasks;
 
 namespace Elevel.Application.Features.CommandsForAudition
 {
-    public class CreateAuditionCommand
+    
+    public class UpdateAuditionCommand
     {
         public class Request : IRequest<Response>
         {
             [JsonIgnore]
-            public Guid CreatorId { get; set; }
+            public Guid Id { get; set; }
             public long AuditionNumber { get; set; }
             public string AudioFilePath { get; set; }
             public Level Level { get; set; }
             public List<QuestionDto> Questions { get; set; }
         }
 
-        public class Handler :IRequestHandler<Request, Response>
+        public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IApplicationDbContext _context;
             private readonly IMapper _mapper;
@@ -39,8 +39,13 @@ namespace Elevel.Application.Features.CommandsForAudition
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var audition = _mapper.Map<Audition>(request);
-                _context.Auditions.Add(audition);
+                var audition = await _context.Auditions.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+                if(audition is null)
+                {
+                    throw new DllNotFoundException($"Audition with id {request.Id}");
+                }
+
+                audition = _mapper.Map(request, audition);
                 await _context.SaveChangesAsync(cancellationToken);
                 return new Response { Id = audition.Id };
             }
