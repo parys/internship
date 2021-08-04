@@ -59,7 +59,7 @@ namespace Elevel.Api.Controllers
         [HttpPut("{id:Guid}")]
         public async Task<IActionResult> UpdateQuestionAsync([FromRoute] Guid id, [FromBody] UpdateQuestionCommand.Request request)
         {
-            if (request.Id == id)
+            if (request.Id != id)
             {
                 return BadRequest("Ids from url and from body are different");
             }
