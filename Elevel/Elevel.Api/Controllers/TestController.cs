@@ -132,10 +132,31 @@ namespace Elevel.Api.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Receives: IsChecked(false default), TestPassingDate, Level, Priority from query.
+        /// Returns: Id, TestNumber, Level, TestPassingDate, Priority, EssayAnswer, SpeakingAnswerReference
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpGet("forCoach"), Authorize(Roles = nameof(UserRole.Coach))]
         public async Task<IActionResult> GetAllTestForCoach([FromQuery] GetTestsForCoachQuery.Request request)
         {
             request.CoachId = User.GetLoggedInUserId();
+
+            var result = await Mediator.Send(request);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Receives: IsAssigned(false default), TestPassingDate, Level, Priority from query.
+        /// Returns: Id, TestNumber, Level, TestPassingDate, Priority, coachId
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpGet("forAdmin"), Authorize(Roles = nameof(UserRole.Administrator))]
+        public async Task<IActionResult> GetAllTestForAdmin([FromQuery] GetTestsForAdminQuery.Request request)
+        {
 
             var result = await Mediator.Send(request);
 
