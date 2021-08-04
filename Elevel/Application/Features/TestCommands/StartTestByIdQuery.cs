@@ -30,8 +30,6 @@ namespace Elevel.Application.Features.TestCommands
         }
         public class Validator : AbstractValidator<Request>
         {
-
-            private const int ANSWER_COUNT = 4;
             public Validator()
             {
                 RuleFor(x => x.Level).IsInEnum().WithMessage("The level must be between 1 and 5!");

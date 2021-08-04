@@ -32,8 +32,6 @@ namespace Elevel.Application.Features.TestCommands
 
         public class Validator : AbstractValidator<Request>
         {
-
-            private const int ANSWER_COUNT = 4;
             public Validator()
             {
                 RuleFor(x => x.SpeakingMark).NotEmpty().WithMessage("SpeakingMark name can't be empty or null!");

@@ -32,7 +32,8 @@ namespace Elevel.Application.Features.QuestionCommands
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var question = await _context.Questions.AsNoTracking().Where(x => !x.AuditionId.HasValue)
+                var question = await _context.Questions.AsNoTracking()
+                    .Where(x => !x.AuditionId.HasValue)
                     .ProjectTo<Response>(_mapper.ConfigurationProvider)
                     .FirstOrDefaultAsync(a => a.Id == request.Id, cancellationToken);
 
