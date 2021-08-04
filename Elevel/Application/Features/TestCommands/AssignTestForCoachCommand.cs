@@ -1,5 +1,6 @@
 ﻿using Elevel.Application.Infrastructure;
 using Elevel.Application.Interfaces;
+using Elevel.Domain.Enums;
 using Elevel.Domain.Models;
 using FluentValidation;
 using MediatR;
@@ -43,14 +44,14 @@ namespace Elevel.Application.Features.TestCommands
                     throw new NotFoundException($"Test with id {request.TestId}");
                 }
 
-                if(test.SpeakingMark.HasValue && test.EssayMark.HasValue && string.IsNullOrWhiteSpace(test.Comment))
+                if(test.SpeakingMark.HasValue && test.EssayMark.HasValue)
                 {
                     throw new ValidationException("This test has already checked!");
                 }
 
                 var coach = await _userManager.FindByIdAsync(request.CoachId.ToString());
 
-                if (coach is null || !(await _userManager.GetRolesAsync(coach)).Contains("Coach"))
+                if (coach is null || !(await _userManager.GetRolesAsync(coach)).Contains(UserRole.Coach.ToString()))
                 {
                     throw new ValidationException($"User is either not found or not coach");
                 }
