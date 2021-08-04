@@ -162,5 +162,23 @@ namespace Elevel.Api.Controllers
 
             return Ok(result);
         }
+
+        /// <summary>
+        /// Receives TestId in route and body and CoachId from body.
+        /// Returns TestId and CoachId
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPut("{id:Guid}/assignForCoach"), Authorize(Roles =nameof(UserRole.Administrator))]
+        public async Task<IActionResult> AssignTestForCoach([FromRoute] Guid id, [FromBody] AssignTestForCoachCommand.Request request)
+        {
+            if(id != request.TestId)
+            {
+                return BadRequest("Route and Boday ids don't match!");
+            }
+            var result = await Mediator.Send(request);
+            return Ok(result);
+        }
     }
 }
