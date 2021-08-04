@@ -2,11 +2,10 @@
 using Elevel.Application.Infrastructure;
 using Elevel.Application.Interfaces;
 using Elevel.Domain.Enums;
-using Elevel.Domain.Models;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,6 +28,20 @@ namespace Elevel.Application.Features.TestCommands
 
             [JsonIgnore]
             public Guid CoachId { get; set; }
+        }
+
+        public class Validator : AbstractValidator<Request>
+        {
+
+            private const int ANSWER_COUNT = 4;
+            public Validator()
+            {
+                RuleFor(x => x.SpeakingMark).NotEmpty().WithMessage("SpeakingMark name can't be empty or null!");
+
+                RuleFor(x => x.EssayMark).NotEmpty().WithMessage("EssayMark name can't be empty or null!");
+
+                RuleFor(x => x.Comment).NotEmpty().WithMessage("Comment name can't be empty or null!");
+            }
         }
 
         public class Handler : IRequestHandler<Request, Response>

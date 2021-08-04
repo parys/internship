@@ -2,16 +2,11 @@
 using AutoMapper.QueryableExtensions;
 using Elevel.Application.Interfaces;
 using Elevel.Application.Pagination;
-using Elevel.Domain;
 using Elevel.Domain.Enums;
-using Elevel.Domain.Models;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -41,7 +36,7 @@ namespace Elevel.Application.Features.QuestionCommands
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var questions = _context.Questions.AsNoTracking();
+                var questions = _context.Questions.AsNoTracking().Where(x => !x.AuditionId.HasValue);
 
                 if (request.Level.HasValue)
                 {

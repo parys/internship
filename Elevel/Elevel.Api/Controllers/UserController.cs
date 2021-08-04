@@ -3,9 +3,6 @@ using Elevel.Application.Features.UserFeatures;
 using Elevel.Application.Interfaces;
 using Elevel.Domain.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Elevel.Api.Controllers
@@ -49,7 +46,7 @@ namespace Elevel.Api.Controllers
                 Id = User.GetLoggedInUserId()
             };
             var result = await Mediator.Send(request);
-            
+
             return Ok(result);
         }
     }
