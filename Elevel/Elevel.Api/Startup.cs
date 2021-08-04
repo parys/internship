@@ -19,6 +19,7 @@ using FluentValidation.AspNetCore;
 using FluentValidation;
 using MediatR;
 using Elevel.Application.Infrastructure;
+using Elevel.Api.Filters;
 
 namespace Elevel.Api
 {
@@ -36,6 +37,9 @@ namespace Elevel.Api
         {
             services.AddAutoMapper(typeof(TestQuestionProfile));
             services.AddCors();
+            services.AddMvc(options => {
+                options.Filters.Add(typeof(CustomExceptionFilterAttribute));
+                });
             //Configuration from AppSettings
             services.Configure<TokenConfiguration>(Configuration.GetSection("JWT"));
             //User Manager Service
