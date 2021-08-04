@@ -18,7 +18,7 @@ namespace Elevel.Api.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> GetQuestionList([FromQuery]GetQuestionListQuery.Request request)
+        public async Task<IActionResult> GetQuestionList([FromQuery] GetQuestionListQuery.Request request)
         {
             return Ok(await Mediator.Send(request));
         }
@@ -30,7 +30,7 @@ namespace Elevel.Api.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpGet("{id:Guid}")]
-        public async Task<IActionResult> GetQuestionById([FromRoute]GetQuestionDetailQuery.Request request)
+        public async Task<IActionResult> GetQuestionById([FromRoute] GetQuestionDetailQuery.Request request)
         {
             var response = await Mediator.Send(request);
             return Ok(response);
@@ -59,7 +59,7 @@ namespace Elevel.Api.Controllers
         [HttpPut("{id:Guid}")]
         public async Task<IActionResult> UpdateQuestionAsync([FromRoute] Guid id, [FromBody] UpdateQuestionCommand.Request request)
         {
-            if(request.Id == id)
+            if (request.Id == id)
             {
                 return BadRequest("Ids from url and from body are different");
             }

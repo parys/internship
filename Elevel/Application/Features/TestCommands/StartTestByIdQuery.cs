@@ -4,12 +4,12 @@ using Elevel.Application.Infrastructure;
 using Elevel.Application.Interfaces;
 using Elevel.Domain.Enums;
 using Elevel.Domain.Models;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -27,6 +27,13 @@ namespace Elevel.Application.Features.TestCommands
 
             [JsonIgnore]
             public Guid UserId { get; set; }
+        }
+        public class Validator : AbstractValidator<Request>
+        {
+            public Validator()
+            {
+                RuleFor(x => x.Level).IsInEnum().WithMessage("The level must be between 1 and 5!");
+            }
         }
 
         public class Handler : IRequestHandler<Request, Response>

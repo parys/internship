@@ -4,7 +4,6 @@ using Elevel.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Elevel.Api.Controllers
@@ -34,7 +33,7 @@ namespace Elevel.Api.Controllers
         ///  * List of GrammarQuestions with List of Answers
         /// </returns>
         [HttpPost]
-        public async Task<IActionResult> CreateTestAsync ([FromBody] CreateTestCommand.Request request)
+        public async Task<IActionResult> CreateTestAsync([FromBody] CreateTestCommand.Request request)
         {
             request.UserId = User.GetLoggedInUserId();
             var result = await Mediator.Send(request);
@@ -49,7 +48,7 @@ namespace Elevel.Api.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [Authorize(Roles = nameof(UserRole.HumanResourceManager)),HttpPost("assign")]
+        [HttpPost("assign"), Authorize(Roles = nameof(UserRole.HumanResourceManager))]
         public async Task<IActionResult> AssignTestAsync([FromBody] AssignTestCommand.Request request)
         {
             request.HrId = User.GetLoggedInUserId();
@@ -102,9 +101,12 @@ namespace Elevel.Api.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPut("{id:Guid}/submit")]
-        public async Task<IActionResult> SubmitTestAsync([FromRoute]Guid id, [FromBody] SubmitTestCommand.Request request)
+        public async Task<IActionResult> SubmitTestAsync([FromRoute] Guid id, [FromBody] SubmitTestCommand.Request request)
         {
             request.Id = id;
+
+            request.UserId = User.GetLoggedInUserId();
+
             var result = await Mediator.Send(request);
 
             return Ok(result);
@@ -119,11 +121,21 @@ namespace Elevel.Api.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPut("{id:Guid}/check"), Authorize(Roles = nameof(UserRole.Coach))]
-        public async Task<IActionResult> CheckTestAsync([FromRoute]Guid id, [FromBody] CheckTestCommand.Request request)
+        public async Task<IActionResult> CheckTestAsync([FromRoute] Guid id, [FromBody] CheckTestCommand.Request request)
         {
             request.CoachId = User.GetLoggedInUserId();
 
             request.Id = id;
+
+            var result = await Mediator.Send(request);
+
+            return Ok(result);
+        }
+
+        [HttpGet("forCoach"), Authorize(Roles = nameof(UserRole.Coach))]
+        public async Task<IActionResult> GetAllTestForCoach([FromQuery] GetTestsForCoachQuery.Request request)
+        {
+            request.CoachId = User.GetLoggedInUserId();
 
             var result = await Mediator.Send(request);
 

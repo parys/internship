@@ -2,7 +2,7 @@
 using Elevel.Application.Infrastructure;
 using Elevel.Application.Interfaces;
 using Elevel.Domain.Enums;
-using Elevel.Domain.Models;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -71,9 +71,9 @@ namespace Elevel.Application.Features.TestCommands
                     throw new ValidationException("Test time has passed");
                 }
 
-                await CheckAnswersForUniqueQuestionAsync(request.GrammarAnswers);
+                await CheckAnswersForUniqueTestQuestionAsync(request.GrammarAnswers, test.Id);
 
-                await CheckAnswersForUniqueQuestionAsync(request.AuditionAnswers);
+                await CheckAnswersForUniqueTestQuestionAsync(request.AuditionAnswers, test.Id);
 
                 test = _mapper.Map(request, test);
 
@@ -88,22 +88,18 @@ namespace Elevel.Application.Features.TestCommands
                 return testResponse;
             }
 
-            private async Task CheckAnswersForUniqueQuestionAsync(IEnumerable<Guid> answers)
+            private async Task CheckAnswersForUniqueTestQuestionAsync(IEnumerable<Guid> answers, Guid testId)
             {
-                var answerList = _context.Answers.AsNoTracking();
+                var questionIds = await _context.TestQuestions.Where(x => x.TestId == testId).Select(x => x.QuestionId).ToListAsync();
+                var answerList = _context.Answers.AsNoTracking().Where(x => questionIds.Contains(x.QuestionId));
 
                 foreach (var answer in answers)
                 {
                     if (!await answerList.AnyAsync(x => x.Id == answer).ConfigureAwait(false))
                     {
-                        throw new NotFoundException($"Answer with Id {answer}");
+                        throw new ValidationException($"Answer with Id {answer} is not in current test");
                     }
                 }
-
-                var questionIds = await answerList
-                    .Where(x => answers.Contains(x.Id))
-                    .Select(x => x.QuestionId).Distinct()
-                    .ToListAsync().ConfigureAwait(false);
 
             }
 

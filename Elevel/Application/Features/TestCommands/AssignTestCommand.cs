@@ -1,14 +1,12 @@
 ﻿using AutoMapper;
 using Elevel.Application.Infrastructure;
 using Elevel.Application.Interfaces;
-using Elevel.Domain.Enums;
 using Elevel.Domain.Models;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,10 +21,21 @@ namespace Elevel.Application.Features.TestCommands
 
             public Guid UserId { get; set; }
 
-            public bool Priority { get; set; }
+            public bool Priority { get; set; } = false;
 
             [JsonIgnore]
             public Guid HrId { get; set; }
+        }
+
+        public class Validator : AbstractValidator<Request>
+        {
+            public Validator()
+            {
+                RuleFor(x => x.AssignmentEndDate).NotEmpty().WithMessage("AssignmentEndDate can't be empty or null!");
+
+                RuleFor(x => x.UserId).NotEmpty().WithMessage("UserId can't be empty or null!");
+
+            }
         }
 
         public class Handler : IRequestHandler<Request, Response>

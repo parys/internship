@@ -30,6 +30,8 @@ namespace Elevel.Application.Profiles
 
             CreateMap<Test, CheckTestCommand.Response>();
 
+            CreateMap<Test, GetTestsForCoachQuery.TestDto>();
+
         }
     }
 }
