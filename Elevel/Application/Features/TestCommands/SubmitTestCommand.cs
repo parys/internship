@@ -40,11 +40,6 @@ namespace Elevel.Application.Features.TestCommands
 
             private readonly IMapper _mapper;
 
-
-            private const int ESSAY_MAX_LENGTH = 512;
-
-            private const int TEST_DURATION = 60; //minutes
-
             public Handler(IApplicationDbContext context, IMapper mapper)
             {
                 _context = context;
@@ -66,12 +61,12 @@ namespace Elevel.Application.Features.TestCommands
                     throw new ValidationException("You can't submit this test");
                 }
 
-                if (request.EssayAnswer.Length > ESSAY_MAX_LENGTH)
+                if (request.EssayAnswer.Length > Constants.ESSAY_MAX_LENGTH)
                 {
                     throw new ValidationException("Essay Answer is too long");
                 }
 
-                if (DateTimeOffset.Compare(((DateTimeOffset)test.TestPassingDate).AddMinutes(TEST_DURATION), DateTimeOffset.Now) < 0)
+                if (DateTimeOffset.Compare(((DateTimeOffset)test.TestPassingDate).AddMinutes(Constants.TEST_DURATION), DateTimeOffset.Now) < 0)
                 {
                     throw new ValidationException("Test time has passed");
                 }

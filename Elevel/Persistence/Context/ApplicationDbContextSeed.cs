@@ -11,7 +11,7 @@ namespace Elevel.Infrastructure.Persistence.Context
 {
     public class ApplicationDbContextSeed
     {
-        public static async Task SeedEssentialsAsync(UserManager<ApplicationUser> userManager,
+        public static async Task SeedEssentialsAsync(UserManager<User> userManager,
             RoleManager<IdentityRole<Guid>> roleManager)
         {
             //Seed Roles
@@ -37,7 +37,7 @@ namespace Elevel.Infrastructure.Persistence.Context
             }
         }
 
-        public static async Task SeedDatabaseDataAsync(UserManager<ApplicationUser> userManager, ApplicationDbContext context)
+        public static async Task SeedDatabaseDataAsync(UserManager<User> userManager, ApplicationDbContext context)
         {
             await TestDataDb.FillDB(context, userManager);
         }

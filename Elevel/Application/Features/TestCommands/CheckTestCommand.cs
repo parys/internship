@@ -35,8 +35,6 @@ namespace Elevel.Application.Features.TestCommands
         {
             private readonly IApplicationDbContext _context;
             private readonly IMapper _mapper;
-            private const int MIN_MARK = 0;
-            private const int MAX_MARK = 10;
 
             public Handler(IApplicationDbContext context, IMapper mapper)
             {
@@ -59,14 +57,14 @@ namespace Elevel.Application.Features.TestCommands
                     throw new ValidationException("You can't check this test");
                 }
 
-                if(request.SpeakingMark < MIN_MARK 
-                    || request.SpeakingMark > MAX_MARK )
+                if(request.SpeakingMark < Constants.MIN_MARK 
+                    || request.SpeakingMark > Constants.MAX_MARK )
                 {
                     throw new ValidationException("Speaking mark number is out if range from 0 to 10");
                 }
 
-                if(request.EssayMark < MIN_MARK
-                    || request.EssayMark > MAX_MARK)
+                if(request.EssayMark < Constants.MIN_MARK
+                    || request.EssayMark > Constants.MAX_MARK)
                 {
                     throw new ValidationException("Essay mark number is out if range from 0 to 10");
                 }

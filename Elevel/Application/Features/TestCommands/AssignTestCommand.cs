@@ -35,9 +35,11 @@ namespace Elevel.Application.Features.TestCommands
 
             private readonly IMapper _mapper;
 
-            private readonly UserManager<ApplicationUser> _userManager;
+            private static Random _rand = new Random();
 
-            public Handler(IApplicationDbContext context, IMapper mapper, UserManager<ApplicationUser> userManager)
+            private readonly UserManager<User> _userManager;
+
+            public Handler(IApplicationDbContext context, IMapper mapper, UserManager<User> userManager)
             {
                 _context = context;
 
