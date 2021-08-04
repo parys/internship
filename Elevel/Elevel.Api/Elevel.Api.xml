@@ -113,5 +113,21 @@
             <param name="request"></param>
             <returns></returns>
         </member>
+        <member name="M:Elevel.Api.Controllers.TestController.GetAllTestForCoach(Elevel.Application.Features.TestCommands.GetTestsForCoachQuery.Request)">
+            <summary>
+            Receives: IsChecked(false default), TestPassingDate, Level, Priority from query.
+            Returns: Id, TestNumber, Level, TestPassingDate, Priority, EssayAnswer, SpeakingAnswerReference
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Elevel.Api.Controllers.TestController.GetAllTestForAdmin(Elevel.Application.Features.TestCommands.GetTestsForAdminQuery.Request)">
+            <summary>
+            Receives: IsAssigned(false default), TestPassingDate, Level, Priority from query.
+            Returns: Id, TestNumber, Level, TestPassingDate, Priority, coachId
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
     </members>
 </doc>

@@ -6,24 +6,26 @@ using Elevel.Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
-
 namespace Elevel.Application.Features.TestCommands
 {
-    public class GetAllTestsQuery
+    public class GetTestsForAdminQuery
     {
         public class Request : PagedQueryBase, IRequest<Response>
         {
             public Level? Level { get; set; }
 
+            public bool IsAssigned { get; set; } = false;
+
             public DateTimeOffset? TestPassingDate { get; set; }
 
-            public Guid? UserId { get; set; }
-
-            public Guid? Id { get; set; }
+            public bool? Priority { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Response>
@@ -43,6 +45,13 @@ namespace Elevel.Application.Features.TestCommands
             {
                 var tests = _context.Tests.AsNoTracking();
 
+                if (request.IsAssigned)
+                {
+                    tests = tests.Where(x => x.CoachId.HasValue);
+                } else {
+                    tests = tests.Where(x => !x.CoachId.HasValue);
+                }
+
                 if (request.Level.HasValue)
                 {
                     tests = tests.Where(x => x.Level == request.Level.Value);
@@ -52,13 +61,10 @@ namespace Elevel.Application.Features.TestCommands
                 {
                     tests = tests.Where(x => x.TestPassingDate == request.TestPassingDate);
                 }
-                if (request.UserId.HasValue)
+
+                if (request.Priority.HasValue)
                 {
-                    tests = tests.Where(x => x.UserId == request.UserId);
-                }
-                if (request.Id.HasValue)
-                {
-                    tests = tests.Where(x => x.Id == request.Id);
+                    tests = tests.Where(x => x.Priority == request.Priority);
                 }
 
 
@@ -86,25 +92,7 @@ namespace Elevel.Application.Features.TestCommands
 
             public long TestNumber { get; set; }
 
-            public DateTimeOffset CreationDate { get; set; }
-
-            public DateTimeOffset? TestPassingDate { get; set; }
-
-            public DateTimeOffset? AssignmentEndDate { get; set; }
-
-            public int? GrammarMark { get; set; }
-
-            public int? AuditionMark { get; set; }
-
-            public int? EssayMark { get; set; }
-
-            public int? SpeakingMark { get; set; }
-
-            public string Comment { get; set; }
-
-            public Guid UserId { get; set; }
-
-            public Guid? HrId { get; set; }
+            public DateTimeOffset TestPassingDate { get; set; }
 
             public Guid? CoachId { get; set; }
 

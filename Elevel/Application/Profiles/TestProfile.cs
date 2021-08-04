@@ -15,7 +15,7 @@ namespace Elevel.Application.Profiles
             CreateMap<Topic, CreateTestCommand.TopicDto>();
             CreateMap<Audition, CreateTestCommand.AuditionDto>();
 
-            CreateMap<Test, GetAllTestsQuery.TestDTO>();
+            CreateMap<Test, GetAllTestsQuery.TestDto>();
 
             CreateMap<Test, SubmitTestCommand.Response>();
             CreateMap<SubmitTestCommand.Request, Test>();
@@ -32,6 +32,7 @@ namespace Elevel.Application.Profiles
 
             CreateMap<Test, GetTestsForCoachQuery.TestDto>();
 
+            CreateMap<Test, GetTestsForAdminQuery.TestDto>();
         }
     }
 }
