@@ -37,8 +37,6 @@ namespace Elevel.Application.Features.TestCommands
                 RuleFor(x => x.SpeakingMark).NotEmpty().WithMessage("SpeakingMark name can't be empty or null!");
 
                 RuleFor(x => x.EssayMark).NotEmpty().WithMessage("EssayMark name can't be empty or null!");
-
-                RuleFor(x => x.Comment).NotEmpty().WithMessage("Comment name can't be empty or null!");
             }
         }
 
