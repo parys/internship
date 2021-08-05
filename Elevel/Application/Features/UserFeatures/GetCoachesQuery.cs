@@ -52,7 +52,7 @@ namespace Elevel.Application.Features.UserFeatures
 
                 foreach (var coach in coachList)
                 {
-                    coach.TestCount = tests.Where(x => x.CoachId == coach.Id).Count();
+                    coach.TestCount = tests.Where(x => x.CoachId == coach.Id && !x.EssayMark.HasValue).Count();
                 }
 
                 return new Response
