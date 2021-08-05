@@ -85,8 +85,6 @@ namespace Elevel.Application.Features.TestCommands
                     throw new ValidationException("This test has already been passed");
                 }
 
-                test.TestPassingDate = DateTimeOffset.UtcNow;
-
                 var auditions = await _context.Auditions.AsNoTracking().Where(x => x.Level == request.Level).ToListAsync();
 
                 if (auditions.Count < Constants.AUDTUION_MIN_COUNT)

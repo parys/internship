@@ -91,8 +91,6 @@ namespace Elevel.Application.Features.TestCommands
 
                 test.AuditionId = FindAudition(auditions);
 
-                test.TestPassingDate = DateTimeOffset.UtcNow;
-
                 test.AssignmentEndDate = null;
 
                 _context.Tests.Add(test);

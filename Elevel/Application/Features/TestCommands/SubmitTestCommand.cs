@@ -77,6 +77,8 @@ namespace Elevel.Application.Features.TestCommands
 
                 test = _mapper.Map(request, test);
 
+                test.TestPassingDate = DateTimeOffset.UtcNow;
+
                 test.GrammarMark = await EvaluateTestAsync(request.GrammarAnswers);
 
                 test.AuditionMark = await EvaluateTestAsync(request.AuditionAnswers);
