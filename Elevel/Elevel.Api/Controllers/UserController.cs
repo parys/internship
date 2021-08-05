@@ -24,7 +24,7 @@ namespace Elevel.Api.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet, Authorize(Roles =nameof(UserRole.HumanResourceManager))]
         public async Task<IActionResult> GetAllUsersAsync([FromQuery] GetUserListQuery.Request request)
         {
             var result = Mediator.Send(request);
