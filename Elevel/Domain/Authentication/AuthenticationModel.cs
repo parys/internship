@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Elevel.Domain.Authentication
 {
     public class AuthenticationModel
     {
+        public Guid UserId { get; set; }
         public string Message { get; set; }
         public bool IsAuthenticated { get; set; }
         public string FirstName { get; set; }

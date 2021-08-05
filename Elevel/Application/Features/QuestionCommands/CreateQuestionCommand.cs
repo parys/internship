@@ -36,7 +36,7 @@ namespace Elevel.Application.Features.QuestionCommands
 
                 RuleFor(x => x.Level).IsInEnum().WithMessage("The level must be between 1 and 5!");
 
-                RuleFor(x => x.Answers).Must(x => x.Count == ANSWER_COUNT).WithMessage("The amount of answers must be 4");
+                RuleFor(x => x.Answers).Must(x => x.Count == ANSWER_COUNT).WithMessage($"The amount of answers must be {ANSWER_COUNT}");
             }
         }
 

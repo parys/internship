@@ -138,5 +138,29 @@
             <param name="request"></param>
             <returns></returns>
         </member>
+        <member name="M:Elevel.Api.Controllers.UserController.GetAllUsersAsync(Elevel.Application.Features.UserFeatures.GetUserListQuery.Request)">
+            <summary>
+            Returns all users
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Elevel.Api.Controllers.UserController.GetTokenAsync(Elevel.Domain.Authentication.TokenRequestModel)">
+            <summary>
+            Receives Email, and Password
+            Returns Token, and Id
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Elevel.Api.Controllers.UserController.GetCoachesAsync(Elevel.Application.Features.UserFeatures.GetCoachesQuery.Request)">
+            <summary>
+            Receives piece of name parameter
+            comparing with FirstName, LastName, and UserName 
+            Returns list of coaches(id, FirstName, LastName, UserName, TestCount)
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
     </members>
 </doc>

@@ -9,8 +9,9 @@ namespace Elevel.Application.Profiles
     {
         public UserProfile()
         {
-            CreateMap<User, GetUserByIdQuery.Response>();
             CreateMap<User, UsersDTO>();
+
+            CreateMap<User, GetCoachesQuery.CoachDto>();
         }
     }
 }
