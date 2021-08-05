@@ -65,7 +65,12 @@ namespace Elevel.Application.Features.TestCommands
                     throw new ValidationException("This test is not assigned");
                 }
 
-                if(test.UserId != request.UserId)
+                if (request.UserId == test.HrId)
+                {
+                    throw new ValidationException("You can't assign yourself");
+                }
+
+                if (test.UserId != request.UserId)
                 {
                     throw new ValidationException("You can't pass this test");
                 }
