@@ -27,7 +27,6 @@ namespace Elevel.Application.Features.UserFeatures
             private readonly IMapper _mapper;
             private readonly UserManager<User> _userManager;
             private readonly IApplicationDbContext _context;
-            private readonly RoleManager<User> _roleManager;
 
             public Handler(IMapper mapper, UserManager<User> userManager, IApplicationDbContext context)
             {
