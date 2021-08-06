@@ -66,10 +66,10 @@ namespace Elevel.Application.Features.TestCommands
                     throw new ValidationException("Essay Answer is too long");
                 }
 
-                if (DateTimeOffset.Compare(((DateTimeOffset)test.TestPassingDate).AddMinutes(Constants.TEST_DURATION), DateTimeOffset.Now) < 0)
-                {
-                    throw new ValidationException("Test time has passed");
-                }
+                //if (DateTimeOffset.Compare(((DateTimeOffset)test.TestPassingDate).AddMinutes(Constants.TEST_DURATION), DateTimeOffset.Now) < 0)
+                //{
+                //    throw new ValidationException("Test time has passed");
+                //}
 
                 await CheckAnswersForUniqueTestQuestionAsync(request.GrammarAnswers, test.Id);
 

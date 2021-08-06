@@ -27,6 +27,7 @@ namespace Elevel.Application.Features.UserFeatures
             private readonly IMapper _mapper;
             private readonly UserManager<User> _userManager;
             private readonly IApplicationDbContext _context;
+            private readonly RoleManager<User> _roleManager;
 
             public Handler(IMapper mapper, UserManager<User> userManager, IApplicationDbContext context)
             {
@@ -41,19 +42,23 @@ namespace Elevel.Application.Features.UserFeatures
 
                 if (!string.IsNullOrWhiteSpace(request.Name))
                 {
-                    coaches = coaches.Where(x => x.LastName.Contains(request.Name, StringComparison.OrdinalIgnoreCase)
-                    || x.FirstName.Contains(request.Name, StringComparison.OrdinalIgnoreCase)
-                    || x.UserName.Contains(request.Name, StringComparison.OrdinalIgnoreCase));
+                    coaches = coaches.Where(x => x.LastName.Contains(request.Name)
+                    || x.FirstName.Contains(request.Name)
+                    || x.UserName.Contains(request.Name));
                 }
 
                 var coachList = _mapper.Map<List<CoachDto>>(coaches);
 
-                var tests = _context.Tests.Where(x => x.CoachId.HasValue).AsNoTracking();
+                var tests = _context.Tests.Where(x => x.CoachId.HasValue && !x.EssayMark.HasValue)
+                    .GroupBy(x => x.CoachId, (key , value) => new 
+                    { 
+                        Key = key,
+                        Count = value.Count()
+                    })
+                    .AsNoTracking();
 
-                foreach (var coach in coachList)
-                {
-                    coach.TestCount = tests.Where(x => x.CoachId == coach.Id && !x.EssayMark.HasValue).Count();
-                }
+                coachList.ForEach(coach =>
+                    coach.TestCount = tests.FirstOrDefault(x => x.Key == coach.Id).Count);
 
                 return new Response
                 {

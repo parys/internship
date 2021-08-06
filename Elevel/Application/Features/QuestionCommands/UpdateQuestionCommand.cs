@@ -30,14 +30,13 @@ namespace Elevel.Application.Features.QuestionCommands
         public class Validator: AbstractValidator<Request>
         {
 
-            private const int ANSWER_COUNT = 4;
             public Validator()
             {
                 RuleFor(x => x.NameQuestion).NotEmpty().WithMessage("The question name can't be empty or null!");
 
                 RuleFor(x => x.Level).IsInEnum().WithMessage("The level must be between 1 and 5!");
 
-                RuleFor(x => x.Answers).Must(x => x.Count == ANSWER_COUNT).WithMessage($"The amount of answers must be {ANSWER_COUNT}");
+                RuleFor(x => x.Answers).Must(x => x.Count == Constants.ANSWER_COUNT).WithMessage($"The amount of answers must be {Constants.ANSWER_COUNT}");
             }
         }
 
@@ -62,13 +61,11 @@ namespace Elevel.Application.Features.QuestionCommands
 
                 var answerIds = question.Answers.Select(x => x.Id);
 
-                foreach (var answer in request.Answers)
+                if (request.Answers.Any(x => !answerIds.Contains((Guid)x.Id)))
                 {
-                    if (!answerIds.Contains((Guid)answer.Id))
-                    {
-                        throw new ValidationException($"This question doesn't contain an answer with id {answer.Id}");
-                    }
+                    throw new ValidationException($"This question doesn't contain answers you sent");
                 }
+                
 
                 question = _mapper.Map(request, question);
                 await _context.SaveChangesAsync(cancelationtoken);
