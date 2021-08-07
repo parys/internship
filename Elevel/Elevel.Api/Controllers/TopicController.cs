@@ -1,11 +1,12 @@
 ﻿using Elevel.Application.Features.TopicCommands;
+using Elevel.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace Elevel.Api.Controllers
 {
-    [Authorize, Route("api/[controller]")]
+    [Authorize(Roles = nameof(UserRole.Coach)), Route("api/[controller]")]
     public class TopicController : BaseApiController
     {
         public TopicController()
