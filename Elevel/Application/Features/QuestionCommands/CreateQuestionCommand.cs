@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Elevel.Application.Infrastructure;
 using Elevel.Application.Interfaces;
 using Elevel.Domain.Enums;
 using Elevel.Domain.Models;
@@ -28,15 +29,13 @@ namespace Elevel.Application.Features.QuestionCommands
 
         public class Validator : AbstractValidator<Request>
         {
-
-            private const int ANSWER_COUNT = 4;
             public Validator()
             {
                 RuleFor(x => x.NameQuestion).NotEmpty().WithMessage("The question name can't be empty or null!");
 
                 RuleFor(x => x.Level).IsInEnum().WithMessage("The level must be between 1 and 5!");
 
-                RuleFor(x => x.Answers).Must(x => x.Count == ANSWER_COUNT).WithMessage("The amount of answers must be 4");
+                RuleFor(x => x.Answers).Must(x => x.Count == Constants.ANSWER_COUNT).WithMessage($"The amount of answers must be {Constants.ANSWER_COUNT}");
             }
         }
 

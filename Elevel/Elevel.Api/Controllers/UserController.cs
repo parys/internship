@@ -2,6 +2,8 @@
 using Elevel.Application.Features.UserFeatures;
 using Elevel.Application.Interfaces;
 using Elevel.Domain.Authentication;
+using Elevel.Domain.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -17,20 +19,24 @@ namespace Elevel.Api.Controllers
             _userService = userService;
         }
 
-        [HttpGet]
+        /// <summary>
+        /// Returns all users
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpGet, Authorize(Roles =nameof(UserRole.HumanResourceManager))]
         public async Task<IActionResult> GetAllUsersAsync([FromQuery] GetUserListQuery.Request request)
         {
             var result = Mediator.Send(request);
             return Ok(await result);
         }
 
-        [HttpGet("{Id:Guid}")]
-        public async Task<IActionResult> GetUsersByIdAsync([FromRoute] GetUserByIdQuery.Request request)
-        {
-            var result = Mediator.Send(request);
-            return Ok(await result);
-        }
-
+        /// <summary>
+        /// Receives Email, and Password
+        /// Returns Token, and Id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost("token")]
         public async Task<IActionResult> GetTokenAsync(TokenRequestModel model)
         {
@@ -38,17 +44,20 @@ namespace Elevel.Api.Controllers
             return Ok(result);
         }
 
-        [HttpGet("info")]
-        public async Task<IActionResult> UserInfo()
+        /// <summary>
+        /// Receives piece of name parameter
+        /// comparing with FirstName, LastName, and UserName 
+        /// Returns list of coaches(id, FirstName, LastName, UserName, TestCount)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpGet("coaches"), Authorize(Roles = nameof(UserRole.Administrator))]
+        public async Task<IActionResult> GetCoachesAsync([FromQuery] GetCoachesQuery.Request request)
         {
-            GetUserByIdQuery.Request request = new GetUserByIdQuery.Request()
-            {
-                Id = User.GetLoggedInUserId()
-            };
             var result = await Mediator.Send(request);
-
             return Ok(result);
         }
+
     }
 }
 
