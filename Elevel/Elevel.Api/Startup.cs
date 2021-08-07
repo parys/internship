@@ -1,8 +1,14 @@
+using Elevel.Api.Filters;
 using Elevel.Application;
+using Elevel.Application.Features.FileFeatures;
+using Elevel.Application.Infrastructure;
+using Elevel.Application.Interfaces;
+using Elevel.Application.Profiles;
 using Elevel.Domain.Authentication;
 using Elevel.Domain.Models;
 using Elevel.Infrastructure.Persistence.Context;
 using Elevel.Persistence;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -14,12 +20,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Text;
-using Elevel.Application.Profiles;
-using FluentValidation.AspNetCore;
-using FluentValidation;
-using MediatR;
-using Elevel.Application.Infrastructure;
-using Elevel.Api.Filters;
 
 namespace Elevel.Api
 {
@@ -102,6 +102,7 @@ namespace Elevel.Api
             services.AddControllers();
             services.AddMediatR();
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));
+            services.AddTransient<IFileService, FileCommands>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
