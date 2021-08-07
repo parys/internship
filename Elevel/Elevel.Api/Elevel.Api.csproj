@@ -50,6 +50,9 @@
     <None Update="Elevel.Api.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Handlers\FileHandler.ashx">
+      <SubType>ASPXCodeBehind</SubType>
+    </None>
   </ItemGroup>
 
 </Project>
