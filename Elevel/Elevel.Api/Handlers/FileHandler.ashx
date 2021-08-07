@@ -5,26 +5,32 @@ namespace Elevel.Api.Handlers
 {
     public class FileHandler : IHttpHandler
     {
-
-        public void ProcessRequest(HttpContext context)
-        {
-            string fileToServe = context.Request.Path;
-            //Log the user and the file served to the DB
-            FileInfo pdf = new FileInfo(context.Server.MapPath(fileToServe));
-            context.Response.ClearContent();
-            context.Response.ContentType = "application/pdf";
-            context.Response.AddHeader("Content-Disposition", "attachment; filename=" + pdf.Name);
-            context.Response.AddHeader("Content-Length", pdf.Length.ToString());
-            context.Response.TransmitFile(pdf.FullName);
-            context.Response.Flush();
-            context.Response.End();
-        }
-
-        public bool IsReusable
-        {
-            get {
-                return false; 
-            } 
-        }
-    }
-}
+        public void ProcessRequest(HttpContext context)  
+        {  
+            if (context.Request.Files.Count > 0)  
+            {  
+                HttpFileCollection SelectedFiles = context.Request.Files;  
+                for (int i = 0; i < SelectedFiles.Count; i++)  
+                {  
+                    HttpPostedFile PostedFile = SelectedFiles[i];  
+                    string FileName = context.Server.MapPath("~/wwwroot/" + PostedFile.FileName);  
+                    PostedFile.SaveAs(FileName);                      
+                }  
+            }  
+            else  
+            {  
+                context.Response.ContentType = "text/plain";  
+                context.Response.Write("Please Select Files");  
+            }  
+            context.Response.ContentType = "text/plain";  
+            context.Response.Write("Files Uploaded Successfully!");  
+        }  
+        public bool IsReusable  
+        {  
+            get  
+            {  
+                return false;  
+            }  
+        }  
+    }  
+} 
