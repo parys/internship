@@ -293,7 +293,7 @@ namespace Elevel.Application.Features.TestCommands
 
             public Guid UserId { get; set; }
 
-            public DateTimeOffset TestPassingDate { get; set; }
+            public DateTimeOffset? TestPassingDate { get; set; }
 
             public AuditionDto Audition { get; set; }
 
