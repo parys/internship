@@ -48,16 +48,21 @@ namespace Elevel.Application.Features.UserFeatures
 
                 var coachList = _mapper.Map<List<CoachDto>>(coaches);
 
-                var tests = _context.Tests.Where(x => x.CoachId.HasValue && !x.EssayMark.HasValue)
+                var testcounts = await _context.Tests.Where(x => x.CoachId.HasValue && !x.EssayMark.HasValue)
                     .GroupBy(x => x.CoachId, (key , value) => new 
                     { 
                         Key = key,
                         Count = value.Count()
-                    })
-                    .AsNoTracking();
+                    }).ToListAsync();
 
-                coachList.ForEach(coach =>
-                    coach.TestCount = tests.FirstOrDefault(x => x.Key == coach.Id).Count);
+                foreach (var testcount in testcounts)
+                {
+                    var coach = coachList.FirstOrDefault(x => x.Id == testcount.Key);
+                    if(coach != null)
+                    {
+                        coach.TestCount = testcount.Count;
+                    }
+                }
 
                 return new Response
                 {
