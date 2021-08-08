@@ -175,7 +175,7 @@ namespace Elevel.Api.Controllers
         {
             if(id != request.TestId)
             {
-                return BadRequest("Route and Boday ids don't match!");
+                return BadRequest("Route and Body ids don't match!");
             }
             var result = await Mediator.Send(request);
             return Ok(result);
