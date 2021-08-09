@@ -41,16 +41,15 @@ namespace Elevel.Infrastructure.Services.Implementation
             });
         }
 
-        public FileZip DownloadFiles()
+        public FileZip DownloadFiles(string fromDirectory)
         {
             var zipName = $"archive-{DateTime.Now:yyyy_MM_dd-HH_mm_ss}.zip";
-            var target = @"wwwroot\files";
 
-            if (!File.Exists(target))
+            if (!File.Exists(fromDirectory))
             {
-                Directory.CreateDirectory(target);
+                Directory.CreateDirectory(fromDirectory);
             }
-            var files = Directory.GetFiles(target).ToList();
+            var files = Directory.GetFiles(fromDirectory).ToList();
 
             using var memoryStream = new MemoryStream();
             using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))

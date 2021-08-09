@@ -10,7 +10,7 @@ namespace Elevel.Application.Interfaces
     public interface IFileService
     {
         void UploadFiles(List<IFormFile> files);
-        FileZip DownloadFiles();
+        FileZip DownloadFiles(string fromDirectory);
         string SizeConverter(long bytes);
     }
 }

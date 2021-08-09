@@ -42,7 +42,7 @@ namespace Elevel.Api.Controllers
         [HttpGet(nameof(Download))]
         public IActionResult Download()
         {
-             var Zip = _fileService.DownloadFiles();
+             var Zip = _fileService.DownloadFiles(@"wwwroot\files");
              return File(Zip.ArchiveData, Zip.FileType, Zip.ArchiveName);
         }
     }
