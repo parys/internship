@@ -24,7 +24,7 @@ namespace Elevel.Api.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpGet, Authorize(Roles =nameof(UserRole.HumanResourceManager))]
+        [HttpGet, Authorize(Roles = nameof(UserRole.HumanResourceManager))]
         public async Task<IActionResult> GetAllUsersAsync([FromQuery] GetUserListQuery.Request request)
         {
             var result = Mediator.Send(request);
@@ -58,6 +58,21 @@ namespace Elevel.Api.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// returns user
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("info")]
+        public async Task<IActionResult> UserInfo()
+        {
+            GetUserByIdQuery.Request request = new GetUserByIdQuery.Request()
+            {
+                Id = User.GetLoggedInUserId()
+            };
+            var result = await Mediator.Send(request);
+
+            return Ok(result);
+        }
     }
 }
 
