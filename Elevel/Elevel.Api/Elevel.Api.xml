@@ -179,5 +179,11 @@
             <param name="request"></param>
             <returns></returns>
         </member>
+        <member name="M:Elevel.Api.Controllers.UserController.UserInfo">
+            <summary>
+            returns user
+            </summary>
+            <returns></returns>
+        </member>
     </members>
 </doc>
