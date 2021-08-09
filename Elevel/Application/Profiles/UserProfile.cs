@@ -12,6 +12,8 @@ namespace Elevel.Application.Profiles
             CreateMap<User, UsersDTO>();
 
             CreateMap<User, GetCoachesQuery.CoachDto>();
+
+            CreateMap<User, GetUserByIdQuery.Response>();
         }
     }
 }
