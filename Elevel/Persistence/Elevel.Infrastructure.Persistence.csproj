@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Application\Elevel.Application.csproj" />
+    <ProjectReference Include="..\Elevel.Infrastructure.Import\Elevel.Infrastructure.Import.csproj" />
     <ProjectReference Include="..\Elevel.Infrastructure.Services\Elevel.Infrastructure.Services.csproj" />
   </ItemGroup>
 

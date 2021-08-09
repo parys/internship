@@ -1,4 +1,5 @@
 ﻿using Elevel.Application.Interfaces;
+using Elevel.Infrastructure.Import.Questions;
 using Elevel.Infrastructure.Persistence.Context;
 using Elevel.Infrastructure.Services.Implementation;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,7 @@ namespace Elevel.Persistence
                     b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
             services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IQuestionsImporter, QuestionsImporter>();
         }
     }
 }
