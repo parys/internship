@@ -1,8 +1,6 @@
 using Elevel.Api.Filters;
 using Elevel.Application;
-using Elevel.Application.Features.FileFeatures;
 using Elevel.Application.Infrastructure;
-using Elevel.Application.Interfaces;
 using Elevel.Application.Profiles;
 using Elevel.Domain.Authentication;
 using Elevel.Domain.Models;
@@ -11,7 +9,9 @@ using Elevel.Persistence;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -102,7 +102,6 @@ namespace Elevel.Api
             services.AddControllers();
             services.AddMediatR();
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));
-            services.AddTransient<IFileService, FileCommands>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -114,7 +113,6 @@ namespace Elevel.Api
             }
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Elevel.Api v1"));
-
             app.UseRouting();
             app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             app.UseAuthentication();

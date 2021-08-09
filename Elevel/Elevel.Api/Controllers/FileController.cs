@@ -19,36 +19,31 @@ namespace Elevel.Api.Controllers
             _fileService = fileService;
         }
 
+        /// <summary>
+        /// Uploads the files from the list.
+        /// Receives the list of the files we need to transport to @"wwwroot\files".
+        /// Returns nothing.
+        /// </summary>
+        /// <param name="formFiles">Files (as a list)</param>
+        /// <returns></returns>
         [HttpPost(nameof(Upload))]
-        public IActionResult Upload([Required] List<IFormFile> formFiles, [Required] string subDirectory)
+        public IActionResult Upload([Required] List<IFormFile> formFiles)
         {
-            try
-            {
-                _fileService.UploadFile(formFiles, subDirectory);
-
-                return Ok(new { formFiles.Count, Size = _fileService.SizeConverter(formFiles.Sum(f => f.Length)) });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            _fileService.UploadFiles(formFiles);
+            return Ok();
         }
 
+        /// <summary>
+        /// Downloads all files from folder @"wwwroot\files" as a zip-archive.
+        /// Receives nothing - everything is completed inside the function.
+        /// Returns the ZIP-file with all the files. 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet(nameof(Download))]
-        public IActionResult Download([Required] string subDirectory)
+        public IActionResult Download()
         {
-
-            try
-            {
-                var (fileType, archiveData, archiveName) = _fileService.DownloadFiles(subDirectory);
-
-                return File(archiveData, fileType, archiveName);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-
+             var Zip = _fileService.DownloadFiles();
+             return File(Zip.ArchiveData, Zip.FileType, Zip.ArchiveName);
         }
     }
 }

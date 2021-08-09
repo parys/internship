@@ -1,4 +1,5 @@
 ﻿using Elevel.Application.Interfaces;
+using Elevel.Domain.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -7,38 +8,49 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 
-namespace Elevel.Application.Features.FileFeatures
+namespace Elevel.Infrastructure.Services.Implementation
 {
-    public class FileCommands : IFileService
+    public class FileService : IFileService
     {
         private readonly IWebHostEnvironment _hostingEnvironment;
 
-        public FileCommands(IWebHostEnvironment hostingEnvironment)
+        public FileService(IWebHostEnvironment hostingEnvironment)
         {
             _hostingEnvironment = hostingEnvironment;
         }
 
-        public void UploadFile(List<IFormFile> files, string subDirectory)
+        public void UploadFiles(List<IFormFile> files)
         {
-            subDirectory ??= string.Empty;
-            var target = Path.Combine(_hostingEnvironment.ContentRootPath, subDirectory);
-
+            var target = @"wwwroot\files";
             Directory.CreateDirectory(target);
-
             files.ForEach(async file =>
             {
                 if (file.Length <= 0) return;
-                var filePath = Path.Combine(target, file.FileName);
-                using var stream = new FileStream(filePath, FileMode.Create);
-                await file.CopyToAsync(stream);
+                var filePath = "example.txt";
+                for (int i = 0; ; ++i)
+                {
+                    var fileName = Path.GetFileNameWithoutExtension(file.FileName);
+                    var fileExtension = Path.GetExtension(file.FileName);
+                    filePath = Path.Combine(target, fileName + (i > 0 ? $" ({i})" : "") + fileExtension);
+                    if (!File.Exists(filePath)) break;
+                }
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
             });
         }
 
-        public (string fileType, byte[] archiveData, string archiveName) DownloadFiles(string subDirectory)
+        public FileZip DownloadFiles()
         {
             var zipName = $"archive-{DateTime.Now:yyyy_MM_dd-HH_mm_ss}.zip";
+            var target = @"wwwroot\files";
 
-            var files = Directory.GetFiles(Path.Combine(_hostingEnvironment.ContentRootPath, subDirectory)).ToList();
+            if (!File.Exists(target))
+            {
+                Directory.CreateDirectory(target);
+            }
+            var files = Directory.GetFiles(target).ToList();
 
             using var memoryStream = new MemoryStream();
             using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
@@ -51,7 +63,12 @@ namespace Elevel.Application.Features.FileFeatures
                 });
             }
 
-            return ("application/zip", memoryStream.ToArray(), zipName);
+            return new FileZip
+            {
+                FileType = "application/zip",
+                ArchiveData = memoryStream.ToArray(),
+                ArchiveName = zipName
+            };
 
         }
         public string SizeConverter(long bytes)

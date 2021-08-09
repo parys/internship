@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Elevel.Domain.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +9,8 @@ namespace Elevel.Application.Interfaces
 {
     public interface IFileService
     {
-        void UploadFile(List<IFormFile> files, string subDirectory);
-        (string fileType, byte[] archiveData, string archiveName) DownloadFiles(string subDirectory);
+        void UploadFiles(List<IFormFile> files);
+        FileZip DownloadFiles();
         string SizeConverter(long bytes);
     }
 }
