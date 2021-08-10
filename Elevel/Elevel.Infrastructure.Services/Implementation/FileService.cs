@@ -19,7 +19,7 @@ namespace Elevel.Infrastructure.Services.Implementation
 
         public void UploadFiles(List<IFormFile> files)
         {
-            var target = @"wwwroot\files";
+            const string target = @"wwwroot\files";
             if (!File.Exists(target))
             {
                 Directory.CreateDirectory(target);
@@ -39,9 +39,8 @@ namespace Elevel.Infrastructure.Services.Implementation
 
         public FileType DownloadFile(string fileName)
         {
-            var net = new System.Net.WebClient();
-            var data = net.DownloadData(Path.Combine(@"wwwroot\files", fileName));
-            var content = new System.IO.MemoryStream(data);
+            var file = File.ReadAllBytes(Path.Combine(@"wwwroot\files", fileName));
+            var content = new MemoryStream(file);
             var contentType = "APPLICATION/octet-stream";
             return new FileType
             {

@@ -38,9 +38,9 @@ namespace Elevel.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet(nameof(Download))]
-        public IActionResult Download([Required] string fileName)
+        public IActionResult Download([Required] string filePath)
         {
-            var file =  _fileService.DownloadFile(fileName);
+            var file =  _fileService.DownloadFile(filePath);
             return File(file.Content, file.ContentType, file.FileName);
         }
     }
