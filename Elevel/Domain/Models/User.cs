@@ -14,6 +14,6 @@ namespace Elevel.Domain.Models
         public ICollection<Test> UserTests { get; set; }
         public ICollection<Test> HrTests { get; set; }
         public ICollection<Test> CoachTests { get; set; }
-        //public ICollection<UserRole>
+        
     }
 }
