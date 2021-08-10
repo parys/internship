@@ -19,6 +19,7 @@
             Receives the name of the file we need to download from @"wwwroot\files".
             Returns the file with content according or error if this file doesn't exist.
             </summary>
+            <param name="filePath">The path of file</param>
             <returns></returns>
         </member>
         <member name="M:Elevel.Api.Controllers.QuestionController.GetQuestionList(Elevel.Application.Features.QuestionCommands.GetQuestionListQuery.Request)">
