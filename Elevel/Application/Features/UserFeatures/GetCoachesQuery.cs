@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Elevel.Application.Extensions;
 using Elevel.Application.Interfaces;
 using Elevel.Domain.Enums;
@@ -19,7 +20,6 @@ namespace Elevel.Application.Features.UserFeatures
     {
         public class Request : IRequest<Response>
         {
-            public string Name { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Response>
@@ -37,31 +37,19 @@ namespace Elevel.Application.Features.UserFeatures
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var coaches = await _userManager.Users.WhereAsync(async x => (await _userManager.GetRolesAsync(x)).Contains(UserRole.Coach.ToString()));
+                var coaches = _mapper.Map<List<CoachDto>>(await _userManager.GetUsersInRoleAsync(nameof(UserRole.Coach)));
 
-                if (!string.IsNullOrWhiteSpace(request.Name))
+                var tests = _context.Tests.Where(x => x.CoachId.HasValue && !x.EssayMark.HasValue).AsNoTracking();
+
+                foreach (var coach in coaches)
                 {
-                    coaches = coaches.Where(x => x.LastName.Contains(request.Name)
-                    || x.FirstName.Contains(request.Name)
-                    || x.UserName.Contains(request.Name));
+                    coach.TestAmount = tests.Where(x => x.CoachId == coach.UserId).Count();
                 }
 
-                var coachList = _mapper.Map<List<CoachDto>>(coaches);
-
-                var tests = _context.Tests.Where(x => x.CoachId.HasValue && !x.EssayMark.HasValue)
-                    .GroupBy(x => x.CoachId, (key , value) => new 
-                    { 
-                        Key = key,
-                        Count = value.Count()
-                    })
-                    .AsNoTracking();
-
-                coachList.ForEach(coach =>
-                    coach.TestCount = tests.FirstOrDefault(x => x.Key == coach.Id).Count);
 
                 return new Response
                 {
-                    Coaches = coachList 
+                    Coaches = coaches
                 };
             }
         }
@@ -72,7 +60,7 @@ namespace Elevel.Application.Features.UserFeatures
         }
         public class CoachDto 
         {
-            public Guid Id { get; set; }
+            public Guid UserId { get; set; }
 
             public string FirstName { get; set; }
 
@@ -80,7 +68,7 @@ namespace Elevel.Application.Features.UserFeatures
 
             public string UserName { get; set; }
 
-            public int TestCount { get; set; }
+            public int TestAmount { get; set; }
         }
 
     }

@@ -25,6 +25,7 @@ namespace Elevel.Persistence
 
             services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IFileService, FileService>();
         }
     }
 }
