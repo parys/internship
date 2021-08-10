@@ -69,7 +69,7 @@ namespace Elevel.Infrastructure.Persistence.FillDbScript
 
                             Questions.Add(question);
 
-                            for (int answerNumber = 0; answerNumber < Constants.ANSWER_COUNT; answerNumber++)
+                            for (int answerNumber = 0; answerNumber < Constants.ANSWER_AMOUNT; answerNumber++)
                             {
                                 var qusetionAnswer = new Answer
                                 {
@@ -115,7 +115,7 @@ namespace Elevel.Infrastructure.Persistence.FillDbScript
 
                             Questions.Add(question);
 
-                            for (int answerNumber = 0; answerNumber < Constants.ANSWER_COUNT; answerNumber++)
+                            for (int answerNumber = 0; answerNumber < Constants.ANSWER_AMOUNT; answerNumber++)
                             {
                                 var qusetionAnswer = new Answer
                                 {

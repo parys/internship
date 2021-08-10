@@ -85,6 +85,8 @@ namespace Elevel.Application.Features.TestCommands
 
                 test.Id = Guid.NewGuid();
 
+                test.TestPassingDate = DateTimeOffset.UtcNow;
+
                 test.EssayId = FindTopic(topics);
 
                 test.SpeakingId = FindTopic(topics, test.EssayId);

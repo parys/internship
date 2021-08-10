@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,7 +21,7 @@ namespace Elevel.Application.Features.QuestionCommands
 
             public string NameQuestion { get; set; }
 
-            public Level? Level { get; set; }
+            public Level Level { get; set; }
 
             public List<AnswerDto> Answers { get; set; }
         }
@@ -32,11 +31,21 @@ namespace Elevel.Application.Features.QuestionCommands
 
             public Validator()
             {
-                RuleFor(x => x.NameQuestion).NotEmpty().WithMessage("The question name can't be empty or null!");
+                RuleFor(x => x.NameQuestion)
+                    .NotEmpty()
+                    .WithMessage("The question name can't be empty or null!");
 
-                RuleFor(x => x.Level).IsInEnum().WithMessage("The level must be between 1 and 5!");
+                RuleFor(x => x.Level)
+                    .IsInEnum()
+                    .WithMessage("The level must be between 1 and 5!");
 
-                RuleFor(x => x.Answers).Must(x => x.Count == Constants.ANSWER_COUNT).WithMessage($"The amount of answers must be {Constants.ANSWER_COUNT}");
+                RuleFor(x => x.Answers)
+                    .Must(x => x.Count == Constants.ANSWER_AMOUNT)
+                    .WithMessage($"The amount of answers must be {Constants.ANSWER_AMOUNT}");
+
+                RuleFor(x => x.Answers)
+                    .Must(x => x.Where(a => a.IsRight).Count() == Constants.CORRECT_ANSWER_AMOUNT)
+                    .WithMessage($"Only {Constants.CORRECT_ANSWER_AMOUNT} answer can be right");
             }
         }
 
@@ -52,23 +61,32 @@ namespace Elevel.Application.Features.QuestionCommands
             }
             public async Task<Response> Handle(Request request, CancellationToken cancelationtoken)
             {
-                var question = await _context.Questions.FirstOrDefaultAsync(a => a.Id == request.Id, cancelationtoken);
+                var question = await _context.Questions.Include(x => x.Answers).FirstOrDefaultAsync(a => a.Id == request.Id, cancelationtoken);
 
                 if (question is null)
                 {
                     throw new NotFoundException($"Question with id {request.Id}");
                 }
 
-                var answerIds = question.Answers.Select(x => x.Id);
+                var answers = question.Answers.ToList();
 
-                if (request.Answers.Any(x => !answerIds.Contains((Guid)x.Id)))
+                if (request.Answers.Any(x => !answers.Select(x => x.Id).Contains((Guid)x.Id)))
                 {
                     throw new ValidationException($"This question doesn't contain answers you sent");
                 }
-                
 
-                question = _mapper.Map(request, question);
-                await _context.SaveChangesAsync(cancelationtoken);
+                foreach (var answer in answers)
+                {
+                    var requestAnswer = request.Answers.FirstOrDefault(x => x.Id == answer.Id);
+
+                    answer.NameAnswer = requestAnswer.NameAnswer;
+                    answer.IsRight = (bool)requestAnswer.IsRight;
+                }
+
+                question.Level = request.Level;
+                question.NameQuestion = request.NameQuestion;
+
+                await _context.SaveChangesAsync();
                 return new Response { Id = question.Id };
             }
         }
@@ -81,7 +99,7 @@ namespace Elevel.Application.Features.QuestionCommands
         {
             public Guid? Id { get; set; }
             public string NameAnswer { get; set; }
-            public bool? IsRight { get; set; }
+            public bool IsRight { get; set; }
         }
     }
 }

@@ -7,6 +7,7 @@ using FluentValidation;
 using MediatR;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,11 +32,21 @@ namespace Elevel.Application.Features.QuestionCommands
         {
             public Validator()
             {
-                RuleFor(x => x.NameQuestion).NotEmpty().WithMessage("The question name can't be empty or null!");
+                RuleFor(x => x.NameQuestion)
+                    .NotEmpty()
+                    .WithMessage("The question name can't be empty or null!");
 
-                RuleFor(x => x.Level).IsInEnum().WithMessage("The level must be between 1 and 5!");
+                RuleFor(x => x.Level)
+                    .IsInEnum()
+                    .WithMessage("The level must be between 1 and 5!");
 
-                RuleFor(x => x.Answers).Must(x => x.Count == Constants.ANSWER_COUNT).WithMessage($"The amount of answers must be {Constants.ANSWER_COUNT}");
+                RuleFor(x => x.Answers)
+                    .Must(x => x.Count == Constants.ANSWER_AMOUNT)
+                    .WithMessage($"The amount of answers must be {Constants.ANSWER_AMOUNT}");
+
+                RuleFor(x => x.Answers)
+                    .Must(x => x.Where(a => a.IsRight).Count() == Constants.CORRECT_ANSWER_AMOUNT)
+                    .WithMessage($"Only {Constants.CORRECT_ANSWER_AMOUNT} answer can be right");
             }
         }
 

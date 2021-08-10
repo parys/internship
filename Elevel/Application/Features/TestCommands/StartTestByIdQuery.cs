@@ -107,11 +107,14 @@ namespace Elevel.Application.Features.TestCommands
 
                 test.AuditionId = FindAudition(auditions);
 
+                test.TestPassingDate = DateTimeOffset.UtcNow;
+
                 await CreateTestGrammarQuestionsAsync(test, cancellationToken);
 
                 await CreateTestAuditionQuestionsAsync(test, cancellationToken);
 
                 await _context.SaveChangesAsync(cancellationToken);
+
 
 
                 var response = _mapper.Map<Response>(test);

@@ -13,6 +13,7 @@
         public const int LEVEL_COUNT = 5;
         public const int GRAMMAR_QUESTION_COUNT = 10;
         public const int AUDITION_QUESTION_COUNT = 12;
-        public const int ANSWER_COUNT = 4;
+        public const int ANSWER_AMOUNT = 4;
+        public const int CORRECT_ANSWER_AMOUNT = 1;
     }
 }
