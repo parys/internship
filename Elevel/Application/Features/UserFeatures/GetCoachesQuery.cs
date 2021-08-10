@@ -46,6 +46,7 @@ namespace Elevel.Application.Features.UserFeatures
                     coach.TestAmount = tests.Where(x => x.CoachId == coach.Id).Count();
                 }
 
+
                 return new Response
                 {
                     Coaches = coaches
