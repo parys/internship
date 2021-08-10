@@ -70,7 +70,7 @@ namespace Elevel.Application.Features.QuestionCommands
 
                 var answers = question.Answers.ToList();
 
-                if (request.Answers.Any(x => !answers.Select(x => x.Id).Contains((Guid)x.Id)))
+                if (!request.Answers.All(x => answers.Any(y => y.Id == x.Id)))
                 {
                     throw new ValidationException($"This question doesn't contain answers you sent");
                 }
