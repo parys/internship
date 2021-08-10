@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Elevel.Application.Infrastructure;
 
 namespace Elevel.Application.Features.AuditionCommands
 {
@@ -29,16 +30,17 @@ namespace Elevel.Application.Features.AuditionCommands
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
                 var audition = await _context.Auditions.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+                
                 if (audition is null)
                 {
-                    return null;
+                    throw new NotFoundException($"Could not find audition by ID {request.Id}.");
                 }
+                
                 audition.Deleted = true;
                 await _context.SaveChangesAsync(cancellationToken);
                 return new Response
                 {
-                    Id = audition.Id,
-                    Deleted = audition.Deleted
+                    Id = audition.Id
                 };
             }
         }
@@ -46,7 +48,6 @@ namespace Elevel.Application.Features.AuditionCommands
         public class Response
         {
             public Guid Id { get; set; }
-            public bool Deleted { get; set; }
         }
     }
 }

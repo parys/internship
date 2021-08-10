@@ -10,6 +10,8 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper.QueryableExtensions;
+using Elevel.Application.Features.QuestionCommands;
 using Elevel.Application.Infrastructure;
 using FluentValidation;
 
@@ -62,7 +64,7 @@ namespace Elevel.Application.Features.AuditionCommands
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
                 var audition = await _context.Auditions
-                    .Include(x => x.Questions).ThenInclude(i => i.Answers)
+                    .ProjectTo<Response>(_mapper.ConfigurationProvider)
                     .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
                 
                 if (audition is null)

@@ -35,9 +35,9 @@ namespace Elevel.Application.Features.AuditionCommands
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
                 var audition = await _context.Auditions
-                    .Include(x=>x.Questions).ThenInclude(i => i.Answers)
+                    .ProjectTo<Response>(_mapper.ConfigurationProvider)
                     .FirstOrDefaultAsync(a => a.Id == request.Id, cancellationToken);
-                if (audition == null)
+                if (audition is null)
                 {
                     throw new NotFoundException($"Audition with id {request.Id}");
                 }
