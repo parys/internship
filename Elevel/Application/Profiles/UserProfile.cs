@@ -9,11 +9,14 @@ namespace Elevel.Application.Profiles
     {
         public UserProfile()
         {
-            CreateMap<User, UsersDTO>();
+            CreateMap<User, UsersDTO>()
+                .ForMember(dest => dest.UserId, src => src.MapFrom(x => x.Id));
 
-            CreateMap<User, GetCoachesQuery.CoachDto>();
+            CreateMap<User, GetCoachesQuery.CoachDto>()
+                .ForMember(dest => dest.UserId, src => src.MapFrom(x => x.Id));
 
-            CreateMap<User, GetUserByIdQuery.Response>();
+            CreateMap<User, GetUserByIdQuery.Response>()
+                .ForMember(dest => dest.UserId, src => src.MapFrom(x => x.Id));
         }
     }
 }
