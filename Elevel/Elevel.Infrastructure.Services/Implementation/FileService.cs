@@ -5,8 +5,6 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
-using System.Linq;
 
 namespace Elevel.Infrastructure.Services.Implementation
 {
@@ -22,18 +20,16 @@ namespace Elevel.Infrastructure.Services.Implementation
         public void UploadFiles(List<IFormFile> files)
         {
             var target = @"wwwroot\files";
-            Directory.CreateDirectory(target);
+            if (!File.Exists(target))
+            {
+                Directory.CreateDirectory(target);
+            }
+
             files.ForEach(async file =>
             {
                 if (file.Length <= 0) return;
-                var filePath = "example.txt";
-                for (int i = 0; ; ++i)
-                {
-                    var fileName = Path.GetFileNameWithoutExtension(file.FileName);
-                    var fileExtension = Path.GetExtension(file.FileName);
-                    filePath = Path.Combine(target, fileName + (i > 0 ? $" ({i})" : "") + fileExtension);
-                    if (!File.Exists(filePath)) break;
-                }
+                var fileExtension = Path.GetExtension(file.FileName);
+                var filePath = Path.Combine(target, $"myFile{DateTime.Now:yyyy_MM_dd-HH_mm_ss}{fileExtension}");
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     await file.CopyToAsync(stream);
@@ -41,51 +37,18 @@ namespace Elevel.Infrastructure.Services.Implementation
             });
         }
 
-        public FileZip DownloadFiles(string fromDirectory)
+        public FileType DownloadFile(string fileName)
         {
-            var zipName = $"archive-{DateTime.Now:yyyy_MM_dd-HH_mm_ss}.zip";
-
-            if (!File.Exists(fromDirectory))
+            var net = new System.Net.WebClient();
+            var data = net.DownloadData(Path.Combine(@"wwwroot\files", fileName));
+            var content = new System.IO.MemoryStream(data);
+            var contentType = "APPLICATION/octet-stream";
+            return new FileType
             {
-                Directory.CreateDirectory(fromDirectory);
-            }
-            var files = Directory.GetFiles(fromDirectory).ToList();
-
-            using var memoryStream = new MemoryStream();
-            using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
-            {
-                files.ForEach(file =>
-                {
-                    var theFile = archive.CreateEntry(file);
-                    using var streamWriter = new StreamWriter(theFile.Open());
-                    streamWriter.Write(File.ReadAllText(file));
-                });
-            }
-
-            return new FileZip
-            {
-                FileType = "application/zip",
-                ArchiveData = memoryStream.ToArray(),
-                ArchiveName = zipName
-            };
-
-        }
-        public string SizeConverter(long bytes)
-        {
-            var fileSize = new decimal(bytes);
-            var kilobyte = new decimal(1024);
-            var megabyte = new decimal(1024 * 1024);
-            var gigabyte = new decimal(1024 * 1024 * 1024);
-
-            return fileSize switch
-            {
-                var _ when fileSize < kilobyte => $"Less then 1KB",
-                var _ when fileSize < megabyte => $"{Math.Round(fileSize / kilobyte, 0, MidpointRounding.AwayFromZero):##,###.##}KB",
-                var _ when fileSize < gigabyte => $"{Math.Round(fileSize / megabyte, 2, MidpointRounding.AwayFromZero):##,###.##}MB",
-                var _ when fileSize >= gigabyte => $"{Math.Round(fileSize / gigabyte, 2, MidpointRounding.AwayFromZero):##,###.##}GB",
-                _ => "n/a",
+                Content = content,
+                ContentType = contentType,
+                FileName = fileName
             };
         }
-
     }
 }

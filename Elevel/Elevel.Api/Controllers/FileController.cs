@@ -1,16 +1,14 @@
 ﻿using Elevel.Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 
 namespace Elevel.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class FileController : ControllerBase
+    public class FileController : BaseApiController
     {
         private readonly IFileService _fileService;
 
@@ -34,16 +32,16 @@ namespace Elevel.Api.Controllers
         }
 
         /// <summary>
-        /// Downloads all files from folder @"wwwroot\files" as a zip-archive.
-        /// Receives nothing - everything is completed inside the function.
-        /// Returns the ZIP-file with all the files. 
+        /// Downloads a file from @"wwwroot\files" folder according to its path.
+        /// Receives the name of the file we need to download from @"wwwroot\files".
+        /// Returns the file with content according or error if this file doesn't exist.
         /// </summary>
         /// <returns></returns>
         [HttpGet(nameof(Download))]
-        public IActionResult Download()
+        public IActionResult Download([Required] string fileName)
         {
-             var Zip = _fileService.DownloadFiles(@"wwwroot\files");
-             return File(Zip.ArchiveData, Zip.FileType, Zip.ArchiveName);
+            var file =  _fileService.DownloadFile(fileName);
+            return File(file.Content, file.ContentType, file.FileName);
         }
     }
 }

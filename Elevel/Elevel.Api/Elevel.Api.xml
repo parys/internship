@@ -13,11 +13,11 @@
             <param name="formFiles">Files (as a list)</param>
             <returns></returns>
         </member>
-        <member name="M:Elevel.Api.Controllers.FileController.Download">
+        <member name="M:Elevel.Api.Controllers.FileController.Download(System.String)">
             <summary>
-            Downloads all files from folder @"wwwroot\files" as a zip-archive.
-            Receives nothing - everything is completed inside the function.
-            Returns the ZIP-file with all the files. 
+            Downloads a file from @"wwwroot\files" folder according to its path.
+            Receives the name of the file we need to download from @"wwwroot\files".
+            Returns the file with content according or error if this file doesn't exist.
             </summary>
             <returns></returns>
         </member>
