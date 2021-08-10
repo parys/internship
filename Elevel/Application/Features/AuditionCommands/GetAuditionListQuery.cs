@@ -7,6 +7,8 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,7 +18,6 @@ namespace Elevel.Application.Features.AuditionCommands
     {
         public class Request : PagedQueryBase, IRequest<Response>
         {
-            public Guid? Id { get; set; }
             public long? AuditionNumber { get; set; }
             public Level? Level { get; set; }
         }
@@ -44,6 +45,7 @@ namespace Elevel.Application.Features.AuditionCommands
                 {
                     audition = audition.Where(x => x.AuditionNumber == (long)request.AuditionNumber);
                 }
+
                 return new Response()
                 {
                     PageSize = request.PageSize,
@@ -65,10 +67,9 @@ namespace Elevel.Application.Features.AuditionCommands
         public class QuestionDto
         {
             public Guid Id { get; set; }
-            public long QuestioNumber { get; set; }
+            public long QuestionNumber { get; set; }
             public byte Level { get; set; }
             public Guid CreatorId { get; set; }
-            public string NameQuestion { get; set; }
             public DateTimeOffset CreationDate { get; set; }
         }
     }

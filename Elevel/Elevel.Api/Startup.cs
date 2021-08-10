@@ -14,6 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Text;
+using AutoMapper.EquivalencyExpression;
 using Elevel.Application.Profiles;
 using FluentValidation.AspNetCore;
 using FluentValidation;
@@ -35,7 +36,7 @@ namespace Elevel.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAutoMapper(typeof(TestQuestionProfile));
+            services.AddAutoMapper(cfg => cfg.AddCollectionMappers(), typeof(TestQuestionProfile));
             services.AddCors();
             services.AddMvc(options => {
                 options.Filters.Add(typeof(CustomExceptionFilterAttribute));

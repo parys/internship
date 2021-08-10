@@ -2,7 +2,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.IO;
 using System.Threading.Tasks;
+using Elevel.Application.Extensions;
+using Microsoft.AspNetCore.Http;
 
 namespace Elevel.Api.Controllers
 {
@@ -27,8 +30,13 @@ namespace Elevel.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateauditionAsync([FromBody] CreateAuditionCommand.Request request)
+        public async Task<IActionResult> CreateAuditionAsync([FromBody] CreateAuditionCommand.Request request)
         {
+            request.CreatorId = User.GetLoggedInUserId();
+            foreach (var question in request.Questions)
+            {
+                question.CreatorId = User.GetLoggedInUserId();
+            }
             return Ok(await Mediator.Send(request));
         }
 
@@ -39,7 +47,9 @@ namespace Elevel.Api.Controllers
             {
                 return BadRequest("Id's from url and from body are different");
             }
+
             var response = await Mediator.Send(request);
+
             return Ok(response);
         }
 

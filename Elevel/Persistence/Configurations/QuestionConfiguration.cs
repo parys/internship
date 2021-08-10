@@ -21,7 +21,9 @@ namespace Elevel.Infrastructure.Persistence.Configurations
             builder.Property(x => x.CreationDate)
                 .HasDefaultValueSql("SYSDATETIMEOFFSET()");
 
-            builder.HasQueryFilter(x => !x.Deleted);
+            builder.HasMany(x => x.Answers)
+                .WithOne(x => x.Question)
+                .HasForeignKey(x => x.QuestionId);
         }
     }
 }

@@ -17,7 +17,6 @@ namespace Elevel.Application.Features.AuditionCommands
         {
             [JsonIgnore]
             public Guid CreatorId { get; set; }
-            public long AuditionNumber { get; set; }
             public string AudioFilePath { get; set; }
             public Level Level { get; set; }
             public List<QuestionDto> Questions { get; set; }
@@ -50,9 +49,17 @@ namespace Elevel.Application.Features.AuditionCommands
 
         public class QuestionDto
         {
-            public Guid Id { get; set; }
             public string NameQuestion { get; set; }
-            public string NameAnswer { get; set; }
+            public IEnumerable<AnswerDto> Answers { get; set; }
+            public Level Level { get; set; }
+            public Guid CreatorId { get; set; }
+
+        }
+
+        public class AnswerDto
+        {
+            public String NameAnswer { get; set; }
+            public bool IsRight { get; set; }
         }
     }
 }
