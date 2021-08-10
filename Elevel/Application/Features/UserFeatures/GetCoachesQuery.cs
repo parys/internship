@@ -43,7 +43,7 @@ namespace Elevel.Application.Features.UserFeatures
 
                 foreach (var coach in coaches)
                 {
-                    coach.TestAmount = tests.Where(x => x.CoachId == coach.Id).Count();
+                    coach.TestAmount = tests.Where(x => x.CoachId == coach.UserId).Count();
                 }
 
 
@@ -60,7 +60,7 @@ namespace Elevel.Application.Features.UserFeatures
         }
         public class CoachDto 
         {
-            public Guid Id { get; set; }
+            public Guid UserId { get; set; }
 
             public string FirstName { get; set; }
 
