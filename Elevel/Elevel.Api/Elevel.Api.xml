@@ -4,6 +4,24 @@
         <name>Elevel.Api</name>
     </assembly>
     <members>
+        <member name="M:Elevel.Api.Controllers.FileController.Upload(System.Collections.Generic.List{Microsoft.AspNetCore.Http.IFormFile})">
+            <summary>
+            Uploads the files from the list.
+            Receives the list of the files we need to transport to @"wwwroot\files".
+            Returns nothing.
+            </summary>
+            <param name="formFiles">Files (as a list)</param>
+            <returns></returns>
+        </member>
+        <member name="M:Elevel.Api.Controllers.FileController.Download(System.String)">
+            <summary>
+            Downloads a file from @"wwwroot\files" folder according to its path.
+            Receives the name of the file we need to download from @"wwwroot\files".
+            Returns the file with content according or error if this file doesn't exist.
+            </summary>
+            <param name="filePath">The path of file</param>
+            <returns></returns>
+        </member>
         <member name="M:Elevel.Api.Controllers.QuestionController.GetQuestionList(Elevel.Application.Features.QuestionCommands.GetQuestionListQuery.Request)">
             <summary>
             Receive CreatorId, QuestionNumber, and Level from query.

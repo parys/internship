@@ -1,11 +1,17 @@
+using Elevel.Api.Filters;
 using Elevel.Application;
+using Elevel.Application.Infrastructure;
+using Elevel.Application.Profiles;
 using Elevel.Domain.Authentication;
 using Elevel.Domain.Models;
 using Elevel.Infrastructure.Persistence.Context;
 using Elevel.Persistence;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,12 +20,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Text;
-using Elevel.Application.Profiles;
-using FluentValidation.AspNetCore;
-using FluentValidation;
-using MediatR;
-using Elevel.Application.Infrastructure;
-using Elevel.Api.Filters;
 
 namespace Elevel.Api
 {
@@ -113,7 +113,6 @@ namespace Elevel.Api
             }
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Elevel.Api v1"));
-
             app.UseRouting();
             app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             app.UseAuthentication();
