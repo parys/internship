@@ -36,6 +36,7 @@ namespace Elevel.Api.Controllers
         /// Receives the name of the file we need to download from @"wwwroot\files".
         /// Returns the file with content according or error if this file doesn't exist.
         /// </summary>
+        /// <param name="filePath">The path of file</param>
         /// <returns></returns>
         [HttpGet(nameof(Download))]
         public IActionResult Download([Required] string filePath)
