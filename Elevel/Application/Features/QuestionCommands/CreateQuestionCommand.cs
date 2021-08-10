@@ -45,7 +45,7 @@ namespace Elevel.Application.Features.QuestionCommands
                     .WithMessage($"The amount of answers must be {Constants.ANSWER_AMOUNT}");
 
                 RuleFor(x => x.Answers)
-                    .Must(x => x.Where(a => a.IsRight).Count() == Constants.CORRECT_ANSWER_AMOUNT)
+                    .Must(x => x.Count(x => x.IsRight) == Constants.CORRECT_ANSWER_AMOUNT)
                     .WithMessage($"Only {Constants.CORRECT_ANSWER_AMOUNT} answer can be right");
             }
         }
