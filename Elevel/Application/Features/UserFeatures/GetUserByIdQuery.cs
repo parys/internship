@@ -54,7 +54,7 @@ namespace Elevel.Application.Features.UserFeatures
         }
         public class Response
         {
-            public Guid Id { get; set; }
+            public Guid UserId { get; set; }
             public string FirstName { get; set; }
             public string LastName { get; set; }
             public DateTimeOffset CreationDate { get; set; }

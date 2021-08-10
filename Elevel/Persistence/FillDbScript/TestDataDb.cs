@@ -40,7 +40,7 @@ namespace Elevel.Infrastructure.Persistence.FillDbScript
 
             for (int del = 0; del < 2; del++)
             {
-                for (int level = 1; level <= Constants.LEVEL_COUNT; level++)
+                for (int level = 1; level <= Constants.LEVEL_AMOUNT; level++)
                 {
                     for (int i = 0; i < 2; i++)
                     {
@@ -55,7 +55,7 @@ namespace Elevel.Infrastructure.Persistence.FillDbScript
 
                         Auditions.Add(audition);
 
-                        for (int questionNumber = 0; questionNumber < Constants.AUDITION_QUESTION_COUNT; questionNumber++)
+                        for (int questionNumber = 0; questionNumber < Constants.AUDITION_QUESTION_AMOUNT; questionNumber++)
                         {
                             var question = new Question
                             {
@@ -69,7 +69,7 @@ namespace Elevel.Infrastructure.Persistence.FillDbScript
 
                             Questions.Add(question);
 
-                            for (int answerNumber = 0; answerNumber < Constants.ANSWER_COUNT; answerNumber++)
+                            for (int answerNumber = 0; answerNumber < Constants.ANSWER_AMOUNT; answerNumber++)
                             {
                                 var qusetionAnswer = new Answer
                                 {
@@ -102,7 +102,7 @@ namespace Elevel.Infrastructure.Persistence.FillDbScript
                     }
                     for (int i = 0; i < 3; i++)
                     {
-                        for (int questionNumber = 0; questionNumber < Constants.GRAMMAR_QUESTION_COUNT; questionNumber++)
+                        for (int questionNumber = 0; questionNumber < Constants.GRAMMAR_QUESTION_AMOUNT; questionNumber++)
                         {
                             var question = new Question
                             {
@@ -115,7 +115,7 @@ namespace Elevel.Infrastructure.Persistence.FillDbScript
 
                             Questions.Add(question);
 
-                            for (int answerNumber = 0; answerNumber < Constants.ANSWER_COUNT; answerNumber++)
+                            for (int answerNumber = 0; answerNumber < Constants.ANSWER_AMOUNT; answerNumber++)
                             {
                                 var qusetionAnswer = new Answer
                                 {
