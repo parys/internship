@@ -13,10 +13,10 @@ namespace Elevel.Infrastructure.Persistence.Configurations
             builder.Property(x => x.CreationDate)
                 .HasDefaultValueSql("SYSDATETIMEOFFSET()");
 
-            builder.HasQueryFilter(x => !x.Deleted);
-
             builder.Property(x => x.AuditionNumber)
                 .ValueGeneratedOnAdd();
+
+            builder.HasQueryFilter(x => !x.Deleted);
         }
     }
 }
