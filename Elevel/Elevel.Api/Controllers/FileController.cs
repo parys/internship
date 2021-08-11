@@ -19,17 +19,17 @@ namespace Elevel.Api.Controllers
         }
 
         /// <summary>
-        /// Uploads the files from the list.
-        /// Receives the list of the files we need to transport to @"wwwroot\files".
-        /// Returns nothing.
+        /// Uploads a single file from the list of files.
+        /// Receives the list of the files.
+        /// Returns a path to the uploaded file or error if there were 2 or more files in the list.
         /// </summary>
         /// <param name="formFiles">Files (as a list)</param>
         /// <returns></returns>
         [HttpPost(nameof(Upload))]
         public IActionResult Upload([Required] List<IFormFile> formFiles)
         {
-            _fileService.UploadFiles(formFiles);
-            return Ok();
+            var pathFile = _fileService.UploadFiles(formFiles);
+            return Ok(new { pathfile = pathFile.Result });
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace Elevel.Api.Controllers
         [HttpGet(nameof(Download))]
         public IActionResult Download([Required] string filePath)
         {
-            var file =  _fileService.DownloadFile(filePath);
+            var file = _fileService.DownloadFile(filePath);
             return File(file.Content, file.ContentType, file.FileName);
         }
     }
