@@ -8,7 +8,7 @@ namespace Elevel.Infrastructure.Services.Jobs
     {
 		public Task SendEmailAsync(string email, string subject, string message)
 		{
-			var from = "rogovandrey8@gmail.com";
+			var from = "";
 			var pass = "";
 			SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
 			client.DeliveryMethod = SmtpDeliveryMethod.Network;

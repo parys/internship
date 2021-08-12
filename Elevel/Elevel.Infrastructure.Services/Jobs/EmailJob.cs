@@ -10,20 +10,20 @@ namespace Elevel.Infrastructure.Services.Jobs
 {
     public class EmailJob : IJob
     {
-        private readonly IServiceScopeFactory serviceScopeFactory;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly IApplicationDbContext _context;
         private readonly UserManager<User> _userManager;
 
         public EmailJob(IServiceScopeFactory serviceScopeFactory, IApplicationDbContext context, UserManager<User> userManager)
         {
-            this.serviceScopeFactory = serviceScopeFactory;
+            _serviceScopeFactory = serviceScopeFactory;
             _context = context;
             _userManager = userManager;
         }
 
         public async Task Execute(IJobExecutionContext context)
         {
-            using (var scope = serviceScopeFactory.CreateScope())
+            using (var scope = _serviceScopeFactory.CreateScope())
             {
                 var emailsender = scope.ServiceProvider.GetService<IEmailSender>();
                 try
