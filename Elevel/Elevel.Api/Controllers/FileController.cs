@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 
 namespace Elevel.Api.Controllers
 {
@@ -26,10 +27,10 @@ namespace Elevel.Api.Controllers
         /// <param name="formFiles">Files (as a list)</param>
         /// <returns></returns>
         [HttpPost(nameof(Upload))]
-        public IActionResult Upload([Required] List<IFormFile> formFiles)
+        public async Task<IActionResult> Upload([Required] List<IFormFile> formFiles)
         {
-            var pathFile = _fileService.UploadFiles(formFiles);
-            return Ok(new { pathfile = pathFile.Result });
+            var pathFile = await _fileService.UploadFiles(formFiles);
+            return Ok(new { pathfile = pathFile });
         }
 
         /// <summary>

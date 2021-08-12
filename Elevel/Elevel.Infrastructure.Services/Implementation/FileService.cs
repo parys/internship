@@ -26,9 +26,12 @@ namespace Elevel.Infrastructure.Services.Implementation
             }
 
             var file = files[0];
-            if (file.Length <= 0) return "";
+            if (file.Length <= 0)
+            {
+                return string.Empty;
+            }
             var fileExtension = Path.GetExtension(file.FileName);
-            var filePath = Path.Combine(folderPath, $"myFile{DateTime.Now:yyyy_MM_dd-HH_mm_ss}{fileExtension}");
+            var filePath = Path.Combine(folderPath, $"file{DateTime.Now:yyyy_MM_dd-HH_mm_ss}{fileExtension}");
             using var stream = new FileStream(filePath, FileMode.Create);
             await file.CopyToAsync(stream);
 
