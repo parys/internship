@@ -32,7 +32,6 @@ namespace Elevel.Application.Features.AuditionCommands
                 this.CascadeMode = CascadeMode.Stop;
 
                 RuleFor(x => x.AudioFilePath)
-                    .NotNull()
                     .NotEmpty()
                     .WithMessage("The file path can't be empty.");
 
@@ -41,7 +40,6 @@ namespace Elevel.Application.Features.AuditionCommands
                     .WithMessage("The level must be between 1 and 5.");
 
                 RuleFor(x => x.Questions)
-                    .NotNull()
                     .NotEmpty()
                     .WithMessage("The questions couldn't be null or empty.")
                     .Must(x => x.Count == Constants.AUDITION_QUESTION_AMOUNT)
@@ -57,12 +55,10 @@ namespace Elevel.Application.Features.AuditionCommands
                 this.CascadeMode = CascadeMode.Stop;
 
                 RuleFor(x => x.NameQuestion)
-                    .NotNull()
                     .NotEmpty()
                     .WithMessage("The question name can't be empty or null.");
 
                 RuleFor(x => x.Answers)
-                    .NotNull()
                     .NotEmpty()
                     .WithMessage("The answers couldn't be null or empty.")
                     .Must(x => x.Count == Constants.ANSWER_AMOUNT)
@@ -80,7 +76,6 @@ namespace Elevel.Application.Features.AuditionCommands
                 this.CascadeMode = CascadeMode.Stop;
 
                 RuleFor(x => x.NameAnswer)
-                    .NotNull()
                     .NotEmpty()
                     .WithMessage("The question name can't be empty or null.");
             }
