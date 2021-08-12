@@ -5,6 +5,7 @@ using Elevel.Domain.Models;
 using MediatR;
 using System;
 using System.Collections.Generic;
+<<<<<<< HEAD
 using System.IO;
 using System.Linq;
 using System.Text.Json.Serialization;
@@ -12,6 +13,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Elevel.Application.Infrastructure;
 using FluentValidation;
+=======
+using System.Text.Json.Serialization;
+using System.Threading;
+using System.Threading.Tasks;
+>>>>>>> main
 
 namespace Elevel.Application.Features.AuditionCommands
 {
@@ -26,6 +32,7 @@ namespace Elevel.Application.Features.AuditionCommands
             public List<QuestionDto> Questions { get; set; }
         }
 
+<<<<<<< HEAD
         public class Validator : AbstractValidator<Request>
         {
             public Validator()
@@ -99,6 +106,8 @@ namespace Elevel.Application.Features.AuditionCommands
             }
         }
 
+=======
+>>>>>>> main
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IApplicationDbContext _context;
@@ -112,6 +121,7 @@ namespace Elevel.Application.Features.AuditionCommands
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
+<<<<<<< HEAD
                 //if (request.AudioFilePath == null || !File.Exists(request.AudioFilePath))
                 //{
                 //    throw new NotFoundException($"File for audition not found.");
@@ -121,6 +131,11 @@ namespace Elevel.Application.Features.AuditionCommands
                 _context.Auditions.Add(audition);
                 await _context.SaveChangesAsync(cancellationToken);
 
+=======
+                var audition = _mapper.Map<Audition>(request);
+                _context.Auditions.Add(audition);
+                await _context.SaveChangesAsync(cancellationToken);
+>>>>>>> main
                 return new Response { Id = audition.Id };
             }
         }
@@ -133,10 +148,15 @@ namespace Elevel.Application.Features.AuditionCommands
         public class QuestionDto
         {
             public string NameQuestion { get; set; }
+<<<<<<< HEAD
             public List<AnswerDto> Answers { get; set; }
             [JsonIgnore]
             public Level Level { get; set; }
             [JsonIgnore]
+=======
+            public IEnumerable<AnswerDto> Answers { get; set; }
+            public Level Level { get; set; }
+>>>>>>> main
             public Guid CreatorId { get; set; }
 
         }
