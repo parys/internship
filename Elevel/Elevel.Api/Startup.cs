@@ -20,6 +20,9 @@ using FluentValidation;
 using MediatR;
 using Elevel.Application.Infrastructure;
 using Elevel.Api.Filters;
+using Elevel.Domain.Settings;
+using Elevel.Application.Interfaces;
+using Elevel.Infrastructure.Services.Implementation;
 
 namespace Elevel.Api
 {
@@ -35,11 +38,18 @@ namespace Elevel.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
+            services.AddTransient<IMailService, MailService>();
             services.AddAutoMapper(typeof(TestQuestionProfile));
             services.AddCors();
             services.AddMvc(options => {
                 options.Filters.Add(typeof(CustomExceptionFilterAttribute));
                 });
+
+            services.AddCors(c =>
+            {
+                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin());
+            });
             //Configuration from AppSettings
             services.Configure<TokenConfiguration>(Configuration.GetSection("JWT"));
             //User Manager Service
