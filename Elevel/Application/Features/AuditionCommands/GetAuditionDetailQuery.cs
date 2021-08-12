@@ -34,12 +34,14 @@ namespace Elevel.Application.Features.AuditionCommands
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
+                var audition1 = await _context.Auditions.ToListAsync();
                 var audition = await _context.Auditions
                     .ProjectTo<Response>(_mapper.ConfigurationProvider)
                     .FirstOrDefaultAsync(a => a.Id == request.Id, cancellationToken);
+                
                 if (audition is null)
                 {
-                    throw new NotFoundException($"Audition with id {request.Id}");
+                    throw new NotFoundException($"Audition with id {request.Id} not found.");
                 }
 
                 var response = _mapper.Map<Response>(audition);

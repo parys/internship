@@ -1,19 +1,19 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Elevel.Application.Infrastructure;
 using Elevel.Application.Interfaces;
 using Elevel.Domain.Enums;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper.QueryableExtensions;
-using Elevel.Application.Features.QuestionCommands;
-using Elevel.Application.Infrastructure;
-using FluentValidation;
 
 namespace Elevel.Application.Features.AuditionCommands
 {
@@ -25,30 +25,70 @@ namespace Elevel.Application.Features.AuditionCommands
             public string AudioFilePath { get; set; }
             public Level Level { get; set; }
             public List<QuestionDto> Questions { get; set; }
+            //[JsonIgnore]
+            //public Guid CreatorId { get; set; }
         }
 
-        //public class Validator : AbstractValidator<Request>
-        //{
+        public class Validator : AbstractValidator<Request>
+        {
+            public Validator()
+            {
+                this.CascadeMode = CascadeMode.Stop;
 
-        //    public Validator()
-        //    {
-        //        RuleFor(x => x.NameQuestion)
-        //            .NotEmpty()
-        //            .WithMessage("The question name can't be empty or null!");
+                RuleFor(x => x.AudioFilePath)
+                    .NotNull()
+                    .NotEmpty()
+                    .WithMessage("The file path can't be empty.");
 
-        //        RuleFor(x => x.Level)
-        //            .IsInEnum()
-        //            .WithMessage("The level must be between 1 and 5!");
+                RuleFor(x => x.Level)
+                    .IsInEnum()
+                    .WithMessage("The level must be between 1 and 5.");
 
-        //        RuleFor(x => x.Answers)
-        //            .Must(x => x.Count == Constants.ANSWER_AMOUNT)
-        //            .WithMessage($"The amount of answers must be {Constants.ANSWER_AMOUNT}");
+                RuleFor(x => x.Questions)
+                    .NotNull()
+                    .NotEmpty()
+                    .WithMessage("The questions couldn't be null or empty.")
+                    .Must(x => x.Count == Constants.AUDITION_QUESTION_AMOUNT)
+                    .WithMessage($"The amount of answers must be {Constants.AUDITION_QUESTION_AMOUNT}")
+                    .ForEach(x => x.SetValidator(new AuditionQuestionValidator()));
+            }
+        }
 
-        //        RuleFor(x => x.Answers)
-        //            .Must(x => x.Count(x => x.IsRight) == Constants.CORRECT_ANSWER_AMOUNT)
-        //            .WithMessage($"Only {Constants.CORRECT_ANSWER_AMOUNT} answer can be right");
-        //    }
-        //}
+        public class AuditionQuestionValidator : AbstractValidator<QuestionDto>
+        {
+            public AuditionQuestionValidator()
+            {
+                this.CascadeMode = CascadeMode.Stop;
+
+                RuleFor(x => x.NameQuestion)
+                    .NotNull()
+                    .NotEmpty()
+                    .WithMessage("The question name can't be empty or null.");
+
+                RuleFor(x => x.Answers)
+                    .NotNull()
+                    .NotEmpty()
+                    .WithMessage("The answers couldn't be null or empty.")
+                    .Must(x => x.Count == Constants.ANSWER_AMOUNT)
+                    .WithMessage($"The amount of answers must be {Constants.ANSWER_AMOUNT}")
+                    .Must(x => x.Count(a => a.IsRight) == Constants.CORRECT_ANSWER_AMOUNT)
+                    .WithMessage($"Only {Constants.CORRECT_ANSWER_AMOUNT} answer can be right.")
+                    .ForEach(x => x.SetValidator(new AuditionAnswerValidator()));
+            }
+        }
+
+        public class AuditionAnswerValidator : AbstractValidator<AnswerDto>
+        {
+            public AuditionAnswerValidator()
+            {
+                this.CascadeMode = CascadeMode.Stop;
+
+                RuleFor(x => x.NameAnswer)
+                    .NotNull()
+                    .NotEmpty()
+                    .WithMessage("The question name can't be empty or null.");
+            }
+        }
 
         public class Handler : IRequestHandler<Request, Response>
         {
@@ -63,13 +103,30 @@ namespace Elevel.Application.Features.AuditionCommands
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
+                //if (request.AudioFilePath != null && !File.Exists(request.AudioFilePath))
+                //{
+                //    throw new NotFoundException($"File with path {request.AudioFilePath} not found.");
+                //}
+
                 var audition = await _context.Auditions
-                    .ProjectTo<Response>(_mapper.ConfigurationProvider)
+                    .Include(x => x.Questions)
+                    .ThenInclude(x=>x.Answers)
+                    //.ProjectTo<Response>(_mapper.ConfigurationProvider)
                     .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
                 
                 if (audition is null)
                 {
-                    throw new NotFoundException($"Audition with id {request.Id}");
+                    throw new NotFoundException($"Audition with id {request.Id} not found");
+                }
+
+                foreach (var question in request.Questions)
+                {
+                    var dbQuestion = audition.Questions.FirstOrDefault(x => x.Id == question.Id);
+                    if (dbQuestion != null)
+                    {
+                        question.QuestionNumber = dbQuestion.QuestionNumber;
+                        question.Level = request.Level;
+                    }
                 }
 
                 audition = _mapper.Map(request, audition);
@@ -87,15 +144,20 @@ namespace Elevel.Application.Features.AuditionCommands
         {
             public Guid Id { get; set; }
             public string NameQuestion { get; set; }
-            public IEnumerable<AnswerDto> Answers { get; set; }
+            public List<AnswerDto> Answers { get; set; }
+            [JsonIgnore]
             public Level Level { get; set; }
+            [JsonIgnore]
+            public long QuestionNumber { get; set; }
+            //[JsonIgnore]
+            //public Guid CreatorId { get; set; }
         }
 
         public class AnswerDto
         {
             public Guid Id { get; set; }
             public string NameAnswer { get; set; }
-            public bool? IsRight { get; set; }
+            public bool IsRight { get; set; }
         }
     }
 }

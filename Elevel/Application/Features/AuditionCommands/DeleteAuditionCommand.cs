@@ -33,7 +33,7 @@ namespace Elevel.Application.Features.AuditionCommands
                 
                 if (audition is null)
                 {
-                    throw new NotFoundException($"Could not find audition by ID {request.Id}.");
+                    throw new NotFoundException($"Could not find audition by Id {request.Id}.");
                 }
                 
                 audition.Deleted = true;

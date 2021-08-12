@@ -4,6 +4,13 @@
         <name>Elevel.Api</name>
     </assembly>
     <members>
+        <member name="M:Elevel.Api.Controllers.AuditionController.GetAuditionList(Elevel.Application.Features.AuditionCommands.GetAuditionListQuery.Request)">
+            <summary>
+            
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="M:Elevel.Api.Controllers.FileController.Upload(System.Collections.Generic.List{Microsoft.AspNetCore.Http.IFormFile})">
             <summary>
             Uploads the files from the list.

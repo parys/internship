@@ -41,6 +41,7 @@ namespace Elevel.Application.Features.AuditionCommands
                 {
                     audition = audition.Where(x => x.Level == request.Level);
                 }
+
                 if (request.AuditionNumber.HasValue)
                 {
                     audition = audition.Where(x => x.AuditionNumber == (long)request.AuditionNumber);

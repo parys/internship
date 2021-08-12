@@ -16,6 +16,11 @@ namespace Elevel.Api.Controllers
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetAuditionList([FromQuery] GetAuditionListQuery.Request request)
         {
@@ -36,6 +41,7 @@ namespace Elevel.Api.Controllers
             foreach (var question in request.Questions)
             {
                 question.CreatorId = User.GetLoggedInUserId();
+                question.Level = request.Level;
             }
             return Ok(await Mediator.Send(request));
         }
