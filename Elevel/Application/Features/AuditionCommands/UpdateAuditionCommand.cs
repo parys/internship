@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Elevel.Application.Infrastructure;
 using Elevel.Application.Interfaces;
 using Elevel.Domain.Enums;
@@ -10,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,8 +23,6 @@ namespace Elevel.Application.Features.AuditionCommands
             public string AudioFilePath { get; set; }
             public Level Level { get; set; }
             public List<QuestionDto> Questions { get; set; }
-            //[JsonIgnore]
-            //public Guid CreatorId { get; set; }
         }
 
         public class Validator : AbstractValidator<Request>
@@ -103,15 +99,14 @@ namespace Elevel.Application.Features.AuditionCommands
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                //if (request.AudioFilePath != null && !File.Exists(request.AudioFilePath))
-                //{
-                //    throw new NotFoundException($"File with path {request.AudioFilePath} not found.");
-                //}
+                if (request.AudioFilePath != null && !File.Exists(request.AudioFilePath))
+                {
+                    throw new NotFoundException($"File with path {request.AudioFilePath} not found.");
+                }
 
                 var audition = await _context.Auditions
                     .Include(x => x.Questions)
                     .ThenInclude(x=>x.Answers)
-                    //.ProjectTo<Response>(_mapper.ConfigurationProvider)
                     .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
                 
                 if (audition is null)
@@ -149,8 +144,6 @@ namespace Elevel.Application.Features.AuditionCommands
             public Level Level { get; set; }
             [JsonIgnore]
             public long QuestionNumber { get; set; }
-            //[JsonIgnore]
-            //public Guid CreatorId { get; set; }
         }
 
         public class AnswerDto
