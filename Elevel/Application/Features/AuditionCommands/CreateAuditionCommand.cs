@@ -109,7 +109,7 @@ namespace Elevel.Application.Features.AuditionCommands
             {
                 if (request.AudioFilePath == null || !File.Exists(request.AudioFilePath))
                 {
-                    throw new NotFoundException($"File for audition not found.");
+                    throw new FileNotFoundException($"Audition file not found.", request.AudioFilePath);
                 }
 
                 var audition = _mapper.Map<Audition>(request);
@@ -131,6 +131,7 @@ namespace Elevel.Application.Features.AuditionCommands
             public List<AnswerDto> Answers { get; set; }
             [JsonIgnore]
             public Level Level { get; set; }
+            [JsonIgnore]
             public Guid CreatorId { get; set; }
 
         }

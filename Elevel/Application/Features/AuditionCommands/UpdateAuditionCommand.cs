@@ -12,6 +12,8 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper.Internal;
+using Elevel.Domain.Models;
 
 namespace Elevel.Application.Features.AuditionCommands
 {
@@ -106,17 +108,29 @@ namespace Elevel.Application.Features.AuditionCommands
                 
                 if (audition is null)
                 {
-                    throw new NotFoundException($"Audition with id {request.Id} not found");
+                    throw new NotFoundException(nameof(Audition), request.Id);
                 }
 
                 foreach (var question in request.Questions)
                 {
                     var dbQuestion = audition.Questions.FirstOrDefault(x => x.Id == question.Id);
-                    if (dbQuestion != null)
+                    
+                    if (dbQuestion == null)
                     {
-                        question.QuestionNumber = dbQuestion.QuestionNumber;
-                        question.Level = request.Level;
+                        throw new ArgumentException("Invalid question Id.", nameof(request));
                     }
+
+                    var questionsAnswersIdList = question.Answers.Select(x => x.Id);
+                    var dbQuestionsAnswersIdList = dbQuestion.Answers.Select(x => x.Id);
+
+                    if (questionsAnswersIdList.Count() != dbQuestionsAnswersIdList.Count() || 
+                        !questionsAnswersIdList.All(x=> dbQuestionsAnswersIdList.Contains(x)))
+                    {
+                        throw new ArgumentException("Invalid answer Id.", nameof(request));
+                    }
+
+                    question.QuestionNumber = dbQuestion.QuestionNumber;
+                    question.Level = request.Level;
                 }
 
                 audition = _mapper.Map(request, audition);

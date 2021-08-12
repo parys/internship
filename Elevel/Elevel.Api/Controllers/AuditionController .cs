@@ -5,11 +5,12 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Elevel.Application.Extensions;
+using Elevel.Domain.Enums;
 using Microsoft.AspNetCore.Http;
 
 namespace Elevel.Api.Controllers
 {
-    [Authorize, Route("api/[controller]")]
+    [Authorize(Roles = nameof(UserRole.Coach)), Route("api/[controller]")]
     public class AuditionController : BaseApiController
     {
         public AuditionController()

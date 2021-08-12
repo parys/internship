@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Elevel.Domain.Models;
 
 namespace Elevel.Application.Features.AuditionCommands
 {
@@ -38,7 +39,7 @@ namespace Elevel.Application.Features.AuditionCommands
                 
                 if (audition is null)
                 {
-                    throw new NotFoundException($"Audition with id {request.Id} not found.");
+                    throw new NotFoundException(nameof(Audition), request.Id);
                 }
 
                 var response = _mapper.Map<Response>(audition);
