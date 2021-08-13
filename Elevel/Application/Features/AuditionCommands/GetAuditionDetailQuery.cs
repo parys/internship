@@ -7,10 +7,9 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Elevel.Application.Features.QuestionCommands;
+using Elevel.Domain.Models;
 
 namespace Elevel.Application.Features.AuditionCommands
 {
@@ -37,9 +36,10 @@ namespace Elevel.Application.Features.AuditionCommands
                 var audition = await _context.Auditions
                     .ProjectTo<Response>(_mapper.ConfigurationProvider)
                     .FirstOrDefaultAsync(a => a.Id == request.Id, cancellationToken);
+                
                 if (audition is null)
                 {
-                    throw new NotFoundException($"Audition with id {request.Id}");
+                    throw new NotFoundException(nameof(Audition), request.Id);
                 }
 
                 var response = _mapper.Map<Response>(audition);

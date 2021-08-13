@@ -2,8 +2,6 @@
 {
     public static class Constants
     {
-        public const int GRAMMAR_TEST_AMOUNT = 12;
-        public const int AUDITION_TEST_AMOUNT = 10;
         public const int AUDTUION_MIN_AMOUNT = 1;
         public const int TOPIC_MIN_AMOUNT = 2;
         public const int MIN_MARK = 0;
@@ -11,8 +9,8 @@
         public const int ESSAY_MAX_LENGTH = 512;
         public const int TEST_DURATION = 60; //minutes
         public const int LEVEL_AMOUNT = 5;
-        public const int GRAMMAR_QUESTION_AMOUNT = 10;
-        public const int AUDITION_QUESTION_AMOUNT = 12;
+        public const int GRAMMAR_QUESTION_AMOUNT = 12;
+        public const int AUDITION_QUESTION_AMOUNT = 10;
         public const int ANSWER_AMOUNT = 4;
         public const int CORRECT_ANSWER_AMOUNT = 1;
     }

@@ -4,6 +4,58 @@
         <name>Elevel.Api</name>
     </assembly>
     <members>
+        <member name="M:Elevel.Api.Controllers.AuditionController.GetAuditionList(Elevel.Application.Features.AuditionCommands.GetAuditionListQuery.Request)">
+            <summary>
+            Get list with auditions.
+            Receive AuditionNumber and Level from query.
+            Returns all not deleted auditions.
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Elevel.Api.Controllers.AuditionController.GetAuditionById(Elevel.Application.Features.AuditionCommands.GetAuditionDetailQuery.Request)">
+            <summary>
+            Get audition by Id.
+            Receives id from route.
+            Returns Id, AuditionNumber, AudioFilePath, Level, CreationDate, CreatorId,
+            List of Questions (Id, NameQuestion, Level,
+            List of answers (Id, NameAnswer, IsRight))
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Elevel.Api.Controllers.AuditionController.CreateAuditionAsync(Elevel.Application.Features.AuditionCommands.CreateAuditionCommand.Request)">
+            <summary>
+            Create audition.
+            Receives AudioFilePath, Level,
+            List of Questions (Id, NameQuestion, Level,
+            List of answers (Id, NameAnswer, IsRight)) from body.
+            Return Id
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Elevel.Api.Controllers.AuditionController.UpdateAuditionAsync(System.Guid,Elevel.Application.Features.AuditionCommands.UpdateAuditionCommand.Request)">
+            <summary>
+            Update audition.
+            Receives Id from route, Receives AudioFilePath, Level,
+            List of Questions (Id, NameQuestion,
+            List of answers (Id, NameAnswer, IsRight)) from body
+            Return Id
+            </summary>
+            <param name="id"></param>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Elevel.Api.Controllers.AuditionController.DeleteAuditionAsync(Elevel.Application.Features.AuditionCommands.DeleteAuditionCommand.Request)">
+            <summary>
+            Delete audition.
+            Receive Id from route.
+            Return Id
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="M:Elevel.Api.Controllers.FileController.Upload(System.Collections.Generic.List{Microsoft.AspNetCore.Http.IFormFile})">
             <summary>
             Uploads a single file from the list of files.

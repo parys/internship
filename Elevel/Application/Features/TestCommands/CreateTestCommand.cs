@@ -206,12 +206,12 @@ namespace Elevel.Application.Features.TestCommands
             {
                 var questions = await GetQuestionListAsync(test.Level);
 
-                if (questions.Count() < Constants.GRAMMAR_TEST_AMOUNT)
+                if (questions.Count() < Constants.GRAMMAR_QUESTION_AMOUNT)
                 {
                     throw new ValidationException("Not Enough questions");
                 }
 
-                var questionIds = GetQuestionIds(questions, Constants.GRAMMAR_TEST_AMOUNT);
+                var questionIds = GetQuestionIds(questions, Constants.GRAMMAR_QUESTION_AMOUNT);
 
                 var testQuestions = CreateTestQuestions(questionIds, test);
 
@@ -228,12 +228,12 @@ namespace Elevel.Application.Features.TestCommands
             {
                 var questions = await GetQuestionListAsync(test.Level, test.AuditionId);
 
-                if (questions.Count() < Constants.AUDITION_TEST_AMOUNT)
+                if (questions.Count() < Constants.AUDITION_QUESTION_AMOUNT)
                 {
                     throw new ValidationException("Not Enough questions");
                 }
 
-                var questionIds = GetQuestionIds(questions, Constants.AUDITION_TEST_AMOUNT);
+                var questionIds = GetQuestionIds(questions, Constants.AUDITION_QUESTION_AMOUNT);
 
                 var testQuestions = CreateTestQuestions(questionIds, test);
 

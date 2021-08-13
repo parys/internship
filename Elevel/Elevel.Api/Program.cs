@@ -1,5 +1,6 @@
 using Elevel.Domain.Models;
 using Elevel.Infrastructure.Persistence.Context;
+using Elevel.Infrastructure.Services.Jobs;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -24,11 +25,14 @@ namespace Elevel.Api
                 var context = services.GetService<ApplicationDbContext>();
                 context.Database.Migrate();
 
+                var serviceProvider = scope.ServiceProvider;
+
                 try
                 {
                     //Seed Default Users
                     var userManager = services.GetRequiredService<UserManager<User>>();
                     var roleManager = services.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+                    EmailScheduler.Start(serviceProvider, context, userManager);
 
                     await ApplicationDbContextSeed.SeedEssentialsAsync(userManager, roleManager);
                     
