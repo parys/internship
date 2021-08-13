@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 
 namespace Elevel.Api.Controllers
 {
@@ -19,17 +20,16 @@ namespace Elevel.Api.Controllers
         }
 
         /// <summary>
-        /// Uploads the files from the list.
-        /// Receives the list of the files we need to transport to @"wwwroot\files".
-        /// Returns nothing.
+        /// Uploads a single file from the list of files.
+        /// Receives the list of the files.
+        /// Returns a path to the uploaded file or error if there were 2 or more files in the list.
         /// </summary>
         /// <param name="formFiles">Files (as a list)</param>
         /// <returns></returns>
         [HttpPost(nameof(Upload))]
-        public IActionResult Upload([Required] List<IFormFile> formFiles)
+        public async Task<IActionResult> Upload([Required] List<IFormFile> formFiles)
         {
-            _fileService.UploadFiles(formFiles);
-            return Ok();
+            return Ok(new { pathfile = await _fileService.UploadFiles(formFiles) });
         }
 
         /// <summary>
@@ -40,10 +40,13 @@ namespace Elevel.Api.Controllers
         /// <param name="filePath">The path of file</param>
         /// <returns></returns>
         [HttpGet(nameof(Download))]
-        public IActionResult Download([Required] string filePath)
+        public FileResult Download([Required] string filePath)
         {
-            var file =  _fileService.DownloadFile(filePath);
-            return File(file.Content, file.ContentType, file.FileName);
+            var file = _fileService.DownloadFile(filePath);
+            return new FileStreamResult(file.Stream, file.ContentType)
+            {
+                FileDownloadName = file.FileName,
+            };
         }
     }
 }
