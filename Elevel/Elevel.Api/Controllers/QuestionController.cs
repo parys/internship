@@ -29,7 +29,7 @@ namespace Elevel.Api.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpGet("{id:Guid}")]
+        [HttpGet("{Id:Guid}")]
         public async Task<IActionResult> GetQuestionById([FromRoute] GetQuestionDetailQuery.Request request)
         {
             var response = await Mediator.Send(request);
@@ -56,7 +56,7 @@ namespace Elevel.Api.Controllers
         /// <param name="id"></param>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPut("{id:Guid}")]
+        [HttpPut("{Id:Guid}")]
         public async Task<IActionResult> UpdateQuestionAsync([FromRoute] Guid id, [FromBody] UpdateQuestionCommand.Request request)
         {
             if (request.Id != id)
@@ -75,7 +75,7 @@ namespace Elevel.Api.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpDelete("{id:Guid}")]
+        [HttpDelete("{Id:Guid}")]
         public async Task<IActionResult> DeleteQuestionAsync([FromRoute] DeleteQuestionCommand.Request request)
         {
             var response = await Mediator.Send(request);
