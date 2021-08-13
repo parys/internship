@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿    using AutoMapper;
 using Elevel.Application.Infrastructure;
 using Elevel.Application.Interfaces;
 using Elevel.Domain.Enums;
@@ -30,6 +30,16 @@ namespace Elevel.Application.Features.TestCommands
             public Guid CoachId { get; set; }
         }
 
+        public class Validator : AbstractValidator<Request>
+        {
+            public Validator()
+            {
+                RuleFor(x => x.SpeakingMark).Must(x => x >= Constants.MIN_MARK && x <= Constants.MAX_MARK).WithMessage("Speaking mark number is out if range from 0 to 10!");
+
+                RuleFor(x => x.EssayMark).Must(x => x >= Constants.MIN_MARK && x <= Constants.MAX_MARK).WithMessage("Essay mark number is out if range from 0 to 10!");
+            }
+        }
+
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IApplicationDbContext _context;
@@ -54,18 +64,6 @@ namespace Elevel.Application.Features.TestCommands
                     || test.UserId == request.CoachId)
                 {
                     throw new ValidationException("You can't check this test");
-                }
-
-                if(request.SpeakingMark < Constants.MIN_MARK 
-                    || request.SpeakingMark > Constants.MAX_MARK )
-                {
-                    throw new ValidationException("Speaking mark number is out if range from 0 to 10");
-                }
-
-                if(request.EssayMark < Constants.MIN_MARK
-                    || request.EssayMark > Constants.MAX_MARK)
-                {
-                    throw new ValidationException("Essay mark number is out if range from 0 to 10");
                 }
 
                 
