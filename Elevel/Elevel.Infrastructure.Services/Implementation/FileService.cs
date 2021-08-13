@@ -40,12 +40,11 @@ namespace Elevel.Infrastructure.Services.Implementation
 
         public FileType DownloadFile(string fileName)
         {
-            var file = File.ReadAllBytes(Path.Combine(folderPath, fileName));
-            var content = new MemoryStream(file);
-            var contentType = "APPLICATION/octet-stream";
+            FileStream fs = new(Path.Combine(folderPath, fileName), FileMode.Open, FileAccess.Read);
+            var contentType = "application/octet-stream";
             return new FileType
             {
-                Content = content,
+                Stream = fs,
                 ContentType = contentType,
                 FileName = fileName
             };

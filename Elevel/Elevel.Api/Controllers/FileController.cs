@@ -41,10 +41,10 @@ namespace Elevel.Api.Controllers
         /// <param name="filePath">The path of file</param>
         /// <returns></returns>
         [HttpGet(nameof(Download))]
-        public IActionResult Download([Required] string filePath)
+        public FileResult Download([Required] string filePath)
         {
             var file = _fileService.DownloadFile(filePath);
-            return File(file.Content, file.ContentType, file.FileName);
+            return File(file.Stream, file.ContentType, file.FileName);
         }
     }
 }
