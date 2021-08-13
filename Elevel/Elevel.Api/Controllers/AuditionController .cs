@@ -39,7 +39,7 @@ namespace Elevel.Api.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpGet("{id:Guid}")]
+        [HttpGet("{Id:Guid}")]
         public async Task<IActionResult> GetAuditionById([FromRoute] GetAuditionDetailQuery.Request request)
         {
             var response = await Mediator.Send(request);
@@ -77,7 +77,7 @@ namespace Elevel.Api.Controllers
         /// <param name="id"></param>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPut("{id:Guid}")]
+        [HttpPut("{Id:Guid}")]
         public async Task<IActionResult> UpdateAuditionAsync([FromRoute] Guid id, [FromBody] UpdateAuditionCommand.Request request)
         {
             if (request.Id != id)
@@ -97,7 +97,7 @@ namespace Elevel.Api.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpDelete("{id:Guid}")]
+        [HttpDelete("{Id:Guid}")]
         public async Task<IActionResult> DeleteAuditionAsync([FromRoute] DeleteAuditionCommand.Request request)
         {
             var response = await Mediator.Send(request);
