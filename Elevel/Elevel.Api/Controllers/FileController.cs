@@ -29,8 +29,7 @@ namespace Elevel.Api.Controllers
         [HttpPost(nameof(Upload))]
         public async Task<IActionResult> Upload([Required] List<IFormFile> formFiles)
         {
-            var pathFile = await _fileService.UploadFiles(formFiles);
-            return Ok(new { pathfile = pathFile });
+            return Ok(new { pathfile = await _fileService.UploadFiles(formFiles) });
         }
 
         /// <summary>
