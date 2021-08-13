@@ -71,7 +71,7 @@ namespace Elevel.Application.Features.TestCommands
                 //    throw new ValidationException("Test time has passed");
                 //}
 
-                await CheckAnswersForUniqueTestQuestionAsync(request.GrammarAnswers, test.Id);
+                var questionIds = await CheckAnswersForUniqueTestQuestionAsync(request.GrammarAnswers, test.Id);
 
                 await CheckAnswersForUniqueTestQuestionAsync(request.AuditionAnswers, test.Id);
 
@@ -88,7 +88,7 @@ namespace Elevel.Application.Features.TestCommands
                 return testResponse;
             }
 
-            private async Task CheckAnswersForUniqueTestQuestionAsync(IEnumerable<Guid> answers, Guid testId)
+            private async Task<IEnumerable<Guid>> CheckAnswersForUniqueTestQuestionAsync(IEnumerable<Guid> answers, Guid testId)
             {
                 var questionIds = await _context.TestQuestions.Where(x => x.TestId == testId).Select(x => x.QuestionId).ToListAsync();
                 var answerList = _context.Answers.AsNoTracking().Where(x => questionIds.Contains(x.QuestionId));
@@ -100,10 +100,10 @@ namespace Elevel.Application.Features.TestCommands
                         throw new ValidationException($"Answer with Id {answer} is not in current test");
                     }
                 }
-
+                return questionIds;
             }
 
-            private Task<int> EvaluateTestAsync(IEnumerable<Guid> answers)
+            private Task<int> EvaluateAndSaveTestAsync(IEnumerable<Guid> answers)
             {
                 return Task.FromResult(_context.Answers.Where(x => answers.Contains(x.Id) && x.IsRight).Count());
             }

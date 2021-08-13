@@ -21,6 +21,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
+using MailKit;
 
 namespace Elevel.Api
 {
@@ -36,6 +38,8 @@ namespace Elevel.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //services.AddTransient<Application.Interfaces.IMailService>();
+            services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
             services.AddAutoMapper(cfg => cfg.AddCollectionMappers(), typeof(TestQuestionProfile));
             services.AddCors();
             services.AddMvc(options => {
