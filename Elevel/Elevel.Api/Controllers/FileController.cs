@@ -44,7 +44,10 @@ namespace Elevel.Api.Controllers
         public FileResult Download([Required] string filePath)
         {
             var file = _fileService.DownloadFile(filePath);
-            return File(file.Stream, file.ContentType, file.FileName);
+            return new FileStreamResult(file.Stream, file.ContentType)
+            {
+                FileDownloadName = file.FileName,
+            };
         }
     }
 }
