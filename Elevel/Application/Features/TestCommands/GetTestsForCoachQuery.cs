@@ -49,12 +49,10 @@ namespace Elevel.Application.Features.TestCommands
                 if (request.IsChecked)
                 {
                     tests = tests.Where(x => x.EssayMark.HasValue 
-                    && x.SpeakingMark.HasValue 
-                    && !string.IsNullOrWhiteSpace(x.Comment));
+                    && x.SpeakingMark.HasValue);
                 } else {
                     tests = tests.Where(x => !x.EssayMark.HasValue 
-                    && !x.SpeakingMark.HasValue 
-                    && string.IsNullOrWhiteSpace(x.Comment));
+                    && !x.SpeakingMark.HasValue);
                 }
 
                 if (request.Level.HasValue)
@@ -97,6 +95,9 @@ namespace Elevel.Application.Features.TestCommands
             public bool Priority { get; set; }
             public string EssayAnswer { get; set; }
             public string SpeakingAnswerReference { get; set; }
+            public int EssayMark { get; set; }
+            public int SpeakingMark { get; set; }
+            public string Comment { get; set; }
         }
     }
 }

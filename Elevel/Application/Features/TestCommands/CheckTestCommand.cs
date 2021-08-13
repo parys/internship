@@ -30,16 +30,6 @@ namespace Elevel.Application.Features.TestCommands
             public Guid CoachId { get; set; }
         }
 
-        public class Validator : AbstractValidator<Request>
-        {
-            public Validator()
-            {
-                RuleFor(x => x.SpeakingMark).NotEmpty().WithMessage("SpeakingMark name can't be empty or null!");
-
-                RuleFor(x => x.EssayMark).NotEmpty().WithMessage("EssayMark name can't be empty or null!");
-            }
-        }
-
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IApplicationDbContext _context;
