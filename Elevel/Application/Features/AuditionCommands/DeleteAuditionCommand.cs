@@ -6,6 +6,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Elevel.Application.Infrastructure;
+using Elevel.Domain.Models;
 
 namespace Elevel.Application.Features.AuditionCommands
 {
@@ -29,11 +30,11 @@ namespace Elevel.Application.Features.AuditionCommands
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var audition = await _context.Auditions.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+                Audition audition = await _context.Auditions.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
                 
                 if (audition is null)
                 {
-                    throw new NotFoundException($"Could not find audition by ID {request.Id}.");
+                    throw new NotFoundException(nameof(Audition), request.Id);
                 }
                 
                 audition.Deleted = true;

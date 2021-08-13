@@ -26,19 +26,19 @@ namespace Elevel.Api.Controllers
             return Ok(await Mediator.Send(request));
         }
 
-        [HttpGet("{id:Guid}")]
+        [HttpGet("{Id:Guid}")]
         public async Task<IActionResult> GetById([FromRoute] GetTopicByIdQuery.Request request)
         {
             return Ok(await Mediator.Send(request));
         }
 
-        [HttpDelete("{id:Guid}")]
+        [HttpDelete("{Id:Guid}")]
         public async Task<IActionResult> DeleteAsync([FromRoute] DeleteTopicCommand.Request request)
         {
             return Ok(await Mediator.Send(request));
         }
 
-        [HttpPut("{id:Guid}")]
+        [HttpPut("{Id:Guid}")]
         public async Task<IActionResult> Update([FromBody] UpdateTopicCommand.Request request)
         {
             return Ok(await Mediator.Send(request));
