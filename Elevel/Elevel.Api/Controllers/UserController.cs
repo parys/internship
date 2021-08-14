@@ -20,7 +20,17 @@ namespace Elevel.Api.Controllers
         }
 
         /// <summary>
-        /// Returns all users
+        /// Receives parameters: 
+        /// LastName, 
+        /// FirstName, 
+        /// Email, 
+        /// PageSize, 
+        /// CurrentPage, 
+        /// SortOn (Email, CreationDate, FirstName, LastName, UserName), 
+        /// sortDirection (asc (a->z,0->9), desc(z->a,9->0))
+        /// 
+        /// Returns:
+        /// Paged, filtered, and sorted user list
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>

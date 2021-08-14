@@ -56,7 +56,7 @@ namespace Elevel.Application.Features.TestCommands
                     throw new NotFoundException($"test with {request.Id}", test);
                 }
 
-                if(request.UserId != test.UserId)
+                if (request.UserId != test.UserId)
                 {
                     throw new ValidationException("You can't submit this test");
                 }
@@ -77,9 +77,9 @@ namespace Elevel.Application.Features.TestCommands
 
                 test = _mapper.Map(request, test);
 
-                test.GrammarMark = await EvaluateTestAsync(request.GrammarAnswers);
+                test.GrammarMark = await EvaluateTestAndSaveAsync(request.GrammarAnswers);
 
-                test.AuditionMark = await EvaluateTestAsync(request.AuditionAnswers);
+                test.AuditionMark = await EvaluateTestAndSaveAsync(request.AuditionAnswers);
 
                 await _context.SaveChangesAsync(cancelationtoken).ConfigureAwait(false);
 
@@ -103,9 +103,21 @@ namespace Elevel.Application.Features.TestCommands
 
             }
 
-            private Task<int> EvaluateTestAsync(IEnumerable<Guid> answers)
+            private async Task<int> EvaluateTestAndSaveAsync(IEnumerable<Guid> answers)
             {
-                return Task.FromResult(_context.Answers.Where(x => answers.Contains(x.Id) && x.IsRight).Count());
+                var testQuestions = await _context.TestQuestions
+                    .Include(x => x.Question)
+                    .ThenInclude(x => x.Answers)
+                    .Where(x => x.Question.Answers
+                        .Any(x => answers.Contains(x.Id)))
+                    .ToListAsync();
+
+                foreach (var testQuestion in testQuestions)
+                {
+                    testQuestion.UserAnswerId = testQuestion.Question.Answers.FirstOrDefault(x => answers.Contains(x.Id)).Id;
+                }
+
+                return _context.Answers.Where(x => answers.Contains(x.Id) && x.IsRight).Count();
             }
 
         }
