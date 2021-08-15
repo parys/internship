@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Elevel.Application.Extensions;
 using Elevel.Application.Interfaces;
 using Elevel.Application.Pagination;
 using Elevel.Domain;
@@ -57,14 +58,43 @@ namespace Elevel.Application.Features.UserFeatures
                     users = users.Where(x => x.Email == request.Email);
                 }
 
-
-                return new Response()
+                Expression<Func<User, object>> sortBy = x => x.FirstName;
+                Expression<Func<User, object>> thenBy = x => x.LastName;
+                if (!string.IsNullOrWhiteSpace(request.SortOn))
                 {
-                    CurrentPage = request.CurrentPage,
-                    PageSize = request.PageSize,
-                    RowCount = await users.CountAsync(),
-                    Results = await users.Skip(request.SkipCount()).Take(request.PageSize).ProjectTo<UsersDTO>(_mapper.ConfigurationProvider).ToListAsync()
-                };
+                    if (request.SortOn.Contains(nameof(User.FirstName),
+                        StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        sortBy = x => x.FirstName;
+                        thenBy = x => x.LastName;
+                    }
+                    else if (request.SortOn.Contains(nameof(User.LastName),
+                        StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        sortBy = x => x.LastName;
+                        thenBy = x => x.FirstName;
+                    }
+                    else if (request.SortOn.Contains(nameof(User.CreationDate),
+                        StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        sortBy = x => x.CreationDate;
+                        thenBy = x => x.FirstName;
+                    }
+                    else if (request.SortOn.Contains(nameof(User.Email),
+                        StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        sortBy = x => x.Email;
+                        thenBy = null;
+                    }
+                    else if (request.SortOn.Contains(nameof(User.UserName),
+                        StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        sortBy = x => x.UserName;
+                        thenBy = x => x.FirstName;
+                    }
+                }
+
+                return await users.GetPagedAsync<Response, User, UsersDTO>(request, _mapper, sortBy, thenBy);
             }
         }
 

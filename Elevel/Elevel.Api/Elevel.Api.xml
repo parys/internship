@@ -58,9 +58,9 @@
         </member>
         <member name="M:Elevel.Api.Controllers.FileController.Upload(System.Collections.Generic.List{Microsoft.AspNetCore.Http.IFormFile})">
             <summary>
-            Uploads the files from the list.
-            Receives the list of the files we need to transport to @"wwwroot\files".
-            Returns nothing.
+            Uploads a single file from the list of files.
+            Receives the list of the files.
+            Returns a path to the uploaded file or error if there were 2 or more files in the list.
             </summary>
             <param name="formFiles">Files (as a list)</param>
             <returns></returns>
@@ -210,7 +210,17 @@
         </member>
         <member name="M:Elevel.Api.Controllers.UserController.GetAllUsersAsync(Elevel.Application.Features.UserFeatures.GetUserListQuery.Request)">
             <summary>
-            Returns all users
+            Receives parameters: 
+            LastName, 
+            FirstName, 
+            Email, 
+            PageSize, 
+            CurrentPage, 
+            SortOn (Email, CreationDate, FirstName, LastName, UserName), 
+            sortDirection (asc (a->z,0->9), desc(z->a,9->0))
+            
+            \nReturns:
+            Paged, filtered, and sorted user list
             </summary>
             <param name="request"></param>
             <returns></returns>

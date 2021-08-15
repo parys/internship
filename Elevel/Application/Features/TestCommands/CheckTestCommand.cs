@@ -35,11 +35,11 @@ namespace Elevel.Application.Features.TestCommands
             public Validator()
             {
                 RuleFor(x => x.SpeakingMark)
-                    .Must(x => x >= Constants.MIN_MARK && x <= Constants.MAX_MARK)
+                    .InclusiveBetween(Constants.MIN_MARK,Constants.MAX_MARK)
                     .WithMessage("Speaking mark number is out if range from 0 to 10!");
 
                 RuleFor(x => x.EssayMark)
-                    .Must(x => x >= Constants.MIN_MARK && x <= Constants.MAX_MARK)
+                    .InclusiveBetween(Constants.MIN_MARK, Constants.MAX_MARK)
                     .WithMessage("Essay mark number is out if range from 0 to 10!");
             }
         }

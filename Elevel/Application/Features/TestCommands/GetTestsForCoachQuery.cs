@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Elevel.Application.Extensions;
 using Elevel.Application.Interfaces;
 using Elevel.Application.Pagination;
 using Elevel.Domain.Enums;
@@ -15,7 +16,7 @@ namespace Elevel.Application.Features.TestCommands
 {
     public class GetTestsForCoachQuery
     {
-        public class Request :PagedQueryBase, IRequest<Response>
+        public class Request : PagedQueryBase, IRequest<Response>
         {
             [JsonIgnore]
             public Guid CoachId { get; set; }
@@ -48,10 +49,12 @@ namespace Elevel.Application.Features.TestCommands
 
                 if (request.IsChecked)
                 {
-                    tests = tests.Where(x => x.EssayMark.HasValue 
+                    tests = tests.Where(x => x.EssayMark.HasValue
                     && x.SpeakingMark.HasValue);
-                } else {
-                    tests = tests.Where(x => !x.EssayMark.HasValue 
+                }
+                else
+                {
+                    tests = tests.Where(x => !x.EssayMark.HasValue
                     && !x.SpeakingMark.HasValue);
                 }
 
@@ -83,7 +86,7 @@ namespace Elevel.Application.Features.TestCommands
                 };
             }
         }
-        public class Response: PagedResult<TestDto>
+        public class Response : PagedResult<TestDto>
         {
         }
         public class TestDto
@@ -95,8 +98,8 @@ namespace Elevel.Application.Features.TestCommands
             public bool Priority { get; set; }
             public string EssayAnswer { get; set; }
             public string SpeakingAnswerReference { get; set; }
-            public int EssayMark { get; set; }
-            public int SpeakingMark { get; set; }
+            public int? EssayMark { get; set; }
+            public int? SpeakingMark { get; set; }
             public string Comment { get; set; }
         }
     }
