@@ -1,36 +1,35 @@
-﻿using AutoMapper;
-using MailKit;
+﻿
+
+using AutoMapper;
+using Elevel.Infrastructure.Services.Implementation;
+using MailKit.Net.Smtp;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
+using MimeKit;
 using System.Threading.Tasks;
 
 namespace Elevel.Api.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [ApiController, Authorize]
     public class EmailNotificationController : ControllerBase
     {
+        private MimeMessage _message;
+        private SmtpClient _smtpClient;
 
-        //private readonly IMailService mailService;
+        public EmailNotificationController()
+        {
+            _message = new MimeMessage();
+            _smtpClient = new SmtpClient();
 
-        //public EmailNotificationController(IMailService mailService)
-        //{
-        //    this.mailService = mailService;
-        //}
-        //[HttpPost("send")]
-        //public async Task<IActionResult> SendMail([FromForm] MapRequest request)
-        //{
-        //    try
-        //    {
-        //        await mailService.SendEmailAsync(request);
-        //        return Ok();
-        //    }
-        //    catch (Exception ex)
-        //    {
+        }
 
-        //        throw;
-        //    }
-        //}
+        [HttpPost("send")]
+        public IActionResult SendMail([FromBody]string email, string subject, string body)
+        {
+            var message = new MailService();
+            return Ok(message.SendMessage(email, subject, body));
+        }
 
         //[HttpPost("sendEmailTemplate")]
         //public async Task<IActionResult> SendWelcomeMail([FromForm] MailSource source)

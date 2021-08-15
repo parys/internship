@@ -31,7 +31,7 @@ namespace Elevel.Persistence
 
             services.AddTransient<JobFactory>();
             services.AddScoped<EmailJob>();
-            //services.AddScoped<IEmailSender, EmailSender>();
+            services.AddScoped<IMailService, MailService>();
         }
     }
 }

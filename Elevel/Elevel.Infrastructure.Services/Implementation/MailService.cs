@@ -1,75 +1,94 @@
-﻿using Elevel.Application.Infrastructure;
-using Elevel.Application.Interfaces;
-using Elevel.Domain.Models;
-using MailKit.Security;
-using Microsoft.Extensions.Options;
-using MimeKit;
-using System.IO;
-using System.Net.Mail;
-using System.Threading.Tasks;
+﻿using Elevel.Application.Interfaces;
 using MailKit.Net.Smtp;
+using MimeKit;
+using System;
+using System.Collections.Generic;
 
 namespace Elevel.Infrastructure.Services.Implementation
 {
     public class MailService : IMailService
     {
-        private readonly MailSettings _mailSettings;
-        public MailService(IOptions<MailSettings> mailSettings)
+        private MimeMessage _message;
+        private SmtpClient _smtpClient;
+        private string adminEmail = "elevelexadel@gmail.com";
+        private string adminPassword = "admin4elevel";
+
+        public MailService()
         {
-            _mailSettings = mailSettings.Value;
+            _message = new MimeMessage();
+            _smtpClient = new SmtpClient();
         }
 
-        public async Task SendEmailAsync(MailRequest mailRequest)
+        public string SendMessage(string receiverEmail, string subject, string body)
         {
-            var email = new MimeMessage();
-            email.Sender = MailboxAddress.Parse(_mailSettings.Mail);
-            email.To.Add(MailboxAddress.Parse(mailRequest.ToEmail));
-            email.Subject = mailRequest.Subject;
-            var builder = new BodyBuilder();
-            if (mailRequest.Attachments != null)
+            _message.From.Add(new MailboxAddress("Elevel Notification", adminEmail));
+            _message.To.Add(MailboxAddress.Parse(receiverEmail));
+            _message.Subject = subject;
+            _message.Body = new TextPart("plain")
             {
-                byte[] fileBytes;
-                foreach (var file in mailRequest.Attachments)
+                Text = body
+            };
+
+            try
+            {
+                _smtpClient.Connect("smtp.gmail.com", 465, true);
+                _smtpClient.Authenticate(adminEmail, adminPassword);
+                _smtpClient.Send(_message);
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+            finally
+            {
+                _smtpClient.Disconnect(true);
+                _smtpClient.Dispose();
+            }
+            return "Email was sent successfully";
+        }
+
+        public string UsersEmailNotification(List<string> receiverEmails, string subject, string body)
+        {
+            try
+            {
+                _smtpClient.Connect("smtp.gmail.com", 465, true);
+                _smtpClient.Authenticate(adminEmail, adminPassword);
+            }
+            catch (Exception ex)
+            {
+                _smtpClient.Disconnect(true);
+                _smtpClient.Dispose();
+                return ex.Message;
+            }
+
+            _message.From.Add(new MailboxAddress("Elevel Notification", adminEmail));
+            _message.Body = new TextPart("plain")
+            {
+                Text = body
+            };
+            _message.Subject = subject;
+
+
+            foreach (var receiverEmail in receiverEmails)
+            {
+                _message.To.Add(MailboxAddress.Parse(receiverEmail));
+
+                try
                 {
-                    if (file.Length > 0)
-                    {
-                        using (var ms = new MemoryStream())
-                        {
-                            file.CopyTo(ms);
-                            fileBytes = ms.ToArray();
-                        }
-                        builder.Attachments.Add(file.FileName, fileBytes, ContentType.Parse(file.ContentType));
-                    }
+                    _smtpClient.Send(_message);
+                }
+                catch (Exception ex)
+                {
+                    _smtpClient.Disconnect(true);
+                    _smtpClient.Dispose();
+                    return ex.Message;
                 }
             }
-            builder.HtmlBody = mailRequest.Body;
-            email.Body = builder.ToMessageBody();
-            using var smtp = new MailKit.Net.Smtp.SmtpClient();
-            smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
-            smtp.Authenticate(_mailSettings.Mail, _mailSettings.Password);
-            await smtp.SendAsync(email);
-            smtp.Disconnect(true);
-        }
 
-        public async Task SendEmailTemplateAsynk(MailSource mailSource)
-        {
-            string FilePath = Directory.GetCurrentDirectory() + "\\Templates\\CustomTemplate.html";
-            StreamReader str = new StreamReader(FilePath);
-            string MailText = str.ReadToEnd();
-            str.Close();
-            MailText = MailText.Replace("[username]", mailSource.UserName).Replace("[email]", mailSource.EmailTo);
-            var email = new MimeMessage();
-            email.Sender = MailboxAddress.Parse(_mailSettings.Mail);
-            email.To.Add(MailboxAddress.Parse(mailSource.EmailTo));
-            email.Subject = $"Welcome {mailSource.UserName}";
-            var builder = new BodyBuilder();
-            builder.HtmlBody = MailText;
-            email.Body = builder.ToMessageBody();
-            using var smtp = new MailKit.Net.Smtp.SmtpClient();
-            smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
-            smtp.Authenticate(_mailSettings.Mail, _mailSettings.Password);
-            await smtp.SendAsync(email);
-            smtp.Disconnect(true);
+            _smtpClient.Disconnect(true);
+            _smtpClient.Dispose();
+
+            return "Email was sent successfully";
         }
     }
 }

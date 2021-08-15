@@ -32,7 +32,7 @@ namespace Elevel.Api
                     //Seed Default Users
                     var userManager = services.GetRequiredService<UserManager<User>>();
                     var roleManager = services.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
-                    EmailScheduler.Start(serviceProvider, context, userManager);
+                    await EmailScheduler.Start(serviceProvider, context, userManager);
 
                     await ApplicationDbContextSeed.SeedEssentialsAsync(userManager, roleManager);
                     
