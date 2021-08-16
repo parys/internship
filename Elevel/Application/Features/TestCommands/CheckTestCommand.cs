@@ -2,8 +2,10 @@
 using Elevel.Application.Infrastructure;
 using Elevel.Application.Interfaces;
 using Elevel.Domain.Enums;
+using Elevel.Domain.Models;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Text.Json.Serialization;
@@ -48,11 +50,15 @@ namespace Elevel.Application.Features.TestCommands
         {
             private readonly IApplicationDbContext _context;
             private readonly IMapper _mapper;
+            private readonly UserManager<User> _userManager;
+            private readonly IMailService _mail;
 
-            public Handler(IApplicationDbContext context, IMapper mapper)
+            public Handler(IApplicationDbContext context, IMapper mapper, UserManager<User> userManager, IMailService mail)
             {
                 _context = context;
                 _mapper = mapper;
+                _userManager = userManager;
+                _mail = mail;
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
@@ -70,8 +76,6 @@ namespace Elevel.Application.Features.TestCommands
                     throw new ValidationException("You can't check this test");
                 }
 
-                
-
                 test.SpeakingMark = request.SpeakingMark;
 
                 test.EssayMark = request.EssayMark;
@@ -80,6 +84,17 @@ namespace Elevel.Application.Features.TestCommands
 
                 await _context.SaveChangesAsync();
 
+                if (test.HrId != null)
+                {
+                    _mail.SendMessage(_userManager,
+                        (Guid)test.HrId,
+                        "The test assinged to user by you was checked",
+                        "text like 'The test assigned to user by you was checked");
+                }
+                _mail.SendMessage(_userManager,
+                    test.UserId,
+                    "You test was checked",
+                    "text like 'The test you completed is now checked");
 
                 return _mapper.Map<Response>(test);
             }
