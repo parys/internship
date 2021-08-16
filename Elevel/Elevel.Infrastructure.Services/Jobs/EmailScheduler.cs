@@ -18,10 +18,10 @@ namespace Elevel.Infrastructure.Services.Jobs
             ITrigger trigger = TriggerBuilder.Create()
                 .WithIdentity("MailingTrigger", "default")
                 .StartAt(DateBuilder.DateOf(12,30,0,17,8))
-                //.StartNow()
+                .StartNow()
                 .WithSimpleSchedule(x => x
                     .WithIntervalInHours(24)
-                    //.WithIntervalInMinutes(1)
+                    .WithIntervalInMinutes(1)
                     .RepeatForever())
                 .Build();
 

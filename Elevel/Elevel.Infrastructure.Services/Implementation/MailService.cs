@@ -3,11 +3,13 @@ using Elevel.Application.Interfaces;
 using Elevel.Domain.Models;
 using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Elevel.Infrastructure.Services.Implementation
 {
@@ -17,16 +19,45 @@ namespace Elevel.Infrastructure.Services.Implementation
         private SmtpClient _smtpClient;
         private readonly UserManager<User> _userManager;
         private readonly EmailConfiguration _emailConfiguration;
+        private readonly IApplicationDbContext _context;
 
-        public MailService(UserManager<User> userManager, IOptions<EmailConfiguration> emailConfiguration)
+        public MailService(UserManager<User> userManager, IOptions<EmailConfiguration> emailConfiguration, IApplicationDbContext context)
         {
             _emailConfiguration = emailConfiguration.Value;
             _userManager = userManager;
             _message = new MimeMessage();
             _smtpClient = new SmtpClient();
+            _context = context;
         }
 
-        public void Connect()
+        public async Task SendNotificationsToHrsAndUsersAsync()
+        {
+            var userIds = await _context.Tests
+                .Where(x => x.AssignmentEndDate.HasValue
+                    && DateTimeOffset.Compare(x.AssignmentEndDate.Value.Date, DateTimeOffset.UtcNow.Date) >= 0)
+                .AsNoTracking()
+                .Select(x => x.UserId)
+                .ToListAsync();
+
+            var missedDeadlineUserIds = await _context.Tests
+                .Where(x => x.AssignmentEndDate.HasValue
+                    && DateTimeOffset.Compare(x.AssignmentEndDate.Value.Date, DateTimeOffset.UtcNow.Date) < 0
+                    && !x.GrammarMark.HasValue)
+                .AsNoTracking().ToListAsync();
+
+            Connect();
+            UsersEmailNotification(userIds,
+                "Elevel test",
+                 "Hi!\nYou have a test assigned on you");
+
+            MissedDeadlineEmailNotification(missedDeadlineUserIds,
+                "Elevel test",
+                 "User {FirstName} {LastName} with email {Email} has lost the assignment end date!");
+
+            Disconnect();
+        }
+
+        private void Connect()
         {
             try
             {
@@ -41,7 +72,7 @@ namespace Elevel.Infrastructure.Services.Implementation
             }
         }
 
-        public void Disconnect()
+        private void Disconnect()
         {
             _smtpClient.Disconnect(true);
             _smtpClient.Dispose();
@@ -82,7 +113,7 @@ namespace Elevel.Infrastructure.Services.Implementation
             return "Email was sent successfully";
         }
 
-        public string UsersEmailNotification(List<Guid> receiverIds, string subject, string body)
+        private string UsersEmailNotification(List<Guid> receiverIds, string subject, string body)
         {
             var receiverEmails = _userManager.Users.Where(x => receiverIds.Contains(x.Id)).Select(x => x.Email).ToList();
             if (receiverEmails == null)
@@ -117,7 +148,7 @@ namespace Elevel.Infrastructure.Services.Implementation
             return "Email was sent successfully";
         }
 
-        public string MissedDeadlineEmailNotification(List<Test> tests, string subject, string body)
+        private string MissedDeadlineEmailNotification(List<Test> tests, string subject, string body)
         {
             var UsersAndHrs = tests.GroupBy(x => x.HrId, (key, value) => new
             {
