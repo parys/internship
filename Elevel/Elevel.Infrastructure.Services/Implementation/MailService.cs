@@ -65,7 +65,7 @@ namespace Elevel.Infrastructure.Services.Implementation
                 _smtpClient.Authenticate(_emailConfiguration.Email,
                     _emailConfiguration.Password);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 _smtpClient.Disconnect(true);
                 _smtpClient.Dispose();
