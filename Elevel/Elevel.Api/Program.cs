@@ -23,7 +23,7 @@ namespace Elevel.Api
                 var services = scope.ServiceProvider;
                 var loggerFactory = services.GetRequiredService<ILoggerFactory>();
                 var context = services.GetService<ApplicationDbContext>();
-                context.Database.Migrate();
+                await context.Database.MigrateAsync();
 
                 var serviceProvider = scope.ServiceProvider;
 
@@ -32,7 +32,7 @@ namespace Elevel.Api
                     //Seed Default Users
                     var userManager = services.GetRequiredService<UserManager<User>>();
                     var roleManager = services.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
-                    await EmailScheduler.Start(serviceProvider, context, userManager);
+                    await EmailScheduler.Start(serviceProvider);
 
                     await ApplicationDbContextSeed.SeedEssentialsAsync(userManager, roleManager);
                     

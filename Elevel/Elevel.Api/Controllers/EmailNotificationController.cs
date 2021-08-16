@@ -24,13 +24,6 @@ namespace Elevel.Api.Controllers
 
         }
 
-        [HttpPost("send")]
-        public IActionResult SendMail([FromBody]string email, string subject, string body)
-        {
-            var message = new MailService();
-            return Ok(message.SendMessage(email, subject, body));
-        }
-
         //[HttpPost("sendEmailTemplate")]
         //public async Task<IActionResult> SendWelcomeMail([FromForm] MailSource source)
         //{

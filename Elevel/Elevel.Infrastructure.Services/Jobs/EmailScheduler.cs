@@ -10,7 +10,7 @@ namespace Elevel.Infrastructure.Services.Jobs
 {
     public class EmailScheduler
     {
-        public static async Task Start(IServiceProvider service, IApplicationDbContext context, UserManager<User> userManager)
+        public static async Task Start(IServiceProvider service)
         {
             IScheduler scheduler = await StdSchedulerFactory.GetDefaultScheduler();
             scheduler.JobFactory = (JobFactory)service.GetService(typeof(JobFactory));
@@ -18,8 +18,7 @@ namespace Elevel.Infrastructure.Services.Jobs
 
             IJobDetail jobDetail = JobBuilder.Create<EmailJob>().Build();
 
-            jobDetail.JobDataMap["context"] = context;
-            jobDetail.JobDataMap["userManager"] = userManager;
+            jobDetail.JobDataMap["service"] = service;
 
             ITrigger trigger = TriggerBuilder.Create()
                 .WithIdentity("MailingTrigger", "default")
