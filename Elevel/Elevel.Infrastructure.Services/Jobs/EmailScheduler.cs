@@ -1,4 +1,6 @@
-﻿using Quartz;
+﻿using Elevel.Application.Infrastructure.Configurations;
+using Microsoft.Extensions.Options;
+using Quartz;
 using Quartz.Impl;
 using System;
 using System.Threading.Tasks;
@@ -7,7 +9,7 @@ namespace Elevel.Infrastructure.Services.Jobs
 {
     public class EmailScheduler
     {
-        public static async Task Start(IServiceProvider service)
+        public static async Task Start(IServiceProvider service, SchedulerConfigurations schedulerConfig)
         {
             IScheduler scheduler = await StdSchedulerFactory.GetDefaultScheduler();
             scheduler.JobFactory = (JobFactory)service.GetService(typeof(JobFactory));
@@ -17,11 +19,16 @@ namespace Elevel.Infrastructure.Services.Jobs
 
             ITrigger trigger = TriggerBuilder.Create()
                 .WithIdentity("MailingTrigger", "default")
-                .StartAt(DateBuilder.DateOf(12,30,0,17,8))
-                .StartNow()
+                .StartAt(DateBuilder.DateOf(
+                    schedulerConfig.startHour,
+                    schedulerConfig.startMinute, 
+                    schedulerConfig.startSecond,
+                    schedulerConfig.startDay,
+                    schedulerConfig.startMonth))
+                //.StartNow()
                 .WithSimpleSchedule(x => x
                     .WithIntervalInHours(24)
-                    .WithIntervalInMinutes(1)
+                    //.WithIntervalInMinutes(1)
                     .RepeatForever())
                 .Build();
 

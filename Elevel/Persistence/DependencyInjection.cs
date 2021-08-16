@@ -1,4 +1,4 @@
-﻿using Elevel.Application.Infrastructure;
+﻿using Elevel.Application.Infrastructure.Configurations;
 using Elevel.Application.Interfaces;
 using Elevel.Infrastructure.Persistence.Context;
 using Elevel.Infrastructure.Services.Implementation;
@@ -32,7 +32,8 @@ namespace Elevel.Persistence
             services.AddTransient<JobFactory>();
             services.AddScoped<EmailJob>();
             services.AddScoped<IMailService, MailService>();
-            services.Configure<EmailConfiguration>(configuration.GetSection("EmailSender"));
+            services.Configure<EmailConfigurations>(configuration.GetSection("EmailSender"));
+            services.Configure<SchedulerConfigurations>(configuration.GetSection("SchedulerConfiguration"));
         }
     }
 }
