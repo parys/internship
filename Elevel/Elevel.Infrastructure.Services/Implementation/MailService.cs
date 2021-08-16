@@ -1,8 +1,11 @@
 ﻿using Elevel.Application.Interfaces;
+using Elevel.Domain.Models;
 using MailKit.Net.Smtp;
+using Microsoft.AspNetCore.Identity;
 using MimeKit;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Elevel.Infrastructure.Services.Implementation
 {
@@ -19,10 +22,16 @@ namespace Elevel.Infrastructure.Services.Implementation
             _smtpClient = new SmtpClient();
         }
 
-        public string SendMessage(string receiverEmail, string subject, string body)
+        public string SendMessage(UserManager<User> userManager, Guid receiverId, string subject, string body)
         {
+            var userEmail = userManager.Users.FirstOrDefault(x => x.Id == receiverId).Email;
+            if(userEmail == null)
+            {
+                return "Email was not sent";
+            }
+
             _message.From.Add(new MailboxAddress("Elevel Notification", adminEmail));
-            _message.To.Add(MailboxAddress.Parse(receiverEmail));
+            _message.To.Add(MailboxAddress.Parse(userEmail));
             _message.Subject = subject;
             _message.Body = new TextPart("plain")
             {
@@ -47,8 +56,14 @@ namespace Elevel.Infrastructure.Services.Implementation
             return "Email was sent successfully";
         }
 
-        public string UsersEmailNotification(List<string> receiverEmails, string subject, string body)
+        public string UsersEmailNotification(UserManager<User> userManager, List<Guid> receiverIds, string subject, string body)
         {
+            var receiverEmails = userManager.Users.Where(x => receiverIds.Contains(x.Id)).Select(x => x.Email).ToList();
+            if (receiverEmails == null)
+            {
+                return "Email was not sent";
+            }
+
             try
             {
                 _smtpClient.Connect("smtp.gmail.com", 465, true);

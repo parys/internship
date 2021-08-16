@@ -26,13 +26,12 @@ namespace Elevel.Infrastructure.Services.Jobs
 
         public async Task Execute(IJobExecutionContext context)
         {
-            JobDataMap dataMap = context.JobDetail.JobDataMap;
-
-            _context = (IApplicationDbContext)dataMap["context"];
-            _userManager = (UserManager<User>)dataMap["userManager"];
-
             using (var scope = _serviceScopeFactory.CreateScope())
             {
+                var service = scope.ServiceProvider;
+                _context = service.GetService<IApplicationDbContext>();
+                _userManager = service.GetService<UserManager<User>>();
+                
                 var userIds = await _context.Tests
                     .Where(x => x.AssignmentEndDate.HasValue
                         && DateTimeOffset.Compare(x.AssignmentEndDate.Value.Date, DateTimeOffset.UtcNow.Date) >= 0)
@@ -40,17 +39,11 @@ namespace Elevel.Infrastructure.Services.Jobs
                     .Select(x => x.UserId)
                     .ToListAsync();
 
-                var userEmails = await _userManager.Users
-                    .Where(x => userIds.Contains(x.Id))
-                    .AsNoTracking()
-                    .Select(x => x.Email)
-                    .ToListAsync();
-
                 try
                 {
-                    _mail.UsersEmailNotification(userEmails,
+                    _mail.UsersEmailNotification(_userManager,userIds,
                         "Elevel test",
-                        "Hi!\nYou have a test assighed on you");
+                        "Hi!\nYou have a test assigned on you");
                 }
                 catch (Exception ex)
                 {
