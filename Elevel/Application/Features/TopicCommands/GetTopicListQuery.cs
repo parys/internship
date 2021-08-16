@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
+using Elevel.Application.Extensions;
 using Elevel.Application.Interfaces;
 using Elevel.Application.Pagination;
 using Elevel.Domain.Enums;
+using Elevel.Domain.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -44,16 +46,31 @@ namespace Elevel.Application.Features.TopicCommands
                     topic = topic.Where(x => x.TopicName.StartsWith(request.TopicName));
                 }
 
-                return new Response
+                Expression<Func<Topic, object>> sortBy = x => x.TopicName;
+                Expression<Func<Topic, object>> thenBy = x => x.Level;
+                if (!string.IsNullOrWhiteSpace(request.SortOn))
                 {
-                    PageSize = request.PageSize,
-                    CurrentPage = request.CurrentPage,
-                    Results = await topic.Skip(request.SkipCount())
-                    .Take(request.PageSize)
-                    .ProjectTo<TopicListDto>(_mapper.ConfigurationProvider)
-                    .ToListAsync(cancellationToken),
-                    RowCount = await topic.CountAsync(cancellationToken)
-                };
+                    if (request.SortOn.Contains(nameof(Topic.TopicName),
+                        StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        sortBy = x => x.TopicName;
+                        thenBy = x => x.Level;
+                    }
+                    else if (request.SortOn.Contains(nameof(Topic.Level),
+                        StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        sortBy = x => x.Level;
+                        thenBy = x => x.TopicName;
+                    }
+                    else if (request.SortOn.Contains(nameof(Topic.CreationDate),
+                        StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        sortBy = x => x.CreationDate;
+                        thenBy = x => x.TopicName;
+                    }
+                }
+
+                return await topic.GetPagedAsync<Response, Topic, TopicListDto>(request, _mapper, sortBy, thenBy);
             }
         }
 

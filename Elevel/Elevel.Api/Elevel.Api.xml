@@ -219,7 +219,7 @@
             SortOn (Email, CreationDate, FirstName, LastName, UserName), 
             sortDirection (asc (a->z,0->9), desc(z->a,9->0))
             
-            \nReturns:
+            Returns:
             Paged, filtered, and sorted user list
             </summary>
             <param name="request"></param>
