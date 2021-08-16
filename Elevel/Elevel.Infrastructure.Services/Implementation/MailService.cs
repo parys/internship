@@ -1,4 +1,4 @@
-﻿using Elevel.Application.Infrastructure;
+﻿using Elevel.Application.Infrastructure.Configurations;
 using Elevel.Application.Interfaces;
 using Elevel.Domain.Models;
 using MailKit.Net.Smtp;
@@ -18,10 +18,10 @@ namespace Elevel.Infrastructure.Services.Implementation
         private MimeMessage _message;
         private SmtpClient _smtpClient;
         private readonly UserManager<User> _userManager;
-        private readonly EmailConfiguration _emailConfiguration;
+        private readonly EmailConfigurations _emailConfiguration;
         private readonly IApplicationDbContext _context;
 
-        public MailService(UserManager<User> userManager, IOptions<EmailConfiguration> emailConfiguration, IApplicationDbContext context)
+        public MailService(UserManager<User> userManager, IOptions<EmailConfigurations> emailConfiguration, IApplicationDbContext context)
         {
             _emailConfiguration = emailConfiguration.Value;
             _userManager = userManager;
@@ -94,11 +94,9 @@ namespace Elevel.Infrastructure.Services.Implementation
                 Text = body
             };
 
+            Connect();
             try
             {
-                _smtpClient.Connect("smtp.gmail.com", 465, true);
-                _smtpClient.Authenticate(_emailConfiguration.Email,
-                    _emailConfiguration.Password);
                 _smtpClient.Send(_message);
             }
             catch (Exception ex)
@@ -107,8 +105,7 @@ namespace Elevel.Infrastructure.Services.Implementation
             }
             finally
             {
-                _smtpClient.Disconnect(true);
-                _smtpClient.Dispose();
+                Disconnect();
             }
             return "Email was sent successfully";
         }
@@ -118,7 +115,7 @@ namespace Elevel.Infrastructure.Services.Implementation
             var receiverEmails = _userManager.Users.Where(x => receiverIds.Contains(x.Id)).Select(x => x.Email).ToList();
             if (receiverEmails == null)
             {
-                return "Email was not sent";
+                return $"There are no valid emails";
             }
 
             _message.From.Add(new MailboxAddress("Elevel Notification", _emailConfiguration.Email));
@@ -139,8 +136,7 @@ namespace Elevel.Infrastructure.Services.Implementation
                 }
                 catch (Exception ex)
                 {
-                    _smtpClient.Disconnect(true);
-                    _smtpClient.Dispose();
+                    Disconnect();
                     return ex.Message;
                 }
             }
@@ -191,8 +187,7 @@ namespace Elevel.Infrastructure.Services.Implementation
                     }
                     catch (Exception ex)
                     {
-                        _smtpClient.Disconnect(true);
-                        _smtpClient.Dispose();
+                        Disconnect();
                         return ex.Message;
                     }
                 }

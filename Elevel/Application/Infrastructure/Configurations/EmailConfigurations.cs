@@ -1,6 +1,6 @@
-﻿namespace Elevel.Application.Infrastructure
+﻿namespace Elevel.Application.Infrastructure.Configurations
 {
-    public class EmailConfiguration
+    public class EmailConfigurations
     {
         public string Email { get; set; }
         public string Password { get; set; }

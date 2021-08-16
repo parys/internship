@@ -1,3 +1,4 @@
+using Elevel.Application.Infrastructure.Configurations;
 using Elevel.Domain.Models;
 using Elevel.Infrastructure.Persistence.Context;
 using Elevel.Infrastructure.Services.Jobs;
@@ -7,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Threading.Tasks;
 
@@ -32,7 +34,8 @@ namespace Elevel.Api
                     //Seed Default Users
                     var userManager = services.GetRequiredService<UserManager<User>>();
                     var roleManager = services.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
-                    await EmailScheduler.Start(serviceProvider);
+                    var schedulerConfig = services.GetService<IOptions<SchedulerConfigurations>>().Value;
+                    await EmailScheduler.Start(serviceProvider, schedulerConfig);
 
                     await ApplicationDbContextSeed.SeedEssentialsAsync(userManager, roleManager);
                     

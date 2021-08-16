@@ -1,4 +1,4 @@
-﻿using Elevel.Application.Infrastructure;
+﻿using Elevel.Application.Infrastructure.Configurations;
 using Elevel.Application.Interfaces;
 using Elevel.Domain.Models;
 using Elevel.Infrastructure.Services.Implementation;
@@ -17,7 +17,7 @@ namespace Elevel.Infrastructure.Services.Jobs
     {
         private IMailService _mail;
 
-        public EmailJob(IServiceScopeFactory serviceScopeFactory, IOptions<EmailConfiguration> emailConfiguration)
+        public EmailJob(IServiceScopeFactory serviceScopeFactory, IOptions<EmailConfigurations> emailConfiguration)
         {
             var service = (serviceScopeFactory.CreateScope()).ServiceProvider;
 
