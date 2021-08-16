@@ -47,15 +47,15 @@ namespace Elevel.Application.Features.UserFeatures
 
                 if (!string.IsNullOrWhiteSpace(request.LastName))
                 {
-                    users = users.Where(x => x.LastName == request.LastName);
+                    users = users.Where(x => x.LastName.StartsWith(request.LastName));
                 }
                 if (!string.IsNullOrWhiteSpace(request.FirstName))
                 {
-                    users = users.Where(x =>x.FirstName == request.FirstName);
+                    users = users.Where(x => x.FirstName.StartsWith(request.FirstName));
                 }
                 if (!string.IsNullOrWhiteSpace(request.Email))
                 {
-                    users = users.Where(x => x.Email == request.Email);
+                    users = users.Where(x => x.Email.StartsWith(request.Email));
                 }
 
                 Expression<Func<User, object>> sortBy = x => x.FirstName;
