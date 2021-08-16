@@ -17,6 +17,7 @@ namespace Elevel.Application.Features.TopicCommands
         public class Request : PagedQueryBase, IRequest<Response>
         {
             public Level? Level { get; set; }
+            public string TopicName { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Response>
@@ -36,6 +37,11 @@ namespace Elevel.Application.Features.TopicCommands
 
                 if (request.Level.HasValue) {
                     topic = topic.Where(x => x.Level == request.Level);
+                }
+
+                if (!string.IsNullOrEmpty(request.TopicName))
+                {
+                    topic = topic.Where(x => x.TopicName.StartsWith(request.TopicName));
                 }
 
                 return new Response
