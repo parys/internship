@@ -67,8 +67,7 @@ namespace Elevel.Infrastructure.Services.Implementation
             }
             catch (Exception)
             {
-                _smtpClient.Disconnect(true);
-                _smtpClient.Dispose();
+                Disconnect();
             }
         }
 
