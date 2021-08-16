@@ -21,6 +21,8 @@ namespace Elevel.Application.Features.QuestionCommands
             public long? QuestionNumber { get; set; }
 
             public Guid? CreatorId { get; set; }
+
+            public string NameQuestion { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Response>
@@ -51,6 +53,11 @@ namespace Elevel.Application.Features.QuestionCommands
                 if (request.CreatorId.HasValue)
                 {
                     questions = questions.Where(x => x.CreatorId == request.CreatorId);
+                }
+
+                if (!string.IsNullOrEmpty(request.NameQuestion))
+                {
+                    questions = questions.Where(x => x.NameQuestion.StartsWith(request.NameQuestion));
                 }
 
                 return new Response()
