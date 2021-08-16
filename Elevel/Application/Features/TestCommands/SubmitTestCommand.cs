@@ -118,8 +118,7 @@ namespace Elevel.Application.Features.TestCommands
                 }
 
                 return _context.Answers
-                    .Where(x => answers.Contains(x.Id) && x.IsRight)
-                    .Count();
+                    .Count(x => answers.Contains(x.Id) && x.IsRight);
             }
 
         }
