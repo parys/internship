@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
+using Elevel.Application.Extensions;
 using Elevel.Application.Interfaces;
 using Elevel.Application.Pagination;
 using Elevel.Domain.Enums;
+using Elevel.Domain.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -61,17 +63,43 @@ namespace Elevel.Application.Features.TestCommands
                     tests = tests.Where(x => x.Id == request.Id);
                 }
 
-
-                return new Response()
+                Expression<Func<Test, object>> sortBy = x => x.Priority;
+                Expression<Func<Test, object>> thenBy = x => x.Level;
+                if (!string.IsNullOrWhiteSpace(request.SortOn))
                 {
-                    PageSize = request.PageSize,
-                    CurrentPage = request.CurrentPage,
-                    RowCount = await tests.CountAsync(cancellationToken),
-                    Results = await tests.Skip(request.SkipCount())
-                    .Take(request.PageSize)
-                    .ProjectTo<TestDto>(_mapper.ConfigurationProvider)
-                    .ToListAsync(cancellationToken),
-                };
+                    if (request.SortOn.Contains(nameof(Test.Priority),
+                        StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        sortBy = x => x.Priority;
+                        thenBy = x => x.Level;
+                    }
+                    else if (request.SortOn.Contains(nameof(Test.Level),
+                        StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        sortBy = x => x.Level;
+                        thenBy = x => x.Priority;
+                    }
+                    else if (request.SortOn.Contains(nameof(Test.CreationDate),
+                        StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        sortBy = x => x.CreationDate;
+                        thenBy = x => x.Priority;
+                    }
+                    else if (request.SortOn.Contains(nameof(Test.TestPassingDate),
+                        StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        sortBy = x => x.TestPassingDate;
+                        thenBy = x => x.Priority;
+                    }
+                    else if (request.SortOn.Contains(nameof(Test.AssignmentEndDate),
+                            StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        sortBy = x => x.AssignmentEndDate;
+                        thenBy = x => x.Priority;
+                    }
+                }
+
+                return await tests.GetPagedAsync<Response, Test, TestDto>(request, _mapper, sortBy, thenBy);
             }
         }
 

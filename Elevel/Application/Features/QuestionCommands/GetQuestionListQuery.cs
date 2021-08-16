@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
+using Elevel.Application.Extensions;
 using Elevel.Application.Interfaces;
 using Elevel.Application.Pagination;
 using Elevel.Domain.Enums;
+using Elevel.Domain.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -60,16 +62,31 @@ namespace Elevel.Application.Features.QuestionCommands
                     questions = questions.Where(x => x.NameQuestion.StartsWith(request.NameQuestion));
                 }
 
-                return new Response()
+                Expression<Func<Question, object>> sortBy = x => x.NameQuestion;
+                Expression<Func<Question, object>> thenBy = x => x.Level;
+                if (!string.IsNullOrWhiteSpace(request.SortOn))
                 {
-                    PageSize = request.PageSize,
-                    CurrentPage = request.CurrentPage,
-                    RowCount = await questions.CountAsync(cancellationToken),
-                    Results = await questions.Skip(request.SkipCount())
-                    .Take(request.PageSize)
-                    .ProjectTo<QuestionsDTO>(_mapper.ConfigurationProvider)
-                    .ToListAsync(cancellationToken)
-                };
+                    if (request.SortOn.Contains(nameof(Question.NameQuestion),
+                        StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        sortBy = x => x.NameQuestion;
+                        thenBy = x => x.Level;
+                    }
+                    else if (request.SortOn.Contains(nameof(Question.Level),
+                        StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        sortBy = x => x.Level;
+                        thenBy = x => x.NameQuestion;
+                    }
+                    else if (request.SortOn.Contains(nameof(Question.CreationDate),
+                        StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        sortBy = x => x.CreationDate;
+                        thenBy = x => x.NameQuestion;
+                    }
+                }
+
+                return await questions.GetPagedAsync<Response, Question, QuestionsDTO>(request, _mapper, sortBy, thenBy);
             }
         }
 
