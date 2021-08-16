@@ -1,7 +1,9 @@
-﻿using Elevel.Application.Interfaces;
+﻿using Elevel.Application.Infrastructure;
+using Elevel.Application.Interfaces;
 using Elevel.Domain.Models;
 using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 using MimeKit;
 using System;
 using System.Collections.Generic;
@@ -13,24 +15,47 @@ namespace Elevel.Infrastructure.Services.Implementation
     {
         private MimeMessage _message;
         private SmtpClient _smtpClient;
-        private string adminEmail = "elevelexadel@gmail.com";
-        private string adminPassword = "admin4elevel";
+        private readonly UserManager<User> _userManager;
+        private readonly EmailConfiguration _emailConfiguration;
 
-        public MailService()
+        public MailService(UserManager<User> userManager, IOptions<EmailConfiguration> emailConfiguration)
         {
+            _emailConfiguration = emailConfiguration.Value;
+            _userManager = userManager;
             _message = new MimeMessage();
             _smtpClient = new SmtpClient();
         }
 
-        public string SendMessage(UserManager<User> userManager, Guid receiverId, string subject, string body)
+        public void Connect()
         {
-            var userEmail = userManager.Users.FirstOrDefault(x => x.Id == receiverId).Email;
-            if(userEmail == null)
+            try
+            {
+                _smtpClient.Connect("smtp.gmail.com", 465, true);
+                _smtpClient.Authenticate(_emailConfiguration.Email,
+                    _emailConfiguration.Password);
+            }
+            catch (Exception ex)
+            {
+                _smtpClient.Disconnect(true);
+                _smtpClient.Dispose();
+            }
+        }
+
+        public void Disconnect()
+        {
+            _smtpClient.Disconnect(true);
+            _smtpClient.Dispose();
+        }
+
+        public string SendMessage(Guid receiverId, string subject, string body)
+        {
+            var userEmail = _userManager.Users.FirstOrDefault(x => x.Id == receiverId).Email;
+            if (userEmail == null)
             {
                 return "Email was not sent";
             }
 
-            _message.From.Add(new MailboxAddress("Elevel Notification", adminEmail));
+            _message.From.Add(new MailboxAddress("Elevel Notification", _emailConfiguration.Email));
             _message.To.Add(MailboxAddress.Parse(userEmail));
             _message.Subject = subject;
             _message.Body = new TextPart("plain")
@@ -41,7 +66,8 @@ namespace Elevel.Infrastructure.Services.Implementation
             try
             {
                 _smtpClient.Connect("smtp.gmail.com", 465, true);
-                _smtpClient.Authenticate(adminEmail, adminPassword);
+                _smtpClient.Authenticate(_emailConfiguration.Email,
+                    _emailConfiguration.Password);
                 _smtpClient.Send(_message);
             }
             catch (Exception ex)
@@ -56,27 +82,15 @@ namespace Elevel.Infrastructure.Services.Implementation
             return "Email was sent successfully";
         }
 
-        public string UsersEmailNotification(UserManager<User> userManager, List<Guid> receiverIds, string subject, string body)
+        public string UsersEmailNotification(List<Guid> receiverIds, string subject, string body)
         {
-            var receiverEmails = userManager.Users.Where(x => receiverIds.Contains(x.Id)).Select(x => x.Email).ToList();
+            var receiverEmails = _userManager.Users.Where(x => receiverIds.Contains(x.Id)).Select(x => x.Email).ToList();
             if (receiverEmails == null)
             {
                 return "Email was not sent";
             }
 
-            try
-            {
-                _smtpClient.Connect("smtp.gmail.com", 465, true);
-                _smtpClient.Authenticate(adminEmail, adminPassword);
-            }
-            catch (Exception ex)
-            {
-                _smtpClient.Disconnect(true);
-                _smtpClient.Dispose();
-                return ex.Message;
-            }
-
-            _message.From.Add(new MailboxAddress("Elevel Notification", adminEmail));
+            _message.From.Add(new MailboxAddress("Elevel Notification", _emailConfiguration.Email));
             _message.Body = new TextPart("plain")
             {
                 Text = body
@@ -100,10 +114,64 @@ namespace Elevel.Infrastructure.Services.Implementation
                 }
             }
 
-            _smtpClient.Disconnect(true);
-            _smtpClient.Dispose();
-
             return "Email was sent successfully";
+        }
+
+        public string MissedDeadlineEmailNotification(List<Test> tests, string subject, string body)
+        {
+            var UsersAndHrs = tests.GroupBy(x => x.HrId, (key, value) => new
+            {
+                HrId = key,
+                UserIds = value.Select(x => x.UserId)
+            });
+
+            _message.From.Add(new MailboxAddress("Elevel Notification", _emailConfiguration.Email));
+
+            _message.Subject = subject;
+
+
+            foreach (var pair in UsersAndHrs)
+            {
+                var hrEmail = _userManager.Users.FirstOrDefault(x => x.Id == pair.HrId).Email;
+                var Users = _userManager.Users.Where(x => pair.UserIds.Contains(x.Id));
+
+                if (hrEmail == null)
+                {
+                    return "Email was not sent";
+                }
+                if (Users == null)
+                {
+                    return "Email was not sent";
+                }
+
+                _message.To.Add(MailboxAddress.Parse(hrEmail));
+                foreach (var user in Users)
+                {
+                    _message.Body = new TextPart("plain")
+                    {
+                        Text = body
+                        .Replace("{FirstName}", user.FirstName, StringComparison.CurrentCultureIgnoreCase)
+                        .Replace("{LastName}", user.LastName, StringComparison.CurrentCultureIgnoreCase)
+                        .Replace("{Email}", user.Email, StringComparison.CurrentCultureIgnoreCase)
+                    };
+                    try
+                    {
+                        _smtpClient.Send(_message);
+                    }
+                    catch (Exception ex)
+                    {
+                        _smtpClient.Disconnect(true);
+                        _smtpClient.Dispose();
+                        return ex.Message;
+                    }
+                }
+            }
+            return "Email was sent successfully";
+        }
+
+        ~MailService()
+        {
+            _smtpClient.Dispose();
         }
     }
 }

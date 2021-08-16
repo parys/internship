@@ -1,7 +1,4 @@
-﻿using Elevel.Application.Interfaces;
-using Elevel.Domain.Models;
-using Microsoft.AspNetCore.Identity;
-using Quartz;
+﻿using Quartz;
 using Quartz.Impl;
 using System;
 using System.Threading.Tasks;
@@ -18,11 +15,9 @@ namespace Elevel.Infrastructure.Services.Jobs
 
             IJobDetail jobDetail = JobBuilder.Create<EmailJob>().Build();
 
-            jobDetail.JobDataMap["service"] = service;
-
             ITrigger trigger = TriggerBuilder.Create()
                 .WithIdentity("MailingTrigger", "default")
-                //.StartAt(DateBuilder.DateOf(12,30,0,12,8))
+                //.StartAt(DateBuilder.DateOf(12,30,0,17,8))
                 .StartNow()
                 .WithSimpleSchedule(x => x
                     //.WithIntervalInHours(24)

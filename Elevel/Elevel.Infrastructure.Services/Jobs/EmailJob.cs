@@ -1,9 +1,11 @@
-﻿using Elevel.Application.Interfaces;
+﻿using Elevel.Application.Infrastructure;
+using Elevel.Application.Interfaces;
 using Elevel.Domain.Models;
 using Elevel.Infrastructure.Services.Implementation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Quartz;
 using System;
 using System.Linq;
@@ -13,43 +15,44 @@ namespace Elevel.Infrastructure.Services.Jobs
 {
     public class EmailJob : IJob
     {
-        private readonly IServiceScopeFactory _serviceScopeFactory;
         private IApplicationDbContext _context;
-        private UserManager<User> _userManager;
         private IMailService _mail;
 
-        public EmailJob(IServiceScopeFactory serviceScopeFactory)
+        public EmailJob(IServiceScopeFactory serviceScopeFactory, IOptions<EmailConfiguration> emailConfiguration)
         {
-            _serviceScopeFactory = serviceScopeFactory;
-            _mail = new MailService();
+            var service = (serviceScopeFactory.CreateScope()).ServiceProvider;
+
+            var userManager = service.GetService<UserManager<User>>();
+
+            _context = service.GetService<IApplicationDbContext>();
+
+            _mail = new MailService(userManager, emailConfiguration);
         }
 
         public async Task Execute(IJobExecutionContext context)
         {
-            using (var scope = _serviceScopeFactory.CreateScope())
-            {
-                var service = scope.ServiceProvider;
-                _context = service.GetService<IApplicationDbContext>();
-                _userManager = service.GetService<UserManager<User>>();
-                
-                var userIds = await _context.Tests
-                    .Where(x => x.AssignmentEndDate.HasValue
-                        && DateTimeOffset.Compare(x.AssignmentEndDate.Value.Date, DateTimeOffset.UtcNow.Date) >= 0)
-                    .AsNoTracking()
-                    .Select(x => x.UserId)
-                    .ToListAsync();
+            var userIds = await _context.Tests
+                .Where(x => x.AssignmentEndDate.HasValue
+                    && DateTimeOffset.Compare(x.AssignmentEndDate.Value.Date, DateTimeOffset.UtcNow.Date) >= 0)
+                .AsNoTracking()
+                .Select(x => x.UserId)
+                .ToListAsync();
 
-                try
-                {
-                    _mail.UsersEmailNotification(_userManager,userIds,
-                        "Elevel test",
-                        "Hi!\nYou have a test assigned on you");
-                }
-                catch (Exception ex)
-                {
-                    throw ex.InnerException;
-                }
-            }
+            var missedDeadlineUserIds = await _context.Tests
+                .Where(x => x.AssignmentEndDate.HasValue
+                    && DateTimeOffset.Compare(x.AssignmentEndDate.Value.Date, DateTimeOffset.UtcNow.Date) < 0
+                    && !x.GrammarMark.HasValue)
+                .AsNoTracking().ToListAsync();
+
+            _mail.Connect();
+            _mail.UsersEmailNotification(userIds,
+                "Elevel test",
+                "Hi!\nYou have a test assigned on you");
+
+            _mail.MissedDeadlineEmailNotification(missedDeadlineUserIds,
+                "Elevel test",
+                "User {FirstName} {LastName} with email {Email} has lost the assignment end date!");
+            _mail.Disconnect();
         }
     }
 }
