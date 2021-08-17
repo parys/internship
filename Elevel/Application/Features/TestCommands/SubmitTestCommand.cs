@@ -84,9 +84,7 @@ namespace Elevel.Application.Features.TestCommands
                 //    throw new ValidationException("Test time has passed");
                 //}
 
-                var allAnswers = new List<Guid>();
-                allAnswers.AddRange(request.AuditionAnswers);
-                allAnswers.AddRange(request.GrammarAnswers);
+                var allAnswers = request.GrammarAnswers.Union(request.AuditionAnswers);
 
                 await CheckAnswersBelongtoTestAsync(request.GrammarAnswers, test.Id);
                 await CheckAnswersBelongtoTestAsync(request.AuditionAnswers, test.Id);
@@ -97,7 +95,7 @@ namespace Elevel.Application.Features.TestCommands
                 test.GrammarMark = EvaluateTestAndSave(request.GrammarAnswers);
                 test.AuditionMark = EvaluateTestAndSave(request.AuditionAnswers);
 
-                await SaveAnswers(request.GrammarAnswers.Union(request.AuditionAnswers));
+                await SaveAnswers(allAnswers);
 
                 await _context.SaveChangesAsync(cancelationtoken).ConfigureAwait(false);
 
