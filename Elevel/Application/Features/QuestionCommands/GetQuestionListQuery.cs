@@ -36,11 +36,9 @@ namespace Elevel.Application.Features.QuestionCommands
         {
             private readonly IApplicationDbContext _context;
             private readonly IMapper _mapper;
-            private readonly UserManager<User> _userManager;
 
-            public Handler(IApplicationDbContext context, IMapper mapper, UserManager<User> userManager)
+            public Handler(IApplicationDbContext context, IMapper mapper)
             {
-                _userManager = userManager;
                 _context = context;
                 _mapper = mapper;
             }
