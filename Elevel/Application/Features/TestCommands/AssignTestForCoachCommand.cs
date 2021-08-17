@@ -24,11 +24,13 @@ namespace Elevel.Application.Features.TestCommands
         {
             private readonly IApplicationDbContext _context;
             private readonly UserManager<User> _userManager;
+            private readonly IMailService _mailService;
 
-            public Handler(IApplicationDbContext context, UserManager<User> userManager)
+            public Handler(IApplicationDbContext context, UserManager<User> userManager, IMailService mailService)
             {
                 _userManager = userManager;
                 _context = context;
+                _mailService = mailService;
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
@@ -60,6 +62,10 @@ namespace Elevel.Application.Features.TestCommands
                 test.CoachId = request.CoachId;
 
                 await _context.SaveChangesAsync(cancellationToken);
+
+                _mailService.SendMessage(request.CoachId,
+                    "You was assigned to the test",
+                    "example text 'assign test for coach'");
 
                 return new Response
                 {

@@ -2,8 +2,10 @@
 using Elevel.Application.Infrastructure;
 using Elevel.Application.Interfaces;
 using Elevel.Domain.Enums;
+using Elevel.Domain.Models;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -40,11 +42,19 @@ namespace Elevel.Application.Features.TestCommands
 
             private readonly IMapper _mapper;
 
-            public Handler(IApplicationDbContext context, IMapper mapper)
+            private readonly UserManager<User> _userManager;
+
+            private readonly IMailService _mailService;
+
+            public Handler(IApplicationDbContext context, IMapper mapper, UserManager<User> userManager, IMailService mailService)
             {
                 _context = context;
 
                 _mapper = mapper;
+
+                _userManager = userManager;
+
+                _mailService = mailService;
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancelationtoken)
@@ -84,6 +94,15 @@ namespace Elevel.Application.Features.TestCommands
                 await _context.SaveChangesAsync(cancelationtoken).ConfigureAwait(false);
 
                 var testResponse = _mapper.Map<Response>(test);
+
+                var admins = _mapper.Map<List<User>>(await _userManager.GetUsersInRoleAsync(nameof(UserRole.Administrator)));
+
+                foreach (var admin in admins)
+                {
+                    _mailService.SendMessage(admin.Id,
+                        "You've successfully submitted the test!",
+                        "example text 'sumbit test'");
+                }
 
                 return testResponse;
             }

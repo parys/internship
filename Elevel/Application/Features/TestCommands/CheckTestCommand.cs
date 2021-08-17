@@ -48,11 +48,13 @@ namespace Elevel.Application.Features.TestCommands
         {
             private readonly IApplicationDbContext _context;
             private readonly IMapper _mapper;
+            private readonly IMailService _mailService;
 
-            public Handler(IApplicationDbContext context, IMapper mapper)
+            public Handler(IApplicationDbContext context, IMapper mapper, IMailService mailService)
             {
                 _context = context;
                 _mapper = mapper;
+                _mailService = mailService;
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
@@ -70,8 +72,6 @@ namespace Elevel.Application.Features.TestCommands
                     throw new ValidationException("You can't check this test");
                 }
 
-                
-
                 test.SpeakingMark = request.SpeakingMark;
 
                 test.EssayMark = request.EssayMark;
@@ -80,6 +80,16 @@ namespace Elevel.Application.Features.TestCommands
 
                 await _context.SaveChangesAsync();
 
+                if (test.HrId.HasValue)
+                {
+                    _mailService.SendMessage((Guid)test.HrId,
+                        "The test you assigned to user was checked",
+                        "example text 'check test [HR]");
+                }
+
+                _mailService.SendMessage(test.UserId,
+                    "Your test was checked",
+                    "example text 'check test [User]");
 
                 return _mapper.Map<Response>(test);
             }
