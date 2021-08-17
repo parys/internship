@@ -38,7 +38,7 @@ namespace Elevel.Application.Features.AuditionCommands
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var audition = _context.Auditions.AsNoTracking();
+                var audition = _context.Auditions.Include(x => x.Creator).AsNoTracking();
 
                 if (request.Level.HasValue)
                 {
@@ -74,31 +74,16 @@ namespace Elevel.Application.Features.AuditionCommands
                     }
                 }
 
-                var response = await audition.GetPagedAsync<Response, Audition, QuestionDto>(request, _mapper, sortBy, thenBy);
-
-                await FillCreatorNames(response);
-
-                return response;
-            }
-
-            private async Task FillCreatorNames(Response response)
-            {
-                var creator = await _userManager.Users.ToListAsync();
-
-                foreach (var question in response.Results)
-                {
-                    question.CreatorFirstName = creator.FirstOrDefault(x => x.Id == question.CreatorId).FirstName;
-                    question.CreatorLastName = creator.FirstOrDefault(x => x.Id == question.CreatorId).LastName;
-                }
+                return await audition.GetPagedAsync<Response, Audition, AuditionDto>(request, _mapper, sortBy, thenBy);
             }
         }
 
-        public class Response : PagedResult<QuestionDto>
+        public class Response : PagedResult<AuditionDto>
         {
 
         }
 
-        public class QuestionDto
+        public class AuditionDto
         {
             public Guid Id { get; set; }
             public long AuditionNumber { get; set; }

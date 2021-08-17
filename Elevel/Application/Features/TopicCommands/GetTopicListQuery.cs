@@ -85,24 +85,7 @@ namespace Elevel.Application.Features.TopicCommands
                     }
                 }
 
-
-
-                var response = await topic.GetPagedAsync<Response, Topic, TopicListDto>(request, _mapper, sortBy, thenBy);
-
-                await FillCreatorNames(response);
-
-                return response;
-            }
-
-            private async Task FillCreatorNames(Response response)
-            {
-                var creator = await _userManager.Users.ToListAsync();
-
-                foreach (var question in response.Results)
-                {
-                    question.CreatorFirstName = creator.FirstOrDefault(x => x.Id == question.CreatorId).FirstName;
-                    question.CreatorLastName = creator.FirstOrDefault(x => x.Id == question.CreatorId).LastName;
-                }
+                return await topic.GetPagedAsync<Response, Topic, TopicListDto>(request, _mapper, sortBy, thenBy);
             }
         }
         [Serializable]

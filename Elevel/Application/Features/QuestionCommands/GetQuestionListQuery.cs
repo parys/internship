@@ -47,7 +47,7 @@ namespace Elevel.Application.Features.QuestionCommands
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var questions = _context.Questions.AsNoTracking().Where(x => !x.AuditionId.HasValue);
+                var questions = _context.Questions.Include(x => x.Creator).AsNoTracking().Where(x => !x.AuditionId.HasValue);
 
                 if (request.Level.HasValue)
                 {
@@ -93,22 +93,7 @@ namespace Elevel.Application.Features.QuestionCommands
                     }
                 }
 
-                var response = await questions.GetPagedAsync<Response, Question, QuestionsDTO>(request, _mapper, sortBy, thenBy);
-
-                await FillCreatorNames(response);
-
-                return response;
-            }
-
-            private async Task FillCreatorNames(Response response)
-            {
-                var creator = await _userManager.Users.ToListAsync();
-
-                foreach (var question in response.Results)
-                {
-                    question.CreatorFirstName = creator.FirstOrDefault(x => x.Id == question.CreatorId).FirstName;
-                    question.CreatorLastName = creator.FirstOrDefault(x => x.Id == question.CreatorId).LastName;
-                }
+                return await questions.GetPagedAsync<Response, Question, QuestionsDTO>(request, _mapper, sortBy, thenBy);
             }
         }
 
