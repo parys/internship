@@ -1,4 +1,6 @@
-﻿namespace Elevel.Application.Infrastructure
+﻿using System.IO;
+
+namespace Elevel.Application.Infrastructure
 {
     public static class Constants
     {
@@ -13,5 +15,6 @@
         public const int AUDITION_QUESTION_AMOUNT = 10;
         public const int ANSWER_AMOUNT = 4;
         public const int CORRECT_ANSWER_AMOUNT = 1;
+        public static readonly string FILE_FOLDER_PATH = Path.Combine("wwwroot", "files");
     }
 }
