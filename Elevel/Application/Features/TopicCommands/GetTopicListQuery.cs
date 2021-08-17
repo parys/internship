@@ -18,6 +18,7 @@ namespace Elevel.Application.Features.TopicCommands
     {
         public class Request : PagedQueryBase, IRequest<Response>
         {
+            public string TopicNumber { get; set; }
             public Level? Level { get; set; }
             public string TopicName { get; set; }
         }
@@ -37,7 +38,8 @@ namespace Elevel.Application.Features.TopicCommands
             {
                 var topic = _context.Topics.AsNoTracking();
 
-                if (request.Level.HasValue) {
+                if (request.Level.HasValue)
+                {
                     topic = topic.Where(x => x.Level == request.Level);
                 }
 
@@ -46,11 +48,16 @@ namespace Elevel.Application.Features.TopicCommands
                     topic = topic.Where(x => x.TopicName.StartsWith(request.TopicName));
                 }
 
-                Expression<Func<Topic, object>> sortBy = x => x.TopicName;
+                if (!string.IsNullOrEmpty(request.TopicNumber))
+                {
+                    topic = topic.Where(x => Convert.ToString(x.TopicNumber).StartsWith(request.TopicNumber));
+                }
+
+                Expression<Func<Topic, object>> sortBy = x => x.TopicNumber;
                 Expression<Func<Topic, object>> thenBy = x => x.Level;
                 if (!string.IsNullOrWhiteSpace(request.SortOn))
                 {
-                    if (request.SortOn.Contains(nameof(Topic.TopicName),
+                    if (request.SortOn.Contains(nameof(Topic.TopicNumber),
                         StringComparison.InvariantCultureIgnoreCase))
                     {
                         sortBy = x => x.TopicName;
@@ -60,20 +67,25 @@ namespace Elevel.Application.Features.TopicCommands
                         StringComparison.InvariantCultureIgnoreCase))
                     {
                         sortBy = x => x.Level;
-                        thenBy = x => x.TopicName;
+                        thenBy = x => x.TopicNumber;
                     }
                     else if (request.SortOn.Contains(nameof(Topic.CreationDate),
                         StringComparison.InvariantCultureIgnoreCase))
                     {
                         sortBy = x => x.CreationDate;
-                        thenBy = x => x.TopicName;
+                        thenBy = x => x.TopicNumber;
+                    }
+                    else if (request.SortOn.Contains(nameof(Topic.TopicName),
+                        StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        sortBy = x => x.TopicName;
+                        thenBy = x => x.TopicNumber;
                     }
                 }
 
                 return await topic.GetPagedAsync<Response, Topic, TopicListDto>(request, _mapper, sortBy, thenBy);
             }
         }
-
         [Serializable]
         public class Response : PagedResult<TopicListDto>
         {
@@ -84,10 +96,13 @@ namespace Elevel.Application.Features.TopicCommands
         public class TopicListDto
         {
             public Guid Id { get; set; }
+            public long TopicNumber { get; set; }
             public string TopicName { get; set; }
             public Level Level { get; set; }
             public DateTimeOffset CreationDate { get; set; }
             public Guid CreatorId { get; set; }
+            public string CreatorFirstName { get; set; }
+            public string CreatorLastName { get; set; }
         }
     }
 }
