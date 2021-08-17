@@ -34,6 +34,19 @@ namespace Elevel.Application.Features.TestCommands
 
         }
 
+        public class Validator : AbstractValidator<Request>
+        {
+            public Validator()
+            {
+                RuleFor(x => x.GrammarAnswers)
+                    .Must(x => x is null ? true : x.Count() == x.Distinct().Count())
+                    .WithMessage("Some answers from grammar are the same");
+
+                RuleFor(x => x.AuditionAnswers)
+                    .Must(x => x is null ? true : x.Count() == x.Distinct().Count())
+                    .WithMessage("Some answers from audition are the same");
+            }
+        }
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IApplicationDbContext _context;
@@ -71,15 +84,20 @@ namespace Elevel.Application.Features.TestCommands
                 //    throw new ValidationException("Test time has passed");
                 //}
 
-                await CheckAnswersForUniqueTestQuestionAsync(request.GrammarAnswers, test.Id);
+                var allAnswers = new List<Guid>();
+                allAnswers.AddRange(request.AuditionAnswers);
+                allAnswers.AddRange(request.GrammarAnswers);
 
-                await CheckAnswersForUniqueTestQuestionAsync(request.AuditionAnswers, test.Id);
+                await CheckAnswersBelongtoTestAsync(request.GrammarAnswers, test.Id);
+                await CheckAnswersBelongtoTestAsync(request.AuditionAnswers, test.Id);
+                CheckSingleAnswerForQuestion(allAnswers, test.Id);
 
                 test = _mapper.Map(request, test);
 
-                test.GrammarMark = await EvaluateTestAndSaveAsync(request.GrammarAnswers);
+                test.GrammarMark = EvaluateTestAndSave(request.GrammarAnswers);
+                test.AuditionMark = EvaluateTestAndSave(request.AuditionAnswers);
 
-                test.AuditionMark = await EvaluateTestAndSaveAsync(request.AuditionAnswers);
+                await SaveAnswers(request.GrammarAnswers.Union(request.AuditionAnswers));
 
                 await _context.SaveChangesAsync(cancelationtoken).ConfigureAwait(false);
 
@@ -88,21 +106,51 @@ namespace Elevel.Application.Features.TestCommands
                 return testResponse;
             }
 
-            private async Task CheckAnswersForUniqueTestQuestionAsync(IEnumerable<Guid> answers, Guid testId)
+            private async Task CheckAnswersBelongtoTestAsync(IEnumerable<Guid> answers, Guid testId)
             {
-                var questionIds = await _context.TestQuestions.Where(x => x.TestId == testId).Select(x => x.QuestionId).ToListAsync();
-                var answerList = _context.Answers.AsNoTracking().Where(x => questionIds.Contains(x.QuestionId));
+                var questionIds = await _context.TestQuestions
+                    .Where(x => x.TestId == testId)
+                    .Join(_context.Answers, tq => tq.QuestionId, an => an.QuestionId,
+                        (tq, an) => new
+                        {
+                            AnswerId = an.Id
+                        })
+                    .Select(x => x.AnswerId)
+                    .ToListAsync();
 
-                foreach (var answer in answers)
+                if(!answers.All(x => questionIds.Contains(x)))
                 {
-                    if (!await answerList.AnyAsync(x => x.Id == answer).ConfigureAwait(false))
-                    {
-                        throw new ValidationException($"Answer with Id {answer} is not in current test");
-                    }
+                    throw new ValidationException("There aren't some answers from current test");
+                }
+            }
+            
+            private void CheckSingleAnswerForQuestion(IEnumerable<Guid> answers, Guid testId)
+            {
+                var questionAnswers1 = from tq in _context.TestQuestions.Where(x => x.TestId == testId)
+                                              join an in _context.Answers
+                                              on tq.QuestionId equals an.QuestionId
+                                              group an by an.QuestionId into g
+                                              select new
+                                              {
+                                                  QuestionId = g.Key,
+                                                  AnswrerId = g.Select(x => x.Id)
+                                                  .Where(x => answers.Contains(x)).Count()
+                                              };
+
+
+                if (questionAnswers1.Any(x => x.AnswrerId > Constants.ANSWERS_AMOUNT_PER_QUESTION))
+                {
+                    throw new ValidationException("There aren't some answers from te same question");
                 }
             }
 
-            private async Task<int> EvaluateTestAndSaveAsync(IEnumerable<Guid> answers)
+            private int EvaluateTestAndSave(IEnumerable<Guid> answers)
+            {
+                return _context.Answers
+                    .Count(x => answers.Contains(x.Id) && x.IsRight);
+            }
+
+            private async Task SaveAnswers(IEnumerable<Guid> answers)
             {
                 var testQuestions = await _context.TestQuestions
                     .Include(x => x.Question)
@@ -116,11 +164,7 @@ namespace Elevel.Application.Features.TestCommands
                     testQuestion.UserAnswerId = testQuestion.Question.Answers
                         .FirstOrDefault(x => answers.Contains(x.Id)).Id;
                 }
-
-                return _context.Answers
-                    .Count(x => answers.Contains(x.Id) && x.IsRight);
             }
-
         }
 
         public class Response
