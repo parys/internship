@@ -1,24 +1,30 @@
-﻿using Elevel.Application.Interfaces;
-using Elevel.Domain.Models;
-using Microsoft.AspNetCore.Identity;
+﻿using Elevel.Application.Infrastructure.Configurations;
+using Microsoft.Extensions.Options;
 using Quartz;
 using Quartz.Impl;
 using System;
+using System.Threading.Tasks;
 
 namespace Elevel.Infrastructure.Services.Jobs
 {
     public class EmailScheduler
     {
-        public static async void Start(IServiceProvider service, IApplicationDbContext context, UserManager<User> userManager)
+        public static async Task Start(IServiceProvider service, SchedulerConfigurations schedulerConfig)
         {
             IScheduler scheduler = await StdSchedulerFactory.GetDefaultScheduler();
             scheduler.JobFactory = (JobFactory)service.GetService(typeof(JobFactory));
             await scheduler.Start();
 
             IJobDetail jobDetail = JobBuilder.Create<EmailJob>().Build();
+
             ITrigger trigger = TriggerBuilder.Create()
                 .WithIdentity("MailingTrigger", "default")
-                .StartAt(DateBuilder.DateOf(12,30,0,12,8))
+                .StartAt(DateBuilder.DateOf(
+                    schedulerConfig.startHour,
+                    schedulerConfig.startMinute, 
+                    schedulerConfig.startSecond,
+                    schedulerConfig.startDay,
+                    schedulerConfig.startMonth))
                 //.StartNow()
                 .WithSimpleSchedule(x => x
                     .WithIntervalInHours(24)

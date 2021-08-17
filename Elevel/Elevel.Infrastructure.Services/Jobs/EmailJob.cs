@@ -1,40 +1,36 @@
-﻿using Elevel.Application.Interfaces;
+﻿using Elevel.Application.Infrastructure.Configurations;
+using Elevel.Application.Interfaces;
 using Elevel.Domain.Models;
+using Elevel.Infrastructure.Services.Implementation;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Quartz;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Elevel.Infrastructure.Services.Jobs
 {
     public class EmailJob : IJob
     {
-        private readonly IServiceScopeFactory _serviceScopeFactory;
-        private readonly IApplicationDbContext _context;
-        private readonly UserManager<User> _userManager;
+        private IMailService _mail;
 
-        public EmailJob(IServiceScopeFactory serviceScopeFactory, IApplicationDbContext context, UserManager<User> userManager)
+        public EmailJob(IServiceScopeFactory serviceScopeFactory, IOptions<EmailConfigurations> emailConfiguration)
         {
-            _serviceScopeFactory = serviceScopeFactory;
-            _context = context;
-            _userManager = userManager;
+            var service = (serviceScopeFactory.CreateScope()).ServiceProvider;
+
+            var userManager = service.GetService<UserManager<User>>();
+
+            var context = service.GetService<IApplicationDbContext>();
+
+            _mail = new MailService(userManager, emailConfiguration, context);
         }
 
         public async Task Execute(IJobExecutionContext context)
         {
-            using (var scope = _serviceScopeFactory.CreateScope())
-            {
-                var emailsender = scope.ServiceProvider.GetService<IEmailSender>();
-                try
-                {
-                    //await emailsender.SendEmailAsync("arohau@exadel.com", "example", "hello");
-                }
-                catch(Exception ex)
-                {
-
-                }
-            }
+            await _mail.SendNotificationsToHrsAndUsersAsync();
         }
     }
 }

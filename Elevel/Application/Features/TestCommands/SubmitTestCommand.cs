@@ -100,7 +100,6 @@ namespace Elevel.Application.Features.TestCommands
                         throw new ValidationException($"Answer with Id {answer} is not in current test");
                     }
                 }
-
             }
 
             private async Task<int> EvaluateTestAndSaveAsync(IEnumerable<Guid> answers)
@@ -114,10 +113,12 @@ namespace Elevel.Application.Features.TestCommands
 
                 foreach (var testQuestion in testQuestions)
                 {
-                    testQuestion.UserAnswerId = testQuestion.Question.Answers.FirstOrDefault(x => answers.Contains(x.Id)).Id;
+                    testQuestion.UserAnswerId = testQuestion.Question.Answers
+                        .FirstOrDefault(x => answers.Contains(x.Id)).Id;
                 }
 
-                return _context.Answers.Where(x => answers.Contains(x.Id) && x.IsRight).Count();
+                return _context.Answers
+                    .Count(x => answers.Contains(x.Id) && x.IsRight);
             }
 
         }

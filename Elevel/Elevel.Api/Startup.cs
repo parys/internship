@@ -21,6 +21,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
+using MailKit;
 
 namespace Elevel.Api
 {
