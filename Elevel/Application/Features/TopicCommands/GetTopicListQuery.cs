@@ -5,7 +5,6 @@ using Elevel.Application.Pagination;
 using Elevel.Domain.Enums;
 using Elevel.Domain.Models;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -39,7 +38,8 @@ namespace Elevel.Application.Features.TopicCommands
             {
                 var topic = _context.Topics.AsNoTracking();
 
-                if (request.Level.HasValue) {
+                if (request.Level.HasValue)
+                {
                     topic = topic.Where(x => x.Level == request.Level);
                 }
 

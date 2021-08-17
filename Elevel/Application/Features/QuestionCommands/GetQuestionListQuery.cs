@@ -5,7 +5,6 @@ using Elevel.Application.Pagination;
 using Elevel.Domain.Enums;
 using Elevel.Domain.Models;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
