@@ -48,9 +48,9 @@ namespace Elevel.Application.Features.TestCommands
 
             private readonly UserManager<User> _userManager;
 
-            private readonly IMailService _mail;
+            private readonly IMailService _mailService;
 
-            public Handler(IApplicationDbContext context, IMapper mapper, UserManager<User> userManager, IMailService mail)
+            public Handler(IApplicationDbContext context, IMapper mapper, UserManager<User> userManager, IMailService mailService)
             {
                 _context = context;
 
@@ -58,7 +58,7 @@ namespace Elevel.Application.Features.TestCommands
 
                 _userManager = userManager;
 
-                _mail = mail;
+                _mailService = mailService;
             }
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
@@ -92,7 +92,7 @@ namespace Elevel.Application.Features.TestCommands
 
                 await _context.SaveChangesAsync(cancellationToken);
 
-                _mail.SendMessage(request.UserId,
+                _mailService.SendMessage(request.UserId,
                     "You was assigned to the test",
                     "example text 'assign test'");
 

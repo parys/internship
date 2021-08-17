@@ -44,9 +44,9 @@ namespace Elevel.Application.Features.TestCommands
 
             private readonly UserManager<User> _userManager;
 
-            private readonly IMailService _mail;
+            private readonly IMailService _mailService;
 
-            public Handler(IApplicationDbContext context, IMapper mapper, UserManager<User> userManager, IMailService mail)
+            public Handler(IApplicationDbContext context, IMapper mapper, UserManager<User> userManager, IMailService mailService)
             {
                 _context = context;
 
@@ -54,7 +54,7 @@ namespace Elevel.Application.Features.TestCommands
 
                 _userManager = userManager;
 
-                _mail = mail;
+                _mailService = mailService;
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancelationtoken)
@@ -99,7 +99,7 @@ namespace Elevel.Application.Features.TestCommands
 
                 foreach (var admin in admins)
                 {
-                    _mail.SendMessage(admin.Id,
+                    _mailService.SendMessage(admin.Id,
                         "You've successfully submitted the test!",
                         "example text 'sumbit test'");
                 }

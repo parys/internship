@@ -48,13 +48,13 @@ namespace Elevel.Application.Features.TestCommands
         {
             private readonly IApplicationDbContext _context;
             private readonly IMapper _mapper;
-            private readonly IMailService _mail;
+            private readonly IMailService _mailService;
 
-            public Handler(IApplicationDbContext context, IMapper mapper, IMailService mail)
+            public Handler(IApplicationDbContext context, IMapper mapper, IMailService mailService)
             {
                 _context = context;
                 _mapper = mapper;
-                _mail = mail;
+                _mailService = mailService;
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
@@ -82,12 +82,12 @@ namespace Elevel.Application.Features.TestCommands
 
                 if (test.HrId.HasValue)
                 {
-                    _mail.SendMessage((Guid)test.HrId,
+                    _mailService.SendMessage((Guid)test.HrId,
                         "The test you assigned to user was checked",
                         "example text 'check test [HR]");
                 }
 
-                _mail.SendMessage(test.UserId,
+                _mailService.SendMessage(test.UserId,
                     "Your test was checked",
                     "example text 'check test [User]");
 
