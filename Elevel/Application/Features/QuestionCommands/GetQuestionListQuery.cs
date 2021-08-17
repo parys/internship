@@ -23,10 +23,6 @@ namespace Elevel.Application.Features.QuestionCommands
 
             public string QuestionNumber { get; set; }
 
-            public string CreatorFirstName { get; set; }
-
-            public string CreatorLastName { get; set; }
-
             public Guid? CreatorId { get; set; }
 
             public string NameQuestion { get; set; }
