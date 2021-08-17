@@ -50,21 +50,27 @@ namespace Elevel.Application.Features.AuditionCommands
                     audition = audition.Where(x => Convert.ToString(x.AuditionNumber).StartsWith(request.AuditionNumber));
                 }
 
-                Expression<Func<Audition, object>> sortBy = x => x.Level;
+                Expression<Func<Audition, object>> sortBy = x => x.AuditionNumber;
                 Expression<Func<Audition, object>> thenBy = x => x.CreationDate;
                 if (!string.IsNullOrWhiteSpace(request.SortOn))
                 {
-                    if (request.SortOn.Contains(nameof(Audition.Level),
+                    if (request.SortOn.Contains(nameof(Audition.AuditionNumber),
+                        StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        sortBy = x => x.AuditionNumber;
+                        thenBy = x => x.Level;
+                    }
+                    else if (request.SortOn.Contains(nameof(Audition.Level),
                         StringComparison.InvariantCultureIgnoreCase))
                     {
                         sortBy = x => x.Level;
-                        thenBy = x => x.CreationDate;
+                        thenBy = x => x.AuditionNumber;
                     }
                     else if (request.SortOn.Contains(nameof(Audition.CreationDate),
                         StringComparison.InvariantCultureIgnoreCase))
                     {
                         sortBy = x => x.CreationDate;
-                        thenBy = x => x.Level;
+                        thenBy = x => x.AuditionNumber;
                     }
                 }
 
