@@ -94,8 +94,12 @@ namespace Elevel.Application.Features.TestCommands
 
                 _mailService.SendMessage(request.UserId,
                     "You was assigned to the test",
-                    "example text 'assign test'");
-
+                    "<center><table width=\"500px\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\"><tr><td style=\"text-align: center; font-size: large;\">"
+                    + "You was assigned to complete the test by Elevel's HR.<br/>"
+                    + "Please go to the following link to enter the Elevel site: <br/>"
+                    + "<a href=\"http://exadel-train-app.herokuapp.com\">Enter the Elevel site</a><br/><br/>"
+                    + "<img src =\"https://habrastorage.org/getpro/moikrug/uploads/company/663/850/800/logo/medium_57e7286b71f5bb50f7eda0c9bce2cf99.png\" alt =\"Exadel Logo\" style=\"margin: auto; display:inline; width: 200px;\">"
+                    + "</td></tr></table></center>");
                 return new Response { Id = test.Id };
             }
         }

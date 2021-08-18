@@ -88,7 +88,7 @@ namespace Elevel.Infrastructure.Services.Implementation
             _message.From.Add(new MailboxAddress("Elevel Notification", _emailConfiguration.Email));
             _message.To.Add(MailboxAddress.Parse(userEmail));
             _message.Subject = subject;
-            _message.Body = new TextPart("plain")
+            _message.Body = new TextPart("html")
             {
                 Text = body
             };
