@@ -14,5 +14,6 @@ namespace Elevel.Domain.Models
         public Guid CreatorId { get; set; }
         public ICollection<Question> Questions { get; set; }
         public ICollection<Test> Tests { get; set; }
+        public ICollection<Report> Reports { get; set; }
     }
 }

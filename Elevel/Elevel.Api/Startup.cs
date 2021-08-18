@@ -9,9 +9,7 @@ using Elevel.Persistence;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,12 +19,6 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Text;
 using AutoMapper.EquivalencyExpression;
-using Elevel.Application.Profiles;
-using FluentValidation.AspNetCore;
-using FluentValidation;
-using MediatR;
-using Elevel.Application.Infrastructure;
-using Elevel.Api.Filters;
 
 namespace Elevel.Api
 {

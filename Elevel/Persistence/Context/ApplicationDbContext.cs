@@ -23,6 +23,7 @@ namespace Elevel.Infrastructure.Persistence.Context
         public DbSet<Test> Tests { get; set; }
         public DbSet<Topic> Topics { get; set; }
         public DbSet<Audition> Auditions { get; set; }
+        public DbSet<Report> Reports { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

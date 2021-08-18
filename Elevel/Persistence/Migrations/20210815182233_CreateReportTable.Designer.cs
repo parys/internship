@@ -4,14 +4,16 @@ using Elevel.Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Elevel.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210815182233_CreateReportTable")]
+    partial class CreateReportTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -118,29 +120,25 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("AuditionId")
+                    b.Property<Guid>("AuditionId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("CreationDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("SYSDATETIMEOFFSET()");
+                    b.Property<Guid>("CoachId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("QuestionId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<bool>("IsSolve")
+                        .HasColumnType("bit");
 
-                    b.Property<byte>("ReportStatus")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint")
-                        .HasDefaultValue((byte)1);
+                    b.Property<Guid>("QuestionId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("TestId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("TopicId")
+                    b.Property<Guid>("TopicId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("UserId")
@@ -150,6 +148,8 @@ namespace Elevel.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("AuditionId");
 
+                    b.HasIndex("CoachId");
+
                     b.HasIndex("QuestionId");
 
                     b.HasIndex("TestId");
@@ -158,7 +158,7 @@ namespace Elevel.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reports");
+                    b.ToTable("Report");
                 });
 
             modelBuilder.Entity("Elevel.Domain.Models.Test", b =>
@@ -537,7 +537,14 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     b.HasOne("Elevel.Domain.Models.Audition", "Audition")
                         .WithMany("Reports")
                         .HasForeignKey("AuditionId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Elevel.Domain.Models.User", "Coach")
+                        .WithMany("CoachReports")
+                        .HasForeignKey("CoachId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Elevel.Domain.Models.Question", "Question")
                         .WithMany("Reports")
@@ -561,6 +568,8 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Audition");
+
+                    b.Navigation("Coach");
 
                     b.Navigation("Question");
 
@@ -735,6 +744,8 @@ namespace Elevel.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Elevel.Domain.Models.User", b =>
                 {
+                    b.Navigation("CoachReports");
+
                     b.Navigation("CoachTests");
 
                     b.Navigation("HrTests");

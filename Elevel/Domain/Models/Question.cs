@@ -18,5 +18,6 @@ namespace Elevel.Domain.Models
 
         public ICollection<Answer> Answers { get; set; }
         public ICollection<TestQuestion> TestQuestions { get; set; }
+        public ICollection<Report> Reports { get; set; }
     }
 }

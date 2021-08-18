@@ -4,14 +4,16 @@ using Elevel.Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Elevel.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210816194955_RenameTableReport")]
+    partial class RenameTableReport
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -121,6 +123,9 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     b.Property<Guid?>("AuditionId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("CoachId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTimeOffset>("CreationDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetimeoffset")
@@ -129,13 +134,13 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsSolved")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
                     b.Property<Guid?>("QuestionId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<byte>("ReportStatus")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint")
-                        .HasDefaultValue((byte)1);
 
                     b.Property<Guid>("TestId")
                         .HasColumnType("uniqueidentifier");
@@ -149,6 +154,8 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AuditionId");
+
+                    b.HasIndex("CoachId");
 
                     b.HasIndex("QuestionId");
 
@@ -539,6 +546,12 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         .HasForeignKey("AuditionId")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("Elevel.Domain.Models.User", "Coach")
+                        .WithMany("CoachReports")
+                        .HasForeignKey("CoachId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Elevel.Domain.Models.Question", "Question")
                         .WithMany("Reports")
                         .HasForeignKey("QuestionId")
@@ -561,6 +574,8 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Audition");
+
+                    b.Navigation("Coach");
 
                     b.Navigation("Question");
 
@@ -735,6 +750,8 @@ namespace Elevel.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Elevel.Domain.Models.User", b =>
                 {
+                    b.Navigation("CoachReports");
+
                     b.Navigation("CoachTests");
 
                     b.Navigation("HrTests");

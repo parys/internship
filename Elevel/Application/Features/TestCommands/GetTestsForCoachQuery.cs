@@ -97,6 +97,9 @@ namespace Elevel.Application.Features.TestCommands
             public bool Priority { get; set; }
             public string EssayAnswer { get; set; }
             public string SpeakingAnswerReference { get; set; }
+            public int? EssayMark { get; set; }
+            public int? SpeakingMark { get; set; }
+            public String Comment { get; set; }
         }
     }
 }

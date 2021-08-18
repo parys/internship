@@ -115,6 +115,43 @@
             <param name="request"></param>
             <returns></returns>
         </member>
+        <member name="M:Elevel.Api.Controllers.ReportController.GetReportList(Elevel.Application.Features.ReportCommands.GetReportListQuery.Request)">
+            <summary>
+            Get list with reports.
+            Receive ... from query.
+            Returns all reports.
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Elevel.Api.Controllers.ReportController.GetReportById(Elevel.Application.Features.ReportCommands.GetReportDetailQuery.Request)">
+            <summary>
+            Get report by Id.
+            Receives id from route.
+            Returns Id, ...
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Elevel.Api.Controllers.ReportController.CreateReportAsync(Elevel.Application.Features.ReportCommands.CreateReportCommand.Request)">
+            <summary>
+            Create report.
+            Receives ...
+            Return Id
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Elevel.Api.Controllers.ReportController.UpdateReportAsync(System.Guid,Elevel.Application.Features.ReportCommands.UpdateReportCommand.Request)">
+            <summary>
+            Update report.
+            Receives Id from route, Receives ... from body
+            Return Id
+            </summary>
+            <param name="id"></param>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="M:Elevel.Api.Controllers.TestController.CreateTestAsync(Elevel.Application.Features.TestCommands.CreateTestCommand.Request)">
             <summary>
             For "Start test" button without assignment. 
