@@ -21,7 +21,7 @@ namespace Elevel.Infrastructure.Services.Jobs
                 .WithIdentity("MailingTrigger", "default")
                 .StartAt(DateBuilder.DateOf(
                     schedulerConfig.startHour,
-                    schedulerConfig.startMinute, 
+                    schedulerConfig.startMinute,
                     schedulerConfig.startSecond,
                     schedulerConfig.startDay,
                     schedulerConfig.startMonth))
