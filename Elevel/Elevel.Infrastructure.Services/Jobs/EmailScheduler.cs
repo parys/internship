@@ -19,16 +19,16 @@ namespace Elevel.Infrastructure.Services.Jobs
 
             ITrigger trigger = TriggerBuilder.Create()
                 .WithIdentity("MailingTrigger", "default")
-                //.StartAt(DateBuilder.DateOf(
-                //    schedulerConfig.startHour,
-                //    schedulerConfig.startMinute, 
-                //    schedulerConfig.startSecond,
-                //    schedulerConfig.startDay,
-                //    schedulerConfig.startMonth))
-                .StartNow()
+                .StartAt(DateBuilder.DateOf(
+                    schedulerConfig.startHour,
+                    schedulerConfig.startMinute,
+                    schedulerConfig.startSecond,
+                    schedulerConfig.startDay,
+                    schedulerConfig.startMonth))
+                //.StartNow()
                 .WithSimpleSchedule(x => x
-                    //.WithIntervalInHours(24)
-                    .WithIntervalInMinutes(1)
+                    .WithIntervalInHours(24)
+                    //.WithIntervalInMinutes(1)
                     .RepeatForever())
                 .Build();
 
