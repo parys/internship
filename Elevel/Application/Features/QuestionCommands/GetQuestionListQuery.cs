@@ -20,7 +20,7 @@ namespace Elevel.Application.Features.QuestionCommands
         {
             public Level? Level { get; set; }
 
-            public long? QuestionNumber { get; set; }
+            public string QuestionNumber { get; set; }
 
             public Guid? CreatorId { get; set; }
 
@@ -40,16 +40,16 @@ namespace Elevel.Application.Features.QuestionCommands
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var questions = _context.Questions.AsNoTracking().Where(x => !x.AuditionId.HasValue);
+                var questions = _context.Questions.Include(x => x.Creator).AsNoTracking().Where(x => !x.AuditionId.HasValue);
 
                 if (request.Level.HasValue)
                 {
                     questions = questions.Where(x => x.Level == request.Level);
                 }
 
-                if (request.QuestionNumber.HasValue)
+                if (!string.IsNullOrEmpty(request.QuestionNumber))
                 {
-                    questions = questions.Where(x => x.QuestionNumber == (long)request.QuestionNumber);
+                    questions = questions.Where(x => Convert.ToString(x.QuestionNumber).StartsWith(request.QuestionNumber));
                 }
 
                 if (request.CreatorId.HasValue)
@@ -62,27 +62,27 @@ namespace Elevel.Application.Features.QuestionCommands
                     questions = questions.Where(x => x.NameQuestion.StartsWith(request.NameQuestion));
                 }
 
-                Expression<Func<Question, object>> sortBy = x => x.NameQuestion;
+                Expression<Func<Question, object>> sortBy = x => x.QuestionNumber;
                 Expression<Func<Question, object>> thenBy = x => x.Level;
                 if (!string.IsNullOrWhiteSpace(request.SortOn))
                 {
-                    if (request.SortOn.Contains(nameof(Question.NameQuestion),
+                    if (request.SortOn.Contains(nameof(Question.QuestionNumber),
                         StringComparison.InvariantCultureIgnoreCase))
                     {
-                        sortBy = x => x.NameQuestion;
+                        sortBy = x => x.QuestionNumber;
                         thenBy = x => x.Level;
                     }
                     else if (request.SortOn.Contains(nameof(Question.Level),
                         StringComparison.InvariantCultureIgnoreCase))
                     {
                         sortBy = x => x.Level;
-                        thenBy = x => x.NameQuestion;
+                        thenBy = x => x.QuestionNumber;
                     }
                     else if (request.SortOn.Contains(nameof(Question.CreationDate),
                         StringComparison.InvariantCultureIgnoreCase))
                     {
                         sortBy = x => x.CreationDate;
-                        thenBy = x => x.NameQuestion;
+                        thenBy = x => x.QuestionNumber;
                     }
                 }
 
@@ -103,6 +103,10 @@ namespace Elevel.Application.Features.QuestionCommands
             public byte Level { get; set; }
 
             public Guid CreatorId { get; set; }
+
+            public string CreatorFirstName { get; set; }
+
+            public string CreatorLastName { get; set; }
 
             public string NameQuestion { get; set; }
 

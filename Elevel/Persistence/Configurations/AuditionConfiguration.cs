@@ -17,6 +17,10 @@ namespace Elevel.Infrastructure.Persistence.Configurations
                 .ValueGeneratedOnAdd();
 
             builder.HasQueryFilter(x => !x.Deleted);
+
+            builder.HasOne(x => x.Creator)
+                .WithMany(x => x.Auditions)
+                .HasForeignKey(x => x.CreatorId);
         }
     }
 }

@@ -10,6 +10,10 @@ namespace Elevel.Infrastructure.Persistence.Configurations
         {
             builder.ToTable("Topics");
 
+            builder.HasOne(x => x.Creator)
+                .WithMany(x => x.Topics)
+                .HasForeignKey(x => x.CreatorId);
+
             builder.Property(x => x.TopicNumber)
                 .ValueGeneratedOnAdd();
 

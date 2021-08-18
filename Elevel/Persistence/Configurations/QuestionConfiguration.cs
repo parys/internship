@@ -25,6 +25,10 @@ namespace Elevel.Infrastructure.Persistence.Configurations
                 .WithOne(x => x.Question)
                 .HasForeignKey(x => x.QuestionId);
 
+            builder.HasOne(x => x.Creator)
+                .WithMany(x => x.Questions)
+                .HasForeignKey(x => x.CreatorId);
+
             builder.HasQueryFilter(x => !x.Deleted);
         }
     }

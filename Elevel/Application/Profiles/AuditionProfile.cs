@@ -22,7 +22,11 @@ namespace Elevel.Application.Profiles
             CreateMap<Answer, GetAuditionDetailQuery.AnswerDto>();
             CreateMap<Question, GetAuditionDetailQuery.QuestionDto>();
 
-            CreateMap<Audition, GetAuditionListQuery.QuestionDto>();
+            CreateMap<Audition, GetAuditionListQuery.AuditionDto>();
+            CreateMap<User, GetAuditionListQuery.AuditionDto>()
+                .ForMember(dest => dest.CreatorId, src => src.MapFrom(x => x.Id))
+                .ForMember(dest => dest.CreatorFirstName, src => src.MapFrom(x => x.FirstName))
+                .ForMember(dest => dest.CreatorLastName, src => src.MapFrom(x => x.LastName));
 
             CreateMap<Audition, UpdateAuditionCommand.Response>();
             CreateMap<Question, UpdateAuditionCommand.QuestionDto>();
