@@ -96,7 +96,7 @@ namespace Elevel.Application.Features.AuditionCommands
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                if (request.AudioFilePath != null && !File.Exists(request.AudioFilePath))
+                if (request.AudioFilePath != null && !File.Exists(Path.Combine(Constants.FILE_FOLDER_PATH,request.AudioFilePath)))
                 {
                     throw new NotFoundException($"File with path {request.AudioFilePath} not found.");
                 }

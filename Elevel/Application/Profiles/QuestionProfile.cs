@@ -18,11 +18,16 @@ namespace Elevel.Application.Profiles
             CreateMap<Answer, GetQuestionDetailQuery.AnswerDto>();
 
             CreateMap<Question, GetQuestionListQuery.QuestionsDTO>();
+            CreateMap<User, GetQuestionListQuery.QuestionsDTO>()
+                .ForMember(dest => dest.CreatorId, src => src.MapFrom(x => x.Id))
+                .ForMember(dest => dest.CreatorFirstName, src => src.MapFrom(x => x.FirstName))
+                .ForMember(dest => dest.CreatorLastName, src => src.MapFrom(x => x.LastName));
 
             CreateMap<Question, UpdateQuestionCommand.Response>();
             CreateMap<Answer, UpdateQuestionCommand.AnswerDto>();
             CreateMap<UpdateQuestionCommand.Request, Question>();
             CreateMap<UpdateQuestionCommand.AnswerDto, Answer>();
+            
         }
     }
 }

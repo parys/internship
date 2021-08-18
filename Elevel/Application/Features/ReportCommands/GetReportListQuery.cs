@@ -32,7 +32,7 @@ namespace Elevel.Application.Features.ReportCommands
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var report = _context.Reports.AsNoTracking();
+                var report = _context.Reports.AsNoTracking().Where(x=>x.ReportStatus == ReportStatus.Created);
 
                 return new Response()
                 {

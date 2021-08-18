@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
+using Elevel.Application.Extensions;
 using Elevel.Application.Interfaces;
 using Elevel.Application.Pagination;
 using Elevel.Domain.Enums;
+using Elevel.Domain.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,7 +18,7 @@ namespace Elevel.Application.Features.AuditionCommands
     {
         public class Request : PagedQueryBase, IRequest<Response>
         {
-            public long? AuditionNumber { get; set; }
+            public string AuditionNumber { get; set; }
             public Level? Level { get; set; }
         }
 
@@ -33,42 +35,59 @@ namespace Elevel.Application.Features.AuditionCommands
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var audition = _context.Auditions.AsNoTracking();
+                var audition = _context.Auditions.Include(x => x.Creator).AsNoTracking();
 
                 if (request.Level.HasValue)
                 {
                     audition = audition.Where(x => x.Level == request.Level);
                 }
 
-                if (request.AuditionNumber.HasValue)
+                if (!string.IsNullOrEmpty(request.AuditionNumber))
                 {
-                    audition = audition.Where(x => x.AuditionNumber == (long)request.AuditionNumber);
+                    audition = audition.Where(x => Convert.ToString(x.AuditionNumber).StartsWith(request.AuditionNumber));
                 }
 
-                return new Response()
+                Expression<Func<Audition, object>> sortBy = x => x.AuditionNumber;
+                Expression<Func<Audition, object>> thenBy = x => x.CreationDate;
+                if (!string.IsNullOrWhiteSpace(request.SortOn))
                 {
-                    PageSize = request.PageSize,
-                    CurrentPage = request.CurrentPage,
-                    RowCount = await audition.CountAsync(cancellationToken),
-                    Results = await audition.Skip(request.SkipCount())
-                    .Take(request.PageSize)
-                    .ProjectTo<QuestionDto>(_mapper.ConfigurationProvider)
-                    .ToListAsync(cancellationToken)
-                };
+                    if (request.SortOn.Contains(nameof(Audition.AuditionNumber),
+                        StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        sortBy = x => x.AuditionNumber;
+                        thenBy = x => x.Level;
+                    }
+                    else if (request.SortOn.Contains(nameof(Audition.Level),
+                        StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        sortBy = x => x.Level;
+                        thenBy = x => x.AuditionNumber;
+                    }
+                    else if (request.SortOn.Contains(nameof(Audition.CreationDate),
+                        StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        sortBy = x => x.CreationDate;
+                        thenBy = x => x.AuditionNumber;
+                    }
+                }
+
+                return await audition.GetPagedAsync<Response, Audition, AuditionDto>(request, _mapper, sortBy, thenBy);
             }
         }
 
-        public class Response : PagedResult<QuestionDto>
+        public class Response : PagedResult<AuditionDto>
         {
 
         }
 
-        public class QuestionDto
+        public class AuditionDto
         {
             public Guid Id { get; set; }
-            public long QuestionNumber { get; set; }
+            public long AuditionNumber { get; set; }
             public byte Level { get; set; }
             public Guid CreatorId { get; set; }
+            public string CreatorFirstName { get; set; }
+            public string CreatorLastName { get; set; }
             public DateTimeOffset CreationDate { get; set; }
         }
     }

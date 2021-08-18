@@ -15,8 +15,7 @@ namespace Elevel.Api.Controllers
     {
         /// <summary>
         /// Get list with reports.
-        /// Receive ... from query.
-        /// Returns all reports.
+        /// Returns all reports with status "Created".
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -29,7 +28,9 @@ namespace Elevel.Api.Controllers
         /// <summary>
         /// Get report by Id.
         /// Receives id from route.
-        /// Returns Id, ...
+        /// Returns Id, Description, CreationDate, ReportStatus,
+        /// User (UserName)
+        /// Coach (CoachName)
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -42,7 +43,10 @@ namespace Elevel.Api.Controllers
 
         /// <summary>
         /// Create report.
-        /// Receives ...
+        /// Receives TestId, Description
+        /// If report in Grammar, add only QuestionsId
+        /// If report in Listening, add AuditionId and QuestionId
+        /// If report in Writing or Speaking, add TopicId
         /// Return Id
         /// </summary>
         /// <param name="request"></param>
@@ -56,6 +60,8 @@ namespace Elevel.Api.Controllers
         }
 
         /// <summary>
+        ///NOT FINISH
+        /// 
         /// Update report.
         /// Receives Id from route, Receives ... from body
         /// Return Id

@@ -34,9 +34,13 @@ namespace Elevel.Application.Features.TestCommands
         {
             public Validator()
             {
-                RuleFor(x => x.SpeakingMark).NotEmpty().WithMessage("SpeakingMark name can't be empty or null!");
+                RuleFor(x => x.SpeakingMark)
+                    .InclusiveBetween(Constants.MIN_MARK,Constants.MAX_MARK)
+                    .WithMessage("Speaking mark number is out if range from 0 to 10!");
 
-                RuleFor(x => x.EssayMark).NotEmpty().WithMessage("EssayMark name can't be empty or null!");
+                RuleFor(x => x.EssayMark)
+                    .InclusiveBetween(Constants.MIN_MARK, Constants.MAX_MARK)
+                    .WithMessage("Essay mark number is out if range from 0 to 10!");
             }
         }
 
@@ -44,11 +48,13 @@ namespace Elevel.Application.Features.TestCommands
         {
             private readonly IApplicationDbContext _context;
             private readonly IMapper _mapper;
+            private readonly IMailService _mailService;
 
-            public Handler(IApplicationDbContext context, IMapper mapper)
+            public Handler(IApplicationDbContext context, IMapper mapper, IMailService mailService)
             {
                 _context = context;
                 _mapper = mapper;
+                _mailService = mailService;
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
@@ -66,20 +72,6 @@ namespace Elevel.Application.Features.TestCommands
                     throw new ValidationException("You can't check this test");
                 }
 
-                if(request.SpeakingMark < Constants.MIN_MARK 
-                    || request.SpeakingMark > Constants.MAX_MARK )
-                {
-                    throw new ValidationException("Speaking mark number is out if range from 0 to 10");
-                }
-
-                if(request.EssayMark < Constants.MIN_MARK
-                    || request.EssayMark > Constants.MAX_MARK)
-                {
-                    throw new ValidationException("Essay mark number is out if range from 0 to 10");
-                }
-
-                
-
                 test.SpeakingMark = request.SpeakingMark;
 
                 test.EssayMark = request.EssayMark;
@@ -88,6 +80,16 @@ namespace Elevel.Application.Features.TestCommands
 
                 await _context.SaveChangesAsync();
 
+                if (test.HrId.HasValue)
+                {
+                    _mailService.SendMessage((Guid)test.HrId,
+                        "The test you assigned to user was checked",
+                        "example text 'check test [HR]");
+                }
+
+                _mailService.SendMessage(test.UserId,
+                    "Your test was checked",
+                    "example text 'check test [User]");
 
                 return _mapper.Map<Response>(test);
             }

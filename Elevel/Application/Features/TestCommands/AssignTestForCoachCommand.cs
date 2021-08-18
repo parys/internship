@@ -7,10 +7,6 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,7 +14,7 @@ namespace Elevel.Application.Features.TestCommands
 {
     public class AssignTestForCoachCommand
     {
-        public class Request: IRequest<Response>
+        public class Request : IRequest<Response>
         {
             public Guid TestId { get; set; }
             public Guid CoachId { get; set; }
@@ -28,23 +24,30 @@ namespace Elevel.Application.Features.TestCommands
         {
             private readonly IApplicationDbContext _context;
             private readonly UserManager<User> _userManager;
+            private readonly IMailService _mailService;
 
-            public Handler(IApplicationDbContext context, UserManager<User> userManager)
+            public Handler(IApplicationDbContext context, UserManager<User> userManager, IMailService mailService)
             {
                 _userManager = userManager;
                 _context = context;
+                _mailService = mailService;
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
                 var test = await _context.Tests.FirstOrDefaultAsync(x => x.Id == request.TestId);
 
-                if(test is null)
+                if (test is null)
                 {
                     throw new NotFoundException($"Test with id {request.TestId}");
                 }
 
-                if(test.SpeakingMark.HasValue && test.EssayMark.HasValue)
+                if (test.UserId == request.CoachId)
+                {
+                    throw new ValidationException("You can't assign this test to this coach!");
+                }
+
+                if (test.SpeakingMark.HasValue && test.EssayMark.HasValue)
                 {
                     throw new ValidationException("This test has already checked!");
                 }
@@ -59,6 +62,10 @@ namespace Elevel.Application.Features.TestCommands
                 test.CoachId = request.CoachId;
 
                 await _context.SaveChangesAsync(cancellationToken);
+
+                _mailService.SendMessage(request.CoachId,
+                    "You was assigned to the test",
+                    "example text 'assign test for coach'");
 
                 return new Response
                 {

@@ -2,8 +2,10 @@
 using Elevel.Application.Infrastructure;
 using Elevel.Application.Interfaces;
 using Elevel.Domain.Enums;
+using Elevel.Domain.Models;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -34,17 +36,38 @@ namespace Elevel.Application.Features.TestCommands
 
         }
 
+        public class Validator : AbstractValidator<Request>
+        {
+            public Validator()
+            {
+                RuleFor(x => x.GrammarAnswers)
+                    .Must(x => x is null ? true : x.Count() == x.Distinct().Count())
+                    .WithMessage("Some answers from grammar are the same");
+
+                RuleFor(x => x.AuditionAnswers)
+                    .Must(x => x is null ? true : x.Count() == x.Distinct().Count())
+                    .WithMessage("Some answers from audition are the same");
+            }
+        }
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IApplicationDbContext _context;
 
             private readonly IMapper _mapper;
 
-            public Handler(IApplicationDbContext context, IMapper mapper)
+            private readonly UserManager<User> _userManager;
+
+            private readonly IMailService _mailService;
+
+            public Handler(IApplicationDbContext context, IMapper mapper, UserManager<User> userManager, IMailService mailService)
             {
                 _context = context;
 
                 _mapper = mapper;
+
+                _userManager = userManager;
+
+                _mailService = mailService;
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancelationtoken)
@@ -56,7 +79,7 @@ namespace Elevel.Application.Features.TestCommands
                     throw new NotFoundException($"test with {request.Id}", test);
                 }
 
-                if(request.UserId != test.UserId)
+                if (request.UserId != test.UserId)
                 {
                     throw new ValidationException("You can't submit this test");
                 }
@@ -71,43 +94,103 @@ namespace Elevel.Application.Features.TestCommands
                 //    throw new ValidationException("Test time has passed");
                 //}
 
-                await CheckAnswersForUniqueTestQuestionAsync(request.GrammarAnswers, test.Id);
+                var allAnswers = request.GrammarAnswers.Union(request.AuditionAnswers);
 
-                await CheckAnswersForUniqueTestQuestionAsync(request.AuditionAnswers, test.Id);
+                await CheckAnswersBelongtoTestAsync(allAnswers, test.Id);
+                CheckSingleAnswerForQuestion(allAnswers, test.Id);
 
                 test = _mapper.Map(request, test);
 
-                test.GrammarMark = await EvaluateTestAsync(request.GrammarAnswers);
+                test.GrammarMark = EvaluateTest(request.GrammarAnswers);
+                test.AuditionMark = EvaluateTest(request.AuditionAnswers);
 
-                test.AuditionMark = await EvaluateTestAsync(request.AuditionAnswers);
+                await SaveAnswers(allAnswers);
 
                 await _context.SaveChangesAsync(cancelationtoken).ConfigureAwait(false);
 
                 var testResponse = _mapper.Map<Response>(test);
 
+                var admins = _mapper.Map<List<User>>(await _userManager.GetUsersInRoleAsync(nameof(UserRole.Administrator)));
+
+                foreach (var admin in admins)
+                {
+                    _mailService.SendMessage(admin.Id,
+                        "You've successfully submitted the test!",
+                        "example text 'sumbit test'");
+                }
+
                 return testResponse;
             }
 
-            private async Task CheckAnswersForUniqueTestQuestionAsync(IEnumerable<Guid> answers, Guid testId)
+            private async Task CheckAnswersBelongtoTestAsync(IEnumerable<Guid> answers, Guid testId)
             {
-                var questionIds = await _context.TestQuestions.Where(x => x.TestId == testId).Select(x => x.QuestionId).ToListAsync();
-                var answerList = _context.Answers.AsNoTracking().Where(x => questionIds.Contains(x.QuestionId));
+                var questionIds = await _context.TestQuestions
+                    .Where(x => x.TestId == testId)
+                    .Join(_context.Answers, tq => tq.QuestionId, an => an.QuestionId,
+                        (tq, an) => new
+                        {
+                            AnswerId = an.Id
+                        })
+                    .Select(x => x.AnswerId)
+                    .ToListAsync();
 
-                foreach (var answer in answers)
+
+
+                if(!answers.All(x => questionIds.Contains(x)))
                 {
-                    if (!await answerList.AnyAsync(x => x.Id == answer).ConfigureAwait(false))
-                    {
-                        throw new ValidationException($"Answer with Id {answer} is not in current test");
-                    }
+                    throw new ValidationException("There aren't some answers from current test");
                 }
-
             }
-
-            private Task<int> EvaluateTestAsync(IEnumerable<Guid> answers)
+            
+            private void CheckSingleAnswerForQuestion(IEnumerable<Guid> answers, Guid testId)
             {
-                return Task.FromResult(_context.Answers.Where(x => answers.Contains(x.Id) && x.IsRight).Count());
+                var questionAnswers = _context.TestQuestions.Where(x => x.TestId == testId)
+                    .Join(_context.Answers,
+                    tq => tq.QuestionId,
+                    an => an.QuestionId,
+                    (tq, an) => new
+                    {
+                        QuestionId = an.QuestionId,
+                        AnswerId = an.Id
+                    })
+                    .GroupBy(
+                    x => x.QuestionId, (key, value) => new
+                    {
+                        QuestionId = key,
+                        AnswersAmount = value
+                        .Select(x => x.AnswerId)
+                        .Where(x => answers.Contains(x))
+                        .Count()
+                    });
+
+
+                if (questionAnswers.Any(x => x.AnswersAmount > Constants.ANSWERS_AMOUNT_PER_QUESTION))
+                {
+                    throw new ValidationException("There aren't some answers from te same question");
+                }
             }
 
+            private int EvaluateTest(IEnumerable<Guid> answers)
+            {
+                return _context.Answers
+                    .Count(x => answers.Contains(x.Id) && x.IsRight);
+            }
+
+            private async Task SaveAnswers(IEnumerable<Guid> answers)
+            {
+                var testQuestions = await _context.TestQuestions
+                    .Include(x => x.Question)
+                    .ThenInclude(x => x.Answers)
+                    .Where(x => x.Question.Answers
+                        .Any(x => answers.Contains(x.Id)))
+                    .ToListAsync();
+
+                foreach (var testQuestion in testQuestions)
+                {
+                    testQuestion.UserAnswerId = testQuestion.Question.Answers
+                        .FirstOrDefault(x => answers.Contains(x.Id)).Id;
+                }
+            }
         }
 
         public class Response

@@ -1,11 +1,14 @@
+using Elevel.Application.Infrastructure.Configurations;
 using Elevel.Domain.Models;
 using Elevel.Infrastructure.Persistence.Context;
+using Elevel.Infrastructure.Services.Jobs;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Threading.Tasks;
 
@@ -22,13 +25,17 @@ namespace Elevel.Api
                 var services = scope.ServiceProvider;
                 var loggerFactory = services.GetRequiredService<ILoggerFactory>();
                 var context = services.GetService<ApplicationDbContext>();
-                context.Database.Migrate();
+                await context.Database.MigrateAsync();
+
+                var serviceProvider = scope.ServiceProvider;
 
                 try
                 {
                     //Seed Default Users
                     var userManager = services.GetRequiredService<UserManager<User>>();
                     var roleManager = services.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+                    var schedulerConfig = services.GetService<IOptions<SchedulerConfigurations>>().Value;
+                    await EmailScheduler.Start(serviceProvider, schedulerConfig);
 
                     await ApplicationDbContextSeed.SeedEssentialsAsync(userManager, roleManager);
                     

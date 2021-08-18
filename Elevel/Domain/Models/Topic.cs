@@ -11,6 +11,7 @@ namespace Elevel.Domain.Models
         public Level Level { get; set; }
         public DateTimeOffset CreationDate { get; set; }
         public Guid CreatorId { get; set; }
+        public User Creator { get; set; }
         public bool Deleted { get; set; }
 
         public ICollection<Test> EssayTests { get; set; }

@@ -58,9 +58,9 @@
         </member>
         <member name="M:Elevel.Api.Controllers.FileController.Upload(System.Collections.Generic.List{Microsoft.AspNetCore.Http.IFormFile})">
             <summary>
-            Uploads the files from the list.
-            Receives the list of the files we need to transport to @"wwwroot\files".
-            Returns nothing.
+            Uploads a single file from the list of files.
+            Receives the list of the files.
+            Returns a path to the uploaded file or error if there were 2 or more files in the list.
             </summary>
             <param name="formFiles">Files (as a list)</param>
             <returns></returns>
@@ -118,8 +118,7 @@
         <member name="M:Elevel.Api.Controllers.ReportController.GetReportList(Elevel.Application.Features.ReportCommands.GetReportListQuery.Request)">
             <summary>
             Get list with reports.
-            Receive ... from query.
-            Returns all reports.
+            Returns all reports with status "Created".
             </summary>
             <param name="request"></param>
             <returns></returns>
@@ -128,7 +127,9 @@
             <summary>
             Get report by Id.
             Receives id from route.
-            Returns Id, ...
+            Returns Id, Description, CreationDate, ReportStatus,
+            User (UserName)
+            Coach (CoachName)
             </summary>
             <param name="request"></param>
             <returns></returns>
@@ -136,21 +137,26 @@
         <member name="M:Elevel.Api.Controllers.ReportController.CreateReportAsync(Elevel.Application.Features.ReportCommands.CreateReportCommand.Request)">
             <summary>
             Create report.
-            Receives ...
+            Receives TestId, Description
+            If report in Grammar, add only QuestionsId
+            If report in Listening, add AuditionId and QuestionId
+            If report in Writing or Speaking, add TopicId
             Return Id
             </summary>
             <param name="request"></param>
             <returns></returns>
         </member>
         <member name="M:Elevel.Api.Controllers.ReportController.UpdateReportAsync(System.Guid,Elevel.Application.Features.ReportCommands.UpdateReportCommand.Request)">
-            <summary>
-            Update report.
-            Receives Id from route, Receives ... from body
-            Return Id
-            </summary>
-            <param name="id"></param>
-            <param name="request"></param>
-            <returns></returns>
+             <summary>
+            NOT FINISH
+             
+             Update report.
+             Receives Id from route, Receives ... from body
+             Return Id
+             </summary>
+             <param name="id"></param>
+             <param name="request"></param>
+             <returns></returns>
         </member>
         <member name="M:Elevel.Api.Controllers.TestController.CreateTestAsync(Elevel.Application.Features.TestCommands.CreateTestCommand.Request)">
             <summary>
@@ -247,7 +253,17 @@
         </member>
         <member name="M:Elevel.Api.Controllers.UserController.GetAllUsersAsync(Elevel.Application.Features.UserFeatures.GetUserListQuery.Request)">
             <summary>
-            Returns all users
+            Receives parameters: 
+            LastName, 
+            FirstName, 
+            Email, 
+            PageSize, 
+            CurrentPage, 
+            SortOn (Email, CreationDate, FirstName, LastName, UserName), 
+            sortDirection (asc (a->z,0->9), desc(z->a,9->0))
+            
+            Returns:
+            Paged, filtered, and sorted user list
             </summary>
             <param name="request"></param>
             <returns></returns>
