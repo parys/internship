@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Elevel.Application.Extensions
 {
-    public static class UserExtension
+    public static class UserExtensions
     {
         public static string GetUserNames(this User source)
         {

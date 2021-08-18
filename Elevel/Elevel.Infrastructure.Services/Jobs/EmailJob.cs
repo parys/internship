@@ -44,16 +44,18 @@ namespace Elevel.Infrastructure.Services.Jobs
                 .AsNoTracking()
                 .ToListAsync();
 
-            var missedDeadlineUsers = _context.Tests
+            var missedDeadlineUsers = await _context.Tests
                 .Where(x => x.AssignmentEndDate.HasValue
-                    && DateTimeOffset.Compare(x.AssignmentEndDate.Value.Date, DateTimeOffset.UtcNow.Date) < 0
+                    && DateTimeOffset.Compare(x.AssignmentEndDate.Value.AddDays(1).Date, DateTimeOffset.UtcNow.Date) == 0
                     && !x.GrammarMark.HasValue)
                 .Select(x => new
                 {
                     HrEmail = MailboxAddress.Parse(
                     _userManager.Users.FirstOrDefault(u => u.Id == x.HrId).Email),
                     UserName = _userManager.Users.FirstOrDefault(u => u.Id == x.UserId).GetUserNames()
-                });
+                })
+                .AsNoTracking()
+                .ToListAsync();
 
             var missedDict = new Dictionary<MailboxAddress, string>();
 
