@@ -38,8 +38,6 @@ namespace Elevel.Infrastructure.Services.Jobs
             var userEmails = await _context.Tests
                 .Where(x => x.AssignmentEndDate.HasValue
                     && DateTimeOffset.Compare(x.AssignmentEndDate.Value.Date, DateTimeOffset.UtcNow.Date) >= 0)
-                .Include(x => x.User)
-                .AsNoTracking()
                 .Select(x => MailboxAddress.Parse(x.User.Email))
                 .ToListAsync();
 
@@ -47,8 +45,6 @@ namespace Elevel.Infrastructure.Services.Jobs
                 .Where(x => x.AssignmentEndDate.HasValue
                     && DateTimeOffset.Compare(x.AssignmentEndDate.Value.AddDays(1).Date, DateTimeOffset.UtcNow.Date) == 0
                     && !x.GrammarMark.HasValue)
-                .Include(x=> x.Hr)
-                .Include(x=> x.User)
                 .Select(x => new
                 {
                     HrEmail = MailboxAddress.Parse(x.Hr.Email),
