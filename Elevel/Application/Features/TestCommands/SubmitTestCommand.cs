@@ -86,8 +86,7 @@ namespace Elevel.Application.Features.TestCommands
 
                 var allAnswers = request.GrammarAnswers.Union(request.AuditionAnswers);
 
-                await CheckAnswersBelongtoTestAsync(request.GrammarAnswers, test.Id);
-                await CheckAnswersBelongtoTestAsync(request.AuditionAnswers, test.Id);
+                await CheckAnswersBelongtoTestAsync(allAnswers, test.Id);
                 CheckSingleAnswerForQuestion(allAnswers, test.Id);
 
                 test = _mapper.Map(request, test);
@@ -116,6 +115,8 @@ namespace Elevel.Application.Features.TestCommands
                     .Select(x => x.AnswerId)
                     .ToListAsync();
 
+
+
                 if(!answers.All(x => questionIds.Contains(x)))
                 {
                     throw new ValidationException("There aren't some answers from current test");
@@ -124,19 +125,27 @@ namespace Elevel.Application.Features.TestCommands
             
             private void CheckSingleAnswerForQuestion(IEnumerable<Guid> answers, Guid testId)
             {
-                var questionAnswers1 = from tq in _context.TestQuestions.Where(x => x.TestId == testId)
-                                              join an in _context.Answers
-                                              on tq.QuestionId equals an.QuestionId
-                                              group an by an.QuestionId into g
-                                              select new
-                                              {
-                                                  QuestionId = g.Key,
-                                                  AnswrerId = g.Select(x => x.Id)
-                                                  .Where(x => answers.Contains(x)).Count()
-                                              };
+                var questionAnswers = _context.TestQuestions.Where(x => x.TestId == testId)
+                    .Join(_context.Answers,
+                    tq => tq.QuestionId,
+                    an => an.QuestionId,
+                    (tq, an) => new
+                    {
+                        QuestionId = an.QuestionId,
+                        AnswerId = an.Id
+                    })
+                    .GroupBy(
+                    x => x.QuestionId, (key, value) => new
+                    {
+                        QuestionId = key,
+                        AnswersAmount = value
+                        .Select(x => x.AnswerId)
+                        .Where(x => answers.Contains(x))
+                        .Count()
+                    });
 
 
-                if (questionAnswers1.Any(x => x.AnswrerId > Constants.ANSWERS_AMOUNT_PER_QUESTION))
+                if (questionAnswers.Any(x => x.AnswersAmount > Constants.ANSWERS_AMOUNT_PER_QUESTION))
                 {
                     throw new ValidationException("There aren't some answers from te same question");
                 }
