@@ -17,5 +17,6 @@ namespace Elevel.Application.Infrastructure
         public const int CORRECT_ANSWER_AMOUNT = 1;
         public const int ANSWERS_AMOUNT_PER_QUESTION = 1;
         public static readonly string FILE_FOLDER_PATH = Path.Combine("wwwroot", "files");
+        public static readonly string EMAIL_PATH = @"EmailTemplate.html";
     }
 }

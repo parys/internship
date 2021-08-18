@@ -64,8 +64,10 @@ namespace Elevel.Application.Features.TestCommands
                 await _context.SaveChangesAsync(cancellationToken);
 
                 _mailService.SendMessage(request.CoachId,
-                    "You was assigned to the test",
-                    "example text 'assign test for coach'");
+                    "You were assigned to the test",
+                    "You were assigned to complete the test by Elevel's HR.<br/>"
+                    + "Please go to the following link to enter the Elevel site: <br/>"
+                    + "<a href=\"http://exadel-train-app.herokuapp.com\">Enter the Elevel site</a><br/><br/>");
 
                 return new Response
                 {
