@@ -23,11 +23,11 @@ namespace Elevel.Infrastructure.Services.Implementation
             _emailConfiguration = emailConfiguration.Value;
             _userManager = userManager;
             _message = new MimeMessage();
-            _smtpClient = new SmtpClient();
         }
 
         public string SendMessage(Guid receiverId, string subject, string body)
         {
+            Connect();
             var userEmail = _userManager.Users.FirstOrDefault(x => x.Id == receiverId).Email;
             if (userEmail == null)
             {
@@ -96,6 +96,7 @@ namespace Elevel.Infrastructure.Services.Implementation
 
         private void Connect()
         {
+            _smtpClient = new SmtpClient();
             try
             {
                 _smtpClient.Connect("smtp.gmail.com", 465, true);
@@ -114,9 +115,6 @@ namespace Elevel.Infrastructure.Services.Implementation
             _smtpClient.Dispose();
         }
         
-
-       
-
         ~MailService()
         {
             _smtpClient.Dispose();
