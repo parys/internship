@@ -18,4 +18,8 @@
     <ProjectReference Include="..\Domain\Elevel.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\ReportCommands\" />
+  </ItemGroup>
+
 </Project>
