@@ -31,7 +31,7 @@ namespace Elevel.Application.Features.ReportCommands
             {
                 this.CascadeMode = CascadeMode.Stop;
                 
-                When(x => x.QuestionId.HasValue, () =>
+                When(x => x.QuestionId.HasValue && !x.AuditionId.HasValue, () =>
                 {
                     RuleFor(x => x.QuestionId).NotEmpty().NotEqual(Guid.Empty)
                         .WithMessage("When QuestionId is given, AuditionId and TopicId must be empty.");
