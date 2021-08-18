@@ -84,22 +84,16 @@ namespace Elevel.Application.Features.TestCommands
                 {
                     _mailService.SendMessage((Guid)test.HrId,
                          "The test you assigned to user was checked",
-                         "<center><table width=\"500px\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\"><tr><td style=\"text-align: center; font-size: large;\">"
-                         + "The test which was assigned to user {FirstName} {LastName} ({Email} by you is checked now.<br/>"
+                         "The test which was assigned to user {FirstName} {LastName} ({Email} by you is checked now.<br/>"
                          + "Please go to the following link to see the marks: <br/>"
-                         + "<a href=\"http://exadel-train-app.herokuapp.com/home\">Enter the Elevel site</a><br/><br/>"
-                         + "<img src=\"https://habrastorage.org/getpro/moikrug/uploads/company/663/850/800/logo/medium_57e7286b71f5bb50f7eda0c9bce2cf99.png\" alt =\"Exadel Logo\" style=\"margin: auto; display:inline; width: 200px;\">"
-                         +"</td></tr></table></center>");
+                         + "<a href=\"http://exadel-train-app.herokuapp.com/home\">Enter the Elevel site</a><br/><br/>");
                 }
 
                 _mailService.SendMessage(test.UserId,
                     "Your test was checked",
-                    "<center><table width=\"500px\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\"><tr><td style=\"text-align: center; font-size: large;\">"
-                    + "The test which was assigned to you is checked now.<br/>"
+                    "The test which was assigned to you is checked now.<br/>"
                     + "Please go to the following link to see the marks: <br/>"
-                    + "<a href=\"http://exadel-train-app.herokuapp.com/home\">Enter the Elevel site</a><br/><br/>"
-                    + "<img src=\"https://habrastorage.org/getpro/moikrug/uploads/company/663/850/800/logo/medium_57e7286b71f5bb50f7eda0c9bce2cf99.png\" alt =\"Exadel Logo\" style=\"margin: auto; display:inline; width: 200px;\"><br/>"
-                    + "</td></tr></table></center>");
+                    + "<a href=\"http://exadel-train-app.herokuapp.com/home\">Enter the Elevel site</a><br/><br/>");
 
                 return _mapper.Map<Response>(test);
             }

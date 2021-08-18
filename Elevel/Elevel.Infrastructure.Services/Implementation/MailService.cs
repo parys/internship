@@ -1,4 +1,5 @@
-﻿using Elevel.Application.Infrastructure.Configurations;
+﻿using Elevel.Application.Infrastructure;
+using Elevel.Application.Infrastructure.Configurations;
 using Elevel.Application.Interfaces;
 using Elevel.Domain.Models;
 using MailKit.Net.Smtp;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Options;
 using MimeKit;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -85,12 +87,17 @@ namespace Elevel.Infrastructure.Services.Implementation
                 return "Email was not sent";
             }
 
+            StreamReader str = new(Constants.EMAIL_PATH);
+            string mailText = str.ReadToEnd();
+            str.Close();
+            var emailContent = body;
+            mailText = mailText.Replace("[Content]", emailContent);
+
             _message.From.Add(new MailboxAddress("Elevel Notification", _emailConfiguration.Email));
             _message.To.Add(MailboxAddress.Parse(userEmail));
             _message.Subject = subject;
-            _message.Body = new TextPart("html")
-            {
-                Text = body
+            _message.Body = new TextPart("html") {
+                Text = mailText
             };
 
             Connect();

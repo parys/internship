@@ -101,12 +101,9 @@ namespace Elevel.Application.Features.TestCommands
                 {
                     _mailService.SendMessage(admin.Id,
                         "The test is submitted",
-                        "<center><table width=\"500px\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\"><tr><td style=\"text-align: center; font-size: large;\">"
-                        + "The test №" + test.TestNumber + "is submitted by a user.<br/>"
+                        "The test №" + test.TestNumber + "is submitted by a user.<br/>"
                         + "Please go to the following link to assign the test to one of the coaches: <br/>"
-                        + "<a href=\"http://exadel-train-app.herokuapp.com/adminProfile\">Assign the test</a><br/><br/>"
-                        + "<img src=\"https://habrastorage.org/getpro/moikrug/uploads/company/663/850/800/logo/medium_57e7286b71f5bb50f7eda0c9bce2cf99.png\" alt =\"Exadel Logo\" style=\"margin: auto; display:inline; width: 200px;\"><br/>"
-                        + "</td></tr></table></center>");
+                        + "<a href=\"http://exadel-train-app.herokuapp.com/adminProfile\">Assign the test</a><br/><br/>");
                 }
 
                 return testResponse;
