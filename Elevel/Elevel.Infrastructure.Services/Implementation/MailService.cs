@@ -42,7 +42,6 @@ namespace Elevel.Infrastructure.Services.Implementation
                 Text = body
             };
 
-            Connect();
             try
             {
                 _smtpClient.Send(_message);
