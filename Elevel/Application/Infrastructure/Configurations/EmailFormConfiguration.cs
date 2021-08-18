@@ -9,7 +9,7 @@ namespace Elevel.Application.Infrastructure.Configurations
 {
     public class EmailFormConfiguration
     {
-        public List<MailboxAddress> ReceiverEmail { get; set; } = new List<MailboxAddress>();
+        public List<MailboxAddress> ReceiverEmails { get; set; } = new List<MailboxAddress>();
         public string Subject { get; set; }
         public string Body { get; set; }
     }

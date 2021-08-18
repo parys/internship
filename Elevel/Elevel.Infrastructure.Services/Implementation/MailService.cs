@@ -71,7 +71,7 @@ namespace Elevel.Infrastructure.Services.Implementation
                     _message.To.Clear();
                 }
 
-                _message.To.AddRange(email.ReceiverEmail);
+                _message.To.AddRange(email.ReceiverEmails);
                 _message.Subject = email.Subject;
                 _message.Body = new TextPart("plain")
                 {

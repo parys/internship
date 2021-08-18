@@ -76,7 +76,7 @@ namespace Elevel.Infrastructure.Services.Jobs
             var userEmailForm = new EmailFormConfiguration();
             if (userEmails.Count > 0)
             {
-                userEmailForm.ReceiverEmail.AddRange(userEmails);
+                userEmailForm.ReceiverEmails.AddRange(userEmails);
                 userEmailForm.Subject = "Elevel test reminder";
                 userEmailForm.Body = "You have assigned for test. \nCheck your profile.";
                 emailForms.Add(userEmailForm);
@@ -86,7 +86,7 @@ namespace Elevel.Infrastructure.Services.Jobs
                 {
                     var hrEmailForm = new EmailFormConfiguration();
 
-                    hrEmailForm.ReceiverEmail.Add(hr.Key);
+                    hrEmailForm.ReceiverEmails.Add(hr.Key);
                     hrEmailForm.Subject = "Missed deadline users";
                     hrEmailForm.Body = $"There are some users have missed the deadline:\n{hr.Value}";
 
