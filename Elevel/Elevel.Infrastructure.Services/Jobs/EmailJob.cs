@@ -38,9 +38,9 @@ namespace Elevel.Infrastructure.Services.Jobs
             var userEmails = await _context.Tests
                 .Where(x => x.AssignmentEndDate.HasValue
                     && DateTimeOffset.Compare(x.AssignmentEndDate.Value.Date, DateTimeOffset.UtcNow.Date) >= 0)
+                .Include(x => x.User)
                 .AsNoTracking()
-                .Select(x => MailboxAddress.Parse(
-                    _userManager.Users.FirstOrDefault(u => u.Id == x.UserId).Email))
+                .Select(x => MailboxAddress.Parse(x.User.Email))
                 .AsNoTracking()
                 .ToListAsync();
 
@@ -48,11 +48,12 @@ namespace Elevel.Infrastructure.Services.Jobs
                 .Where(x => x.AssignmentEndDate.HasValue
                     && DateTimeOffset.Compare(x.AssignmentEndDate.Value.AddDays(1).Date, DateTimeOffset.UtcNow.Date) == 0
                     && !x.GrammarMark.HasValue)
+                .Include(x=> x.Hr)
+                .Include(x=> x.User)
                 .Select(x => new
                 {
-                    HrEmail = MailboxAddress.Parse(
-                    _userManager.Users.FirstOrDefault(u => u.Id == x.HrId).Email),
-                    UserName = _userManager.Users.FirstOrDefault(u => u.Id == x.UserId).GetUserNames()
+                    HrEmail = MailboxAddress.Parse(x.Hr.Email),
+                    UserName = x.User.GetUserNames()
                 })
                 .AsNoTracking()
                 .ToListAsync();
@@ -74,6 +75,7 @@ namespace Elevel.Infrastructure.Services.Jobs
             var emailForms = new List<EmailFormConfiguration>();
 
             var userEmailForm = new EmailFormConfiguration();
+
             if (userEmails.Count > 0)
             {
                 userEmailForm.ReceiverEmails.AddRange(userEmails);
@@ -81,18 +83,18 @@ namespace Elevel.Infrastructure.Services.Jobs
                 userEmailForm.Body = "You have assigned for test. \nCheck your profile.";
                 emailForms.Add(userEmailForm);
             }
-            if (missedDict.Count > 0) {
-                foreach (var hr in missedDict)
-                {
-                    var hrEmailForm = new EmailFormConfiguration();
 
-                    hrEmailForm.ReceiverEmails.Add(hr.Key);
-                    hrEmailForm.Subject = "Missed deadline users";
-                    hrEmailForm.Body = $"There are some users have missed the deadline:\n{hr.Value}";
+            foreach (var hr in missedDict)
+            {
+                var hrEmailForm = new EmailFormConfiguration();
 
-                    emailForms.Add(hrEmailForm);
-                }
+                hrEmailForm.ReceiverEmails.Add(hr.Key);
+                hrEmailForm.Subject = "Missed deadline users";
+                hrEmailForm.Body = $"There are some users have missed the deadline:\n{hr.Value}";
+
+                emailForms.Add(hrEmailForm);
             }
+
             if (emailForms.Count > 0) {
                 _mail.UsersEmailNotification(emailForms);
             } 
