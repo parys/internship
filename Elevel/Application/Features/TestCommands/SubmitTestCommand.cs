@@ -91,8 +91,8 @@ namespace Elevel.Application.Features.TestCommands
 
                 test = _mapper.Map(request, test);
 
-                test.GrammarMark = EvaluateTestAndSave(request.GrammarAnswers);
-                test.AuditionMark = EvaluateTestAndSave(request.AuditionAnswers);
+                test.GrammarMark = EvaluateTest(request.GrammarAnswers);
+                test.AuditionMark = EvaluateTest(request.AuditionAnswers);
 
                 await SaveAnswers(allAnswers);
 
@@ -151,7 +151,7 @@ namespace Elevel.Application.Features.TestCommands
                 }
             }
 
-            private int EvaluateTestAndSave(IEnumerable<Guid> answers)
+            private int EvaluateTest(IEnumerable<Guid> answers)
             {
                 return _context.Answers
                     .Count(x => answers.Contains(x.Id) && x.IsRight);
