@@ -41,7 +41,6 @@ namespace Elevel.Infrastructure.Services.Jobs
                 .Include(x => x.User)
                 .AsNoTracking()
                 .Select(x => MailboxAddress.Parse(x.User.Email))
-                .AsNoTracking()
                 .ToListAsync();
 
             var missedDeadlineUsers = await _context.Tests
@@ -55,7 +54,6 @@ namespace Elevel.Infrastructure.Services.Jobs
                     HrEmail = MailboxAddress.Parse(x.Hr.Email),
                     UserName = x.User.GetUserNames()
                 })
-                .AsNoTracking()
                 .ToListAsync();
 
             var missedDict = new Dictionary<MailboxAddress, string>();
@@ -76,7 +74,7 @@ namespace Elevel.Infrastructure.Services.Jobs
 
             var userEmailForm = new EmailFormConfiguration();
 
-            if (userEmails.Count > 0)
+            if (userEmails.Any())
             {
                 userEmailForm.ReceiverEmails.AddRange(userEmails);
                 userEmailForm.Subject = "Elevel test reminder";
@@ -95,7 +93,7 @@ namespace Elevel.Infrastructure.Services.Jobs
                 emailForms.Add(hrEmailForm);
             }
 
-            if (emailForms.Count > 0) {
+            if (emailForms.Any()) {
                 _mail.UsersEmailNotification(emailForms);
             } 
         }
