@@ -83,13 +83,17 @@ namespace Elevel.Application.Features.TestCommands
                 if (test.HrId.HasValue)
                 {
                     _mailService.SendMessage((Guid)test.HrId,
-                        "The test you assigned to user was checked",
-                        "example text 'check test [HR]");
+                         "The test you assigned to user was checked",
+                         "The test which was assigned to user {FirstName} {LastName} ({Email} by you is checked now.<br/>"
+                         + "Please go to the following link to see the marks: <br/>"
+                         + "<a href=\"http://exadel-train-app.herokuapp.com/home\">Enter the Elevel site</a><br/><br/>");
                 }
 
                 _mailService.SendMessage(test.UserId,
                     "Your test was checked",
-                    "example text 'check test [User]");
+                    "The test which was assigned to you is checked now.<br/>"
+                    + "Please go to the following link to see the marks: <br/>"
+                    + "<a href=\"http://exadel-train-app.herokuapp.com/home\">Enter the Elevel site</a><br/><br/>");
 
                 return _mapper.Map<Response>(test);
             }

@@ -1,4 +1,5 @@
-﻿using Elevel.Application.Infrastructure.Configurations;
+﻿using Elevel.Application.Infrastructure;
+using Elevel.Application.Infrastructure.Configurations;
 using Elevel.Application.Interfaces;
 using Elevel.Domain.Models;
 using MailKit.Net.Smtp;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.Options;
 using MimeKit;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Elevel.Infrastructure.Services.Implementation
@@ -23,26 +25,30 @@ namespace Elevel.Infrastructure.Services.Implementation
             _emailConfiguration = emailConfiguration.Value;
             _userManager = userManager;
             _message = new MimeMessage();
-            _smtpClient = new SmtpClient();
         }
 
         public string SendMessage(Guid receiverId, string subject, string body)
         {
+            Connect();
             var userEmail = _userManager.Users.FirstOrDefault(x => x.Id == receiverId).Email;
             if (userEmail == null)
             {
                 return "Email was not sent";
             }
 
+            StreamReader str = new(Constants.EMAIL_PATH);
+            string mailText = str.ReadToEnd();
+            str.Close();
+            var emailContent = body;
+            mailText = mailText.Replace("[Content]", emailContent);
+
             _message.From.Add(new MailboxAddress("Elevel Notification", _emailConfiguration.Email));
             _message.To.Add(MailboxAddress.Parse(userEmail));
             _message.Subject = subject;
-            _message.Body = new TextPart("plain")
-            {
-                Text = body
+            _message.Body = new TextPart("html") {
+                Text = mailText
             };
 
-            Connect();
             try
             {
                 _smtpClient.Send(_message);
@@ -96,6 +102,7 @@ namespace Elevel.Infrastructure.Services.Implementation
 
         private void Connect()
         {
+            _smtpClient = new SmtpClient();
             try
             {
                 _smtpClient.Connect("smtp.gmail.com", 465, true);
@@ -114,9 +121,6 @@ namespace Elevel.Infrastructure.Services.Implementation
             _smtpClient.Dispose();
         }
         
-
-       
-
         ~MailService()
         {
             _smtpClient.Dispose();
