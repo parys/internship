@@ -93,7 +93,7 @@ namespace Elevel.Application.Features.TestCommands
 
                 _mailService.NotifyUser(userEmail,
                     "You were assigned to the test",
-                    "You were assigned to complete the test by Elevel's HR.<br/>"
+                    $"You were assigned the test by Elevel's HR for {test.AssignmentEndDate.Value.Date}.<br/>"
                     + "Please go to the following link to enter the Elevel site: <br/>"
                     + "<a href=\"http://exadel-train-app.herokuapp.com\">Enter the Elevel site</a><br/><br/>");
 

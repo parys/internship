@@ -59,7 +59,7 @@ namespace Elevel.Application.Features.TestCommands
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var test = await _context.Tests.FirstOrDefaultAsync(x => x.Id == request.Id);
+                var test = await _context.Tests.Include(x => x.Hr).Include(x => x.User).FirstOrDefaultAsync(x => x.Id == request.Id);
 
                 if (test == null)
                 {
@@ -84,7 +84,7 @@ namespace Elevel.Application.Features.TestCommands
                 {
                     _mailService.NotifyUser(test.Hr.Email,
                          "The test you assigned to user was checked",
-                         "The test which was assigned to user {FirstName} {LastName} ({Email} by you is checked now.<br/>"
+                         $"The test which was assigned to user {test.User.FirstName} {test.User.LastName} ({test.User.Email}) by you is checked now.<br/>"
                          + "Please go to the following link to see the marks: <br/>"
                          + "<a href=\"http://exadel-train-app.herokuapp.com/home\">Enter the Elevel site</a><br/><br/>");
                 }
