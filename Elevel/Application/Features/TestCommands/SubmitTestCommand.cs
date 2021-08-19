@@ -110,7 +110,7 @@ namespace Elevel.Application.Features.TestCommands
 
                 var testResponse = _mapper.Map<Response>(test);
 
-                var waitingAssignmentTestAmount = _context.Tests.Where(x => x.AuditionMark.HasValue && !x.CoachId.HasValue).Count();
+                var waitingAssignmentTestAmount = _context.Tests.Count(x => x.AuditionMark.HasValue && !x.CoachId.HasValue);
 
                 foreach (var admin in await _userManager.GetUsersInRoleAsync(nameof(UserRole.Administrator)))
                 {
