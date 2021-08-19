@@ -82,7 +82,7 @@ namespace Elevel.Infrastructure.Services.Implementation
 
                 _message.To.AddRange(email.ReceiverEmails);
                 _message.Subject = email.Subject;
-                _message.Body = new TextPart("plain")
+                _message.Body = new TextPart("html")
                 {
                     Text = html
                 };
