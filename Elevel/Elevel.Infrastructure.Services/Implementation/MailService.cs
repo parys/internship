@@ -36,26 +36,16 @@ namespace Elevel.Infrastructure.Services.Implementation
                 return "Email was not sent";
             }
 
-            StreamReader str;
-            try
-            {
-                str = new(Path.Combine(Constants.EMAIL_PATH, Constants.EMAIL_TEMPLATE));
-            }
-            catch (Exception)
-            {
-                throw new NotFoundException($"File: {Constants.EMAIL_TEMPLATE}");
-            }
+            string html = GetHtml();
 
-            string mailText = str.ReadToEnd();
-            str.Close();
-
-            mailText = mailText.Replace("[Content]", body);
+            html = html.Replace("[Content]", body);
 
             _message.From.Add(new MailboxAddress("Elevel Notification", _emailConfiguration.Email));
             _message.To.Add(MailboxAddress.Parse(userEmail));
             _message.Subject = subject;
-            _message.Body = new TextPart("html") {
-                Text = mailText
+            _message.Body = new TextPart("html") 
+            {
+                Text = html
             };
 
             try
@@ -89,10 +79,8 @@ namespace Elevel.Infrastructure.Services.Implementation
                 throw new NotFoundException($"File: {Constants.EMAIL_TEMPLATE}");
             }
 
-            string mailText = str.ReadToEnd();
-            str.Close();
+            string html = GetHtml();
 
-            
 
             foreach (var email in emails)
             {
@@ -101,13 +89,13 @@ namespace Elevel.Infrastructure.Services.Implementation
                     _message.To.Clear();
                 }
 
-                mailText = mailText.Replace("[Content]", email.Body);
+                html = html.Replace("[Content]", email.Body);
 
                 _message.To.AddRange(email.ReceiverEmails);
                 _message.Subject = email.Subject;
                 _message.Body = new TextPart("plain")
                 {
-                    Text = mailText
+                    Text = html
                 };
 
                 try
@@ -124,6 +112,22 @@ namespace Elevel.Infrastructure.Services.Implementation
             Disconnect();
 
             return "Email was sent successfully";
+        }
+
+        private string GetHtml()
+        {
+            StreamReader str;
+            try
+            {
+                str = new(Path.Combine(Constants.EMAIL_PATH, Constants.EMAIL_TEMPLATE));
+            }
+            catch (Exception)
+            {
+                throw new NotFoundException($"File: {Constants.EMAIL_TEMPLATE}");
+            }
+            var html = str.ReadToEnd();
+            str.Close();
+            return html;
         }
 
         private void Connect()
