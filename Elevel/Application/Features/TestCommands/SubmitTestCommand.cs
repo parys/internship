@@ -117,8 +117,8 @@ namespace Elevel.Application.Features.TestCommands
                 if(string.IsNullOrWhiteSpace(request.EssayAnswer)
                     && string.IsNullOrWhiteSpace(request.SpeakingAnswerReference))
                 {
-                    test.EssayMark = 0;
-                    test.SpeakingMark = 0;
+                    test.EssayMark = Constants.MIN_MARK;
+                    test.SpeakingMark = Constants.MIN_MARK;
                 }
                 else
                 {
