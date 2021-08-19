@@ -97,10 +97,9 @@ namespace Elevel.Application.Features.TestCommands
                 if (!request.GrammarAnswers.Any()
                     && !request.AuditionAnswers.Any())
                 {
-
-
                     test.GrammarMark = Constants.MIN_MARK;
                     test.AuditionMark = Constants.MIN_MARK;
+
                 }
                 else
                 {
@@ -115,7 +114,16 @@ namespace Elevel.Application.Features.TestCommands
                     await SaveAnswers(allAnswers);
                 }
 
-                test = _mapper.Map(request, test);
+                if(string.IsNullOrWhiteSpace(request.EssayAnswer)
+                    && string.IsNullOrWhiteSpace(request.SpeakingAnswerReference))
+                {
+                    test.EssayMark = 0;
+                    test.SpeakingMark = 0;
+                }
+                else
+                {
+                    test = _mapper.Map(request, test);
+                }
 
                 await _context.SaveChangesAsync(cancelationtoken).ConfigureAwait(false);
 
