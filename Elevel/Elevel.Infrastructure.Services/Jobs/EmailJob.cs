@@ -1,9 +1,7 @@
 ﻿using Elevel.Application.Extensions;
 using Elevel.Application.Infrastructure.Configurations;
 using Elevel.Application.Interfaces;
-using Elevel.Domain.Models;
 using Elevel.Infrastructure.Services.Implementation;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -20,17 +18,14 @@ namespace Elevel.Infrastructure.Services.Jobs
     {
         private IMailService _mail;
         private readonly IApplicationDbContext _context;
-        private readonly UserManager<User> _userManager;
 
         public EmailJob(IServiceScopeFactory serviceScopeFactory, IOptions<EmailConfigurations> emailConfiguration)
         {
             var service = (serviceScopeFactory.CreateScope()).ServiceProvider;
 
-            _userManager = service.GetService<UserManager<User>>();
-
             _context = service.GetService<IApplicationDbContext>();
 
-            _mail = new MailService(_userManager, emailConfiguration);
+            _mail = new MailService(emailConfiguration);
         }
 
         public async Task Execute(IJobExecutionContext context)
@@ -89,9 +84,10 @@ namespace Elevel.Infrastructure.Services.Jobs
                 emailForms.Add(hrEmailForm);
             }
 
-            if (emailForms.Any()) {
+            if (emailForms.Any())
+            {
                 _mail.UsersEmailNotification(emailForms);
-            } 
+            }
         }
     }
 }

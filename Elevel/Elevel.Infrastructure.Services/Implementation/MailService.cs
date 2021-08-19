@@ -1,15 +1,12 @@
 ﻿using Elevel.Application.Infrastructure;
 using Elevel.Application.Infrastructure.Configurations;
 using Elevel.Application.Interfaces;
-using Elevel.Domain.Models;
 using MailKit.Net.Smtp;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace Elevel.Infrastructure.Services.Implementation
 {
@@ -18,50 +15,25 @@ namespace Elevel.Infrastructure.Services.Implementation
         private MimeMessage _message;
         private SmtpClient _smtpClient;
         private readonly EmailConfigurations _emailConfiguration;
-        private readonly UserManager<User> _userManager;
 
-        public MailService(UserManager<User> userManager, IOptions<EmailConfigurations> emailConfiguration)
+        public MailService(IOptions<EmailConfigurations> emailConfiguration)
         {
             _emailConfiguration = emailConfiguration.Value;
-            _userManager = userManager;
             _message = new MimeMessage();
         }
 
-        public string SendMessage(Guid receiverId, string subject, string body)
+        public void SendMessage(string email, string subject, string body)
         {
-            Connect();
-            var userEmail = _userManager.Users.FirstOrDefault(x => x.Id == receiverId).Email;
-            if (userEmail == null)
-            {
-                return "Email was not sent";
-            }
+            var emailFormList = new List<EmailFormConfiguration>();
 
-            StreamReader str = new(Constants.EMAIL_PATH);
-            string mailText = str.ReadToEnd();
-            str.Close();
-            var emailContent = body;
-            mailText = mailText.Replace("[Content]", emailContent);
+            var emailForm = new EmailFormConfiguration();
+            emailForm.ReceiverEmails.Add(MailboxAddress.Parse(email));
+            emailForm.Subject = subject;
+            emailForm.Body = body;
 
-            _message.From.Add(new MailboxAddress("Elevel Notification", _emailConfiguration.Email));
-            _message.To.Add(MailboxAddress.Parse(userEmail));
-            _message.Subject = subject;
-            _message.Body = new TextPart("html") {
-                Text = mailText
-            };
+            emailFormList.Add(emailForm);
 
-            try
-            {
-                _smtpClient.Send(_message);
-            }
-            catch (Exception ex)
-            {
-                return ex.Message;
-            }
-            finally
-            {
-                Disconnect();
-            }
-            return "Email was sent successfully";
+            UsersEmailNotification(emailFormList);
         }
 
         public string UsersEmailNotification(List<EmailFormConfiguration> emails)
@@ -70,6 +42,8 @@ namespace Elevel.Infrastructure.Services.Implementation
 
             _message.From.Add(new MailboxAddress("Elevel Notification", _emailConfiguration.Email));
 
+            string html = GetHtml();
+
             foreach (var email in emails)
             {
                 if (_message.To.Count > 0)
@@ -77,11 +51,13 @@ namespace Elevel.Infrastructure.Services.Implementation
                     _message.To.Clear();
                 }
 
+                html = html.Replace("[Content]", email.Body);
+
                 _message.To.AddRange(email.ReceiverEmails);
                 _message.Subject = email.Subject;
-                _message.Body = new TextPart("plain")
+                _message.Body = new TextPart("html")
                 {
-                    Text = email.Body
+                    Text = html
                 };
 
                 try
@@ -98,6 +74,23 @@ namespace Elevel.Infrastructure.Services.Implementation
             Disconnect();
 
             return "Email was sent successfully";
+        }
+
+        private string GetHtml()
+        {
+            try
+            {
+                using (StreamReader str = new(Path.Combine(Constants.EMAIL_PATH, Constants.EMAIL_TEMPLATE)))
+                {
+                    var html = str.ReadToEnd();
+                    str.Close();
+                    return html;
+                }
+            }
+            catch (Exception)
+            {
+                throw new NotFoundException($"File: {Constants.EMAIL_TEMPLATE}");
+            }
         }
 
         private void Connect()
@@ -120,7 +113,7 @@ namespace Elevel.Infrastructure.Services.Implementation
             _smtpClient.Disconnect(true);
             _smtpClient.Dispose();
         }
-        
+
         ~MailService()
         {
             _smtpClient.Dispose();

@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -63,9 +64,12 @@ namespace Elevel.Application.Features.TestCommands
 
                 await _context.SaveChangesAsync(cancellationToken);
 
-                _mailService.SendMessage(request.CoachId,
-                    "You were assigned to the test",
-                    "You were assigned to complete the test by Elevel's HR.<br/>"
+                var testForCheckAmount = _context.Tests.Count(x => !x.EssayMark.HasValue && x.CoachId == test.Coach.Id);
+
+                _mailService.SendMessage(test.Coach.Email,
+                    "You were assigned to check the test",
+                    "You were assigned to evaluate the test by Elevel's Admin.<br/>"
+                    + $"{(testForCheckAmount == 1 ? $"{testForCheckAmount} test is" : $"{testForCheckAmount} tests are")} waiting for your check<br/>"
                     + "Please go to the following link to enter the Elevel site: <br/>"
                     + "<a href=\"http://exadel-train-app.herokuapp.com\">Enter the Elevel site</a><br/><br/>");
 

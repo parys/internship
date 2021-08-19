@@ -120,14 +120,14 @@ namespace Elevel.Application.Features.TestCommands
 
                 var testResponse = _mapper.Map<Response>(test);
 
-                var admins = _mapper.Map<List<User>>(await _userManager.GetUsersInRoleAsync(nameof(UserRole.Administrator)));
+                var waitingAssignmentTestAmount = _context.Tests.Count(x => x.AuditionMark.HasValue && !x.CoachId.HasValue);
 
-                foreach (var admin in admins)
+                foreach (var admin in await _userManager.GetUsersInRoleAsync(nameof(UserRole.Administrator)))
                 {
-                    _mailService.SendMessage(admin.Id,
+                    _mailService.SendMessage(admin.Email,
                         "The test is submitted",
-                        "The test №" + test.TestNumber + "is submitted by a user.<br/>"
-                        + "Please go to the following link to assign the test to one of the coaches: <br/>"
+                        $"{waitingAssignmentTestAmount} Tests are waiting for assignment to coaches.<br/>"
+                        + "Please go to the following link to assign them: <br/>"
                         + "<a href=\"http://exadel-train-app.herokuapp.com/adminProfile\">Assign the test</a><br/><br/>");
                 }
 
