@@ -113,17 +113,8 @@ namespace Elevel.Application.Features.TestCommands
 
                     await SaveAnswers(allAnswers);
                 }
-
-                if(string.IsNullOrWhiteSpace(request.EssayAnswer)
-                    && string.IsNullOrWhiteSpace(request.SpeakingAnswerReference))
-                {
-                    test.EssayMark = Constants.MIN_MARK;
-                    test.SpeakingMark = Constants.MIN_MARK;
-                }
-                else
-                {
-                    test = _mapper.Map(request, test);
-                }
+                
+                test = _mapper.Map(request, test);
 
                 await _context.SaveChangesAsync(cancelationtoken).ConfigureAwait(false);
 
