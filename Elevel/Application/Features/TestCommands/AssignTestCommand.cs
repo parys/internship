@@ -62,7 +62,8 @@ namespace Elevel.Application.Features.TestCommands
             }
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                if (!await _userManager.Users.AnyAsync(x => x.Id == request.UserId))
+                var userEmail = (await _userManager.Users.FirstOrDefaultAsync(x => x.Id == request.UserId)).Email;
+                if (string.IsNullOrWhiteSpace(userEmail))
                 {
                     throw new NotFoundException($"User with {request.UserId}");
                 }
@@ -85,20 +86,20 @@ namespace Elevel.Application.Features.TestCommands
                 //}
 
                 var test = _mapper.Map<Test>(request);
-
                 test.Id = Guid.NewGuid();
 
                 await _context.Tests.AddAsync(test);
-
                 await _context.SaveChangesAsync(cancellationToken);
 
-                _mailService.SendMessage(request.UserId,
+                _mailService.NotifyUser(userEmail,
                     "You were assigned to the test",
                     "You were assigned to complete the test by Elevel's HR.<br/>"
                     + "Please go to the following link to enter the Elevel site: <br/>"
                     + "<a href=\"http://exadel-train-app.herokuapp.com\">Enter the Elevel site</a><br/><br/>");
+
                 return new Response { Id = test.Id };
             }
+
         }
 
         public class Response

@@ -1,11 +1,16 @@
 ﻿using AutoMapper;
 using Elevel.Application.Infrastructure;
+using Elevel.Application.Infrastructure.Configurations;
 using Elevel.Application.Interfaces;
 using Elevel.Domain.Enums;
+using Elevel.Domain.Models;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using MimeKit;
 using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -82,14 +87,14 @@ namespace Elevel.Application.Features.TestCommands
 
                 if (test.HrId.HasValue)
                 {
-                    _mailService.SendMessage((Guid)test.HrId,
+                    _mailService.NotifyUser(test.Hr.Email,
                          "The test you assigned to user was checked",
                          "The test which was assigned to user {FirstName} {LastName} ({Email} by you is checked now.<br/>"
                          + "Please go to the following link to see the marks: <br/>"
                          + "<a href=\"http://exadel-train-app.herokuapp.com/home\">Enter the Elevel site</a><br/><br/>");
                 }
 
-                _mailService.SendMessage(test.UserId,
+                _mailService.NotifyUser(test.User.Email,
                     "Your test was checked",
                     "The test which was assigned to you is checked now.<br/>"
                     + "Please go to the following link to see the marks: <br/>"
@@ -98,6 +103,7 @@ namespace Elevel.Application.Features.TestCommands
                 return _mapper.Map<Response>(test);
             }
         }
+
         public class Response
         {
             public Level Level { get; set; }

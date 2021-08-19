@@ -18,49 +18,25 @@ namespace Elevel.Infrastructure.Services.Implementation
         private MimeMessage _message;
         private SmtpClient _smtpClient;
         private readonly EmailConfigurations _emailConfiguration;
-        private readonly UserManager<User> _userManager;
 
-        public MailService(UserManager<User> userManager, IOptions<EmailConfigurations> emailConfiguration)
+        public MailService(IOptions<EmailConfigurations> emailConfiguration)
         {
             _emailConfiguration = emailConfiguration.Value;
-            _userManager = userManager;
             _message = new MimeMessage();
         }
 
-        public string SendMessage(Guid receiverId, string subject, string body)
+        public void NotifyUser(string Useremail, string subject, string body)
         {
-            Connect();
-            var userEmail = _userManager.Users.FirstOrDefault(x => x.Id == receiverId).Email;
-            if (userEmail == null)
-            {
-                return "Email was not sent";
-            }
+            var emailForm = new List<EmailFormConfiguration>();
 
-            string html = GetHtml();
+            var email = new EmailFormConfiguration();
+            email.ReceiverEmails.Add(MailboxAddress.Parse(Useremail));
+            email.Subject = subject;
+            email.Body = body;
 
-            html = html.Replace("[Content]", body);
+            emailForm.Add(email);
 
-            _message.From.Add(new MailboxAddress("Elevel Notification", _emailConfiguration.Email));
-            _message.To.Add(MailboxAddress.Parse(userEmail));
-            _message.Subject = subject;
-            _message.Body = new TextPart("html") 
-            {
-                Text = html
-            };
-
-            try
-            {
-                _smtpClient.Send(_message);
-            }
-            catch (Exception ex)
-            {
-                return ex.Message;
-            }
-            finally
-            {
-                Disconnect();
-            }
-            return "Email was sent successfully";
+            UsersEmailNotification(emailForm);
         }
 
         public string UsersEmailNotification(List<EmailFormConfiguration> emails)

@@ -20,17 +20,14 @@ namespace Elevel.Infrastructure.Services.Jobs
     {
         private IMailService _mail;
         private readonly IApplicationDbContext _context;
-        private readonly UserManager<User> _userManager;
 
         public EmailJob(IServiceScopeFactory serviceScopeFactory, IOptions<EmailConfigurations> emailConfiguration)
         {
             var service = (serviceScopeFactory.CreateScope()).ServiceProvider;
 
-            _userManager = service.GetService<UserManager<User>>();
-
             _context = service.GetService<IApplicationDbContext>();
 
-            _mail = new MailService(_userManager, emailConfiguration);
+            _mail = new MailService(emailConfiguration);
         }
 
         public async Task Execute(IJobExecutionContext context)
