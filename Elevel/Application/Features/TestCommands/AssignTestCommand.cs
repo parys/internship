@@ -35,6 +35,8 @@ namespace Elevel.Application.Features.TestCommands
 
                 RuleFor(x => x.UserId).NotEmpty().WithMessage("UserId can't be empty or null!");
 
+                RuleFor(x => x.AssignmentEndDate).Must(x => x.Date >= DateTimeOffset.UtcNow.Date).WithMessage("AssignmentEndDate can't be in the past");
+
             }
         }
 
@@ -71,11 +73,6 @@ namespace Elevel.Application.Features.TestCommands
                 if (request.HrId == request.UserId)
                 {
                     throw new ValidationException("You can't assign test to yourself");
-                }
-
-                if (request.AssignmentEndDate.Date < DateTimeOffset.UtcNow.Date)
-                {
-                    throw new ValidationException($"assignmentEndDate can't be in the past ({request.AssignmentEndDate})");
                 }
 
                 //if (await _context.Tests.AnyAsync(x => x.UserId == request.UserId
