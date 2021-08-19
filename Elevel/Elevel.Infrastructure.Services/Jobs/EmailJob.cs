@@ -1,9 +1,7 @@
 ﻿using Elevel.Application.Extensions;
 using Elevel.Application.Infrastructure.Configurations;
 using Elevel.Application.Interfaces;
-using Elevel.Domain.Models;
 using Elevel.Infrastructure.Services.Implementation;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -86,9 +84,10 @@ namespace Elevel.Infrastructure.Services.Jobs
                 emailForms.Add(hrEmailForm);
             }
 
-            if (emailForms.Any()) {
+            if (emailForms.Any())
+            {
                 _mail.UsersEmailNotification(emailForms);
-            } 
+            }
         }
     }
 }

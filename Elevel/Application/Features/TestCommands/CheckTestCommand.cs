@@ -1,16 +1,11 @@
 ﻿using AutoMapper;
 using Elevel.Application.Infrastructure;
-using Elevel.Application.Infrastructure.Configurations;
 using Elevel.Application.Interfaces;
 using Elevel.Domain.Enums;
-using Elevel.Domain.Models;
 using FluentValidation;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using MimeKit;
 using System;
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -40,7 +35,7 @@ namespace Elevel.Application.Features.TestCommands
             public Validator()
             {
                 RuleFor(x => x.SpeakingMark)
-                    .InclusiveBetween(Constants.MIN_MARK,Constants.MAX_MARK)
+                    .InclusiveBetween(Constants.MIN_MARK, Constants.MAX_MARK)
                     .WithMessage("Speaking mark number is out if range from 0 to 10!");
 
                 RuleFor(x => x.EssayMark)
@@ -71,7 +66,7 @@ namespace Elevel.Application.Features.TestCommands
                     throw new NotFoundException($"Test with Id {request.Id}");
                 }
 
-                if (test.CoachId != request.CoachId 
+                if (test.CoachId != request.CoachId
                     || test.UserId == request.CoachId)
                 {
                     throw new ValidationException("You can't check this test");

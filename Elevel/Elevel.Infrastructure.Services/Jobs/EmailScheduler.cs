@@ -1,5 +1,4 @@
 ﻿using Elevel.Application.Infrastructure.Configurations;
-using Microsoft.Extensions.Options;
 using Quartz;
 using Quartz.Impl;
 using System;

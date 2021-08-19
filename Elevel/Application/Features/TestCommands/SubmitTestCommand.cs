@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Elevel.Application.Infrastructure;
-using Elevel.Application.Infrastructure.Configurations;
 using Elevel.Application.Interfaces;
 using Elevel.Domain.Enums;
 using Elevel.Domain.Models;
@@ -8,7 +7,6 @@ using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using MimeKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -138,12 +136,12 @@ namespace Elevel.Application.Features.TestCommands
                     .Select(x => x.AnswerId)
                     .ToListAsync();
 
-                if(!answers.All(x => questionIds.Contains(x)))
+                if (!answers.All(x => questionIds.Contains(x)))
                 {
                     throw new ValidationException("There aren't some answers from current test");
                 }
             }
-            
+
             private void CheckSingleAnswerForQuestion(IEnumerable<Guid> answers, Guid testId)
             {
                 var questionAnswers = _context.TestQuestions.Where(x => x.TestId == testId)

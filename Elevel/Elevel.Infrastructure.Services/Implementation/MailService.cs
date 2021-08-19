@@ -1,15 +1,12 @@
 ﻿using Elevel.Application.Infrastructure;
 using Elevel.Application.Infrastructure.Configurations;
 using Elevel.Application.Interfaces;
-using Elevel.Domain.Models;
 using MailKit.Net.Smtp;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace Elevel.Infrastructure.Services.Implementation
 {
@@ -116,7 +113,7 @@ namespace Elevel.Infrastructure.Services.Implementation
             _smtpClient.Disconnect(true);
             _smtpClient.Dispose();
         }
-        
+
         ~MailService()
         {
             _smtpClient.Dispose();
