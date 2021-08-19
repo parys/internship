@@ -12,6 +12,13 @@
 
   <ItemGroup>
     <None Remove="EmailTemplate.html" />
+    <None Remove="Resources\EmailTemplate.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\EmailTemplate.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
