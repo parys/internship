@@ -22,18 +22,18 @@ namespace Elevel.Infrastructure.Services.Implementation
             _message = new MimeMessage();
         }
 
-        public void SendMessage(string Useremail, string subject, string body)
+        public void SendMessage(string email, string subject, string body)
         {
-            var emailForm = new List<EmailFormConfiguration>();
+            var emailFormList = new List<EmailFormConfiguration>();
 
-            var email = new EmailFormConfiguration();
-            email.ReceiverEmails.Add(MailboxAddress.Parse(Useremail));
-            email.Subject = subject;
-            email.Body = body;
+            var emailForm = new EmailFormConfiguration();
+            emailForm.ReceiverEmails.Add(MailboxAddress.Parse(email));
+            emailForm.Subject = subject;
+            emailForm.Body = body;
 
-            emailForm.Add(email);
+            emailFormList.Add(emailForm);
 
-            UsersEmailNotification(emailForm);
+            UsersEmailNotification(emailFormList);
         }
 
         public string UsersEmailNotification(List<EmailFormConfiguration> emails)
