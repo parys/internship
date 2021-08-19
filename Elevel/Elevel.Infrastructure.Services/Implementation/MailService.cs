@@ -36,11 +36,20 @@ namespace Elevel.Infrastructure.Services.Implementation
                 return "Email was not sent";
             }
 
-            StreamReader str = new(Constants.EMAIL_PATH);
+            StreamReader str;
+            try
+            {
+                str = new(Path.Combine(Constants.EMAIL_PATH, Constants.EMAIL_TEMPLATE));
+            }
+            catch (Exception)
+            {
+                throw new NotFoundException($"File: {Constants.EMAIL_TEMPLATE}");
+            }
+
             string mailText = str.ReadToEnd();
             str.Close();
-            var emailContent = body;
-            mailText = mailText.Replace("[Content]", emailContent);
+
+            mailText = mailText.Replace("[Content]", body);
 
             _message.From.Add(new MailboxAddress("Elevel Notification", _emailConfiguration.Email));
             _message.To.Add(MailboxAddress.Parse(userEmail));
@@ -70,6 +79,21 @@ namespace Elevel.Infrastructure.Services.Implementation
 
             _message.From.Add(new MailboxAddress("Elevel Notification", _emailConfiguration.Email));
 
+            StreamReader str;
+            try
+            {
+                str = new(Path.Combine(Constants.EMAIL_PATH, Constants.EMAIL_TEMPLATE));
+            }
+            catch (Exception)
+            {
+                throw new NotFoundException($"File: {Constants.EMAIL_TEMPLATE}");
+            }
+
+            string mailText = str.ReadToEnd();
+            str.Close();
+
+            
+
             foreach (var email in emails)
             {
                 if (_message.To.Count > 0)
@@ -77,11 +101,13 @@ namespace Elevel.Infrastructure.Services.Implementation
                     _message.To.Clear();
                 }
 
+                mailText = mailText.Replace("[Content]", email.Body);
+
                 _message.To.AddRange(email.ReceiverEmails);
                 _message.Subject = email.Subject;
                 _message.Body = new TextPart("plain")
                 {
-                    Text = email.Body
+                    Text = mailText
                 };
 
                 try
