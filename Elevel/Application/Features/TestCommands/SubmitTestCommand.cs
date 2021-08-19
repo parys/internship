@@ -94,17 +94,28 @@ namespace Elevel.Application.Features.TestCommands
                 //    throw new ValidationException("Test time has passed");
                 //}
 
-                var allAnswers = request.GrammarAnswers.Union(request.AuditionAnswers);
+                if (!request.GrammarAnswers.Any()
+                    && !request.AuditionAnswers.Any())
+                {
 
-                await CheckAnswersBelongtoTestAsync(allAnswers, test.Id);
-                CheckSingleAnswerForQuestion(allAnswers, test.Id);
+
+                    test.GrammarMark = Constants.MIN_MARK;
+                    test.AuditionMark = Constants.MIN_MARK;
+                }
+                else
+                {
+                    var allAnswers = request.GrammarAnswers.Union(request.AuditionAnswers);
+
+                    await CheckAnswersBelongtoTestAsync(allAnswers, test.Id);
+                    CheckSingleAnswerForQuestion(allAnswers, test.Id);
+
+                    test.GrammarMark = EvaluateTest(request.GrammarAnswers);
+                    test.AuditionMark = EvaluateTest(request.AuditionAnswers);
+
+                    await SaveAnswers(allAnswers);
+                }
 
                 test = _mapper.Map(request, test);
-
-                test.GrammarMark = EvaluateTest(request.GrammarAnswers);
-                test.AuditionMark = EvaluateTest(request.AuditionAnswers);
-
-                await SaveAnswers(allAnswers);
 
                 await _context.SaveChangesAsync(cancelationtoken).ConfigureAwait(false);
 
@@ -136,14 +147,12 @@ namespace Elevel.Application.Features.TestCommands
                     .Select(x => x.AnswerId)
                     .ToListAsync();
 
-
-
-                if(!answers.All(x => questionIds.Contains(x)))
+                if (!answers.All(x => questionIds.Contains(x)))
                 {
                     throw new ValidationException("There aren't some answers from current test");
                 }
             }
-            
+
             private void CheckSingleAnswerForQuestion(IEnumerable<Guid> answers, Guid testId)
             {
                 var questionAnswers = _context.TestQuestions.Where(x => x.TestId == testId)
