@@ -114,7 +114,7 @@ namespace Elevel.Application.Features.TestCommands
 
                 foreach (var admin in await _userManager.GetUsersInRoleAsync(nameof(UserRole.Administrator)))
                 {
-                    _mailService.NotifyUser(admin.Email,
+                    _mailService.SendMessage(admin.Email,
                         "The test is submitted",
                         $"{waitingAssignmentTestAmount} Tests are waiting for assignment to coaches.<br/>"
                         + "Please go to the following link to assign them: <br/>"

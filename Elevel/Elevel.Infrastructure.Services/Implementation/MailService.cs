@@ -22,7 +22,7 @@ namespace Elevel.Infrastructure.Services.Implementation
             _message = new MimeMessage();
         }
 
-        public void NotifyUser(string Useremail, string subject, string body)
+        public void SendMessage(string Useremail, string subject, string body)
         {
             var emailForm = new List<EmailFormConfiguration>();
 

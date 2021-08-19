@@ -66,7 +66,7 @@ namespace Elevel.Application.Features.TestCommands
 
                 var testForCheckAmount = _context.Tests.Count(x => !x.EssayMark.HasValue && x.CoachId == test.Coach.Id);
 
-                _mailService.NotifyUser(test.Coach.Email,
+                _mailService.SendMessage(test.Coach.Email,
                     "You were assigned to check the test",
                     "You were assigned to evaluate the test by Elevel's Admin.<br/>"
                     + $"{(testForCheckAmount == 1 ? $"{testForCheckAmount} test is" : $"{testForCheckAmount} tests are")} waiting for your check<br/>"

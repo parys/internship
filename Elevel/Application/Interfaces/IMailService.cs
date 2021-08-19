@@ -6,7 +6,7 @@ namespace Elevel.Application.Interfaces
 {
     public interface IMailService
     {
-        public void NotifyUser(string Useremail, string subject, string body);
+        public void SendMessage(string Useremail, string subject, string body);
         public string UsersEmailNotification(List<EmailFormConfiguration> emails);
     }
 }

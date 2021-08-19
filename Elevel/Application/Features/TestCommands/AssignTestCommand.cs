@@ -87,7 +87,7 @@ namespace Elevel.Application.Features.TestCommands
                 await _context.Tests.AddAsync(test);
                 await _context.SaveChangesAsync(cancellationToken);
 
-                _mailService.NotifyUser(userEmail,
+                _mailService.SendMessage(userEmail,
                     "You were assigned to the test",
                     $"You were assigned the test by Elevel's HR for {test.AssignmentEndDate.Value.Date}.<br/>"
                     + "Please go to the following link to enter the Elevel site: <br/>"
