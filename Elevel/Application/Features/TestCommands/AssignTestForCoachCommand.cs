@@ -64,7 +64,7 @@ namespace Elevel.Application.Features.TestCommands
 
                 await _context.SaveChangesAsync(cancellationToken);
 
-                var testForCheckAmount = _context.Tests.Where(x => !x.EssayMark.HasValue && x.CoachId == test.Coach.Id).Count();
+                var testForCheckAmount = _context.Tests.Count(x => !x.EssayMark.HasValue && x.CoachId == test.Coach.Id);
 
                 _mailService.NotifyUser(test.Coach.Email,
                     "You were assigned to check the test",
