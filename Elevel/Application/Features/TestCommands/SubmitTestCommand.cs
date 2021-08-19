@@ -116,7 +116,7 @@ namespace Elevel.Application.Features.TestCommands
                 {
                     _mailService.SendMessage(admin.Id,
                         "The test is submitted",
-                        "The test №" + test.TestNumber + "is submitted by a user.<br/>"
+                        "The test №" + test.TestNumber + " is submitted by a user.<br/>"
                         + "Please go to the following link to assign the test to one of the coaches: <br/>"
                         + "<a href=\"http://exadel-train-app.herokuapp.com/adminProfile\">Assign the test</a><br/><br/>");
                 }

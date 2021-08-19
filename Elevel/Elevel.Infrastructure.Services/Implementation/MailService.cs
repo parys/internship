@@ -105,18 +105,19 @@ namespace Elevel.Infrastructure.Services.Implementation
 
         private string GetHtml()
         {
-            StreamReader str;
             try
             {
-                str = new(Path.Combine(Constants.EMAIL_PATH, Constants.EMAIL_TEMPLATE));
+                using (StreamReader str = new(Path.Combine(Constants.EMAIL_PATH, Constants.EMAIL_TEMPLATE)))
+                {
+                    var html = str.ReadToEnd();
+                    str.Close();
+                    return html;
+                }
             }
             catch (Exception)
             {
                 throw new NotFoundException($"File: {Constants.EMAIL_TEMPLATE}");
             }
-            var html = str.ReadToEnd();
-            str.Close();
-            return html;
         }
 
         private void Connect()
