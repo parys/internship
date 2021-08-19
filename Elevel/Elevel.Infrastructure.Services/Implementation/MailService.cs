@@ -69,18 +69,7 @@ namespace Elevel.Infrastructure.Services.Implementation
 
             _message.From.Add(new MailboxAddress("Elevel Notification", _emailConfiguration.Email));
 
-            StreamReader str;
-            try
-            {
-                str = new(Path.Combine(Constants.EMAIL_PATH, Constants.EMAIL_TEMPLATE));
-            }
-            catch (Exception)
-            {
-                throw new NotFoundException($"File: {Constants.EMAIL_TEMPLATE}");
-            }
-
             string html = GetHtml();
-
 
             foreach (var email in emails)
             {
