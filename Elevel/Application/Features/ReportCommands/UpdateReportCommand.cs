@@ -11,6 +11,7 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper.QueryableExtensions;
+using FluentValidation;
 
 namespace Elevel.Application.Features.ReportCommands
 {
@@ -22,6 +23,15 @@ namespace Elevel.Application.Features.ReportCommands
             [JsonIgnore] 
             public Guid CoachId { get; set; }
             public ReportStatus ReportStatus { get; set; }
+        }
+
+        public class Validator : AbstractValidator<Request>
+        {
+            public Validator()
+            {
+                RuleFor(x => x.ReportStatus).Must(x => x == ReportStatus.Declined || x == ReportStatus.Fixed)
+                    .WithMessage("Invalid reportStatus");
+            }
         }
 
         public class Handler : IRequestHandler<Request, Response>
@@ -40,13 +50,39 @@ namespace Elevel.Application.Features.ReportCommands
                 var report = await _context.Reports
                     .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
+                //if(report.CoachId != request.CoachId)
+                //{
+                //    throw new ValidationException("You can't change this report status");
+                //}
+
                 if (report is null)
                 {
                     throw new NotFoundException(nameof(Report), request.Id);
                 }
-                
-                report = _mapper.Map(request, report);
+
+                if(request.ReportStatus == ReportStatus.Fixed)
+                {
+                    var test = await _context.Tests.FirstOrDefaultAsync(x => x.Id == report.TestId);
+                    if(test is null)
+                    {
+                        throw new NotFoundException("Test", test);
+                    }
+
+                    if(report.QuestionId.HasValue && report.AuditionId.HasValue && !report.TopicId.HasValue)
+                    {
+                        test.AuditionMark++;
+                    }
+                    else if (report.QuestionId.HasValue && !report.AuditionId.HasValue && !report.TopicId.HasValue)
+                    {
+                        test.GrammarMark++;
+                    }
+                    report = _mapper.Map(request, report);
+
+                    await _context.SaveChangesAsync();
+                }
+
                 await _context.SaveChangesAsync(cancellationToken);
+
                 return new Response { Id = report.Id };
             }
         }

@@ -7,7 +7,7 @@ namespace Elevel.Application.Pagination
         /// <summary>
         /// Item count on page
         /// </summary>
-        public int PageSize { get; set; } = 10;
+        public int PageSize { get; set; } = 1000;
 
         /// <summary>
         /// Current page number
