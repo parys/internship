@@ -35,6 +35,7 @@ namespace Elevel.Application.Features.TestCommands
 
                 RuleFor(x => x.UserId).NotEmpty().WithMessage("UserId can't be empty or null!");
 
+                RuleFor(x => x.AssignmentEndDate).Must(x => x.Date >= DateTimeOffset.UtcNow.Date).WithMessage("AssignmentEndDate can't be in the past");
             }
         }
 
@@ -48,7 +49,9 @@ namespace Elevel.Application.Features.TestCommands
 
             private readonly UserManager<User> _userManager;
 
-            public Handler(IApplicationDbContext context, IMapper mapper, UserManager<User> userManager)
+            private readonly IMailService _mailService;
+
+            public Handler(IApplicationDbContext context, IMapper mapper, UserManager<User> userManager, IMailService mailService)
             {
                 _context = context;
 
@@ -56,10 +59,12 @@ namespace Elevel.Application.Features.TestCommands
 
                 _userManager = userManager;
 
+                _mailService = mailService;
             }
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                if (!await _userManager.Users.AnyAsync(x => x.Id == request.UserId))
+                var userEmail = (await _userManager.Users.FirstOrDefaultAsync(x => x.Id == request.UserId)).Email;
+                if (string.IsNullOrWhiteSpace(userEmail))
                 {
                     throw new NotFoundException($"User with {request.UserId}");
                 }
@@ -67,11 +72,6 @@ namespace Elevel.Application.Features.TestCommands
                 if (request.HrId == request.UserId)
                 {
                     throw new ValidationException("You can't assign test to yourself");
-                }
-
-                if (request.AssignmentEndDate.Date < DateTimeOffset.UtcNow.Date)
-                {
-                    throw new ValidationException($"assignmentEndDate can't be in the past ({request.AssignmentEndDate})");
                 }
 
                 //if (await _context.Tests.AnyAsync(x => x.UserId == request.UserId
@@ -82,15 +82,20 @@ namespace Elevel.Application.Features.TestCommands
                 //}
 
                 var test = _mapper.Map<Test>(request);
-
                 test.Id = Guid.NewGuid();
 
                 await _context.Tests.AddAsync(test);
-
                 await _context.SaveChangesAsync(cancellationToken);
+
+                _mailService.SendMessage(userEmail,
+                    "You were assigned to the test",
+                    $"You were assigned the test by Elevel's HR for {test.AssignmentEndDate.Value.Date}.<br/>"
+                    + "Please go to the following link to enter the Elevel site: <br/>"
+                    + "<a href=\"http://exadel-train-app.herokuapp.com\">Enter the Elevel site</a><br/><br/>");
 
                 return new Response { Id = test.Id };
             }
+
         }
 
         public class Response
