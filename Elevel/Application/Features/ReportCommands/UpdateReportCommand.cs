@@ -76,9 +76,9 @@ namespace Elevel.Application.Features.ReportCommands
                     {
                         test.GrammarMark++;
                     }
-                    report = _mapper.Map(request, report);
                 }
 
+                report = _mapper.Map(request, report);
                 await _context.SaveChangesAsync(cancellationToken);
 
                 return new Response { Id = report.Id };
