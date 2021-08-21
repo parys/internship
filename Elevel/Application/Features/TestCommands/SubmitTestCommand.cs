@@ -50,11 +50,11 @@ namespace Elevel.Application.Features.TestCommands
 
                 RuleFor(x => x.GrammarAnswers.Count())
                     .InclusiveBetween(Constants.MIN_QUESTION_AMOUNT,Constants.GRAMMAR_QUESTION_AMOUNT)
-                    .WithMessage("Amount of grammar aswers");
+                    .WithMessage("Amount of grammar answers");
 
                 RuleFor(x => x.AuditionAnswers.Count())
                     .InclusiveBetween(Constants.MIN_QUESTION_AMOUNT, Constants.GRAMMAR_QUESTION_AMOUNT)
-                    .WithMessage("Amount of grammar aswers");
+                    .WithMessage("Amount of grammar answers");
             }
         }
         public class Handler : IRequestHandler<Request, Response>
