@@ -15,6 +15,10 @@ namespace Elevel.Infrastructure.Persistence.Configurations
                 .WithMany(x => x.UserReports)
                 .HasForeignKey(x => x.UserId);
 
+            builder.HasOne(x => x.Creator)
+                .WithMany(x => x.CreatorReports)
+                .HasForeignKey(x => x.CreatorId);
+
             builder.HasOne(x => x.Question)
                 .WithMany(x => x.Reports)
                 .HasForeignKey(x => x.QuestionId)
@@ -22,7 +26,8 @@ namespace Elevel.Infrastructure.Persistence.Configurations
 
             builder.HasOne(x => x.Audition)
                 .WithMany(x => x.Reports)
-                .HasForeignKey(x => x.AuditionId);
+                .HasForeignKey(x => x.AuditionId)
+                .IsRequired(false);
 
             builder.HasOne(x => x.Topic)
                 .WithMany(x => x.Reports)
@@ -31,8 +36,7 @@ namespace Elevel.Infrastructure.Persistence.Configurations
 
             builder.HasOne(x => x.Test)
                 .WithMany(x => x.Reports)
-                .HasForeignKey(x => x.TestId)
-                .IsRequired(false);
+                .HasForeignKey(x => x.TestId);
 
             builder.Property(x => x.ReportStatus).HasDefaultValue(ReportStatus.Created);
 
