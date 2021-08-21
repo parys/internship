@@ -9,6 +9,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper.QueryableExtensions;
 using Elevel.Domain.Enums;
 
 namespace Elevel.Application.Features.ReportCommands
@@ -35,15 +36,9 @@ namespace Elevel.Application.Features.ReportCommands
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                if (request == null)
-                {
-                    throw new NotFoundException(nameof(request));
-                }
-
-                var report = await _context.Reports
+               var report = await _context.Reports
                     .AsNoTracking()
-                    .Include(x=>x.Creator)
-                    .Include(x=>x.User)
+                    .ProjectTo<Response>(_mapper.ConfigurationProvider)
                     .FirstOrDefaultAsync(a => a.Id == request.Id, cancellationToken);
 
                 if (report is null)
@@ -52,7 +47,7 @@ namespace Elevel.Application.Features.ReportCommands
                 }
 
                 var response = _mapper.Map<Response>(report);
-                
+
                 return response;
             }
         }
