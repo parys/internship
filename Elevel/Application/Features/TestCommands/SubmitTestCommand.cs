@@ -94,29 +94,41 @@ namespace Elevel.Application.Features.TestCommands
                 //    throw new ValidationException("Test time has passed");
                 //}
 
-                var allAnswers = request.GrammarAnswers.Union(request.AuditionAnswers);
+                if (!request.GrammarAnswers.Any()
+                    && !request.AuditionAnswers.Any())
+                {
+                    test.GrammarMark = Constants.MIN_MARK;
+                    test.AuditionMark = Constants.MIN_MARK;
 
-                await CheckAnswersBelongtoTestAsync(allAnswers, test.Id);
-                CheckSingleAnswerForQuestion(allAnswers, test.Id);
+                }
+                else
+                {
+                    var allAnswers = request.GrammarAnswers.Union(request.AuditionAnswers);
 
+                    await CheckAnswersBelongtoTestAsync(allAnswers, test.Id);
+                    CheckSingleAnswerForQuestion(allAnswers, test.Id);
+
+                    test.GrammarMark = EvaluateTest(request.GrammarAnswers);
+                    test.AuditionMark = EvaluateTest(request.AuditionAnswers);
+
+                    await SaveAnswers(allAnswers);
+                }
+                
                 test = _mapper.Map(request, test);
-
-                test.GrammarMark = EvaluateTest(request.GrammarAnswers);
-                test.AuditionMark = EvaluateTest(request.AuditionAnswers);
-
-                await SaveAnswers(allAnswers);
 
                 await _context.SaveChangesAsync(cancelationtoken).ConfigureAwait(false);
 
                 var testResponse = _mapper.Map<Response>(test);
 
-                var admins = _mapper.Map<List<User>>(await _userManager.GetUsersInRoleAsync(nameof(UserRole.Administrator)));
+                var waitingAssignmentTestAmount = _context.Tests.Count(x => x.AuditionMark.HasValue && !x.CoachId.HasValue);
 
-                foreach (var admin in admins)
+                foreach (var admin in await _userManager.GetUsersInRoleAsync(nameof(UserRole.Administrator)))
                 {
-                    _mailService.SendMessage(admin.Id,
-                        "You've successfully submitted the test!",
-                        "example text 'sumbit test'");
+                    _mailService.SendMessage(admin.Email,
+                        "The test is submitted",
+                        $"{waitingAssignmentTestAmount} Tests are waiting for assignment to coaches.<br/>"
+                        + "Please go to the following link to assign them: <br/>"
+                        + "<a href=\"http://exadel-train-app.herokuapp.com/adminProfile\">Assign the test</a><br/><br/>");
                 }
 
                 return testResponse;
@@ -134,14 +146,12 @@ namespace Elevel.Application.Features.TestCommands
                     .Select(x => x.AnswerId)
                     .ToListAsync();
 
-
-
-                if(!answers.All(x => questionIds.Contains(x)))
+                if (!answers.All(x => questionIds.Contains(x)))
                 {
                     throw new ValidationException("There aren't some answers from current test");
                 }
             }
-            
+
             private void CheckSingleAnswerForQuestion(IEnumerable<Guid> answers, Guid testId)
             {
                 var questionAnswers = _context.TestQuestions.Where(x => x.TestId == testId)
