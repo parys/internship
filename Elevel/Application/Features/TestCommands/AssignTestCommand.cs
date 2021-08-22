@@ -74,12 +74,12 @@ namespace Elevel.Application.Features.TestCommands
                     throw new ValidationException("You can't assign test to yourself");
                 }
 
-                //if (await _context.Tests.AnyAsync(x => x.UserId == request.UserId
-                // && ((DateTimeOffset)x.AssignmentEndDate).Date <= DateTimeOffset.UtcNow.Date
-                // && !x.AuditionMark.HasValue))
-                //{
-                //    throw new ValidationException($"User with id {request.UserId} hasn't passed the previous assigned test for today");
-                //}
+                if (await _context.Tests.AnyAsync(x => x.UserId == request.UserId
+                 && ((DateTimeOffset)x.AssignmentEndDate).Date <= DateTimeOffset.UtcNow.Date
+                 && !x.AuditionMark.HasValue))
+                {
+                    throw new ValidationException($"User with id {request.UserId} hasn't passed the previous assigned test for today");
+                }
 
                 var test = _mapper.Map<Test>(request);
                 test.Id = Guid.NewGuid();
