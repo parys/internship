@@ -11,6 +11,7 @@ namespace Elevel.Application.Infrastructure
         public const int ESSAY_MAX_LENGTH = 512;
         public const int TEST_DURATION = 61; //minutes
         public const int LEVEL_AMOUNT = 5;
+        public const int MIN_QUESTION_AMOUNT = 0;
         public const int GRAMMAR_QUESTION_AMOUNT = 12;
         public const int AUDITION_QUESTION_AMOUNT = 10;
         public const int ANSWER_AMOUNT = 4;
