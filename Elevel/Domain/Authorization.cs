@@ -21,7 +21,7 @@ namespace Elevel.Domain
                         PhoneNumberConfirmed = true,
                         FirstName = "Admin",
                         LastName = "Adminov",
-                        UserName = "Admin Adminov",
+                        UserName = "Admin_Adminov",
                         Email = "ElevelAdministrator@gmail.com",
                         CreationDate = DateTimeOffset.Now,
                         Avatar = @"ava1.jpg"
@@ -32,7 +32,7 @@ namespace Elevel.Domain
                         PhoneNumberConfirmed = true,
                         FirstName = "Admin1",
                         LastName = "Adminov1",
-                        UserName = "Admin Adminov1",
+                        UserName = "Admin_Adminov1",
                         Email = "ElevelAdministrator1@gmail.com",
                         CreationDate = DateTimeOffset.Now,
                        Avatar = @"ava2.jpg"
@@ -43,7 +43,7 @@ namespace Elevel.Domain
                         PhoneNumberConfirmed = true,
                         FirstName = "Admin2",
                         LastName = "Adminov2",
-                        UserName = "Admin Adminov2",
+                        UserName = "Admin_Adminov2",
                         Email = "ElevelAdministrator2@gmail.com",
                         CreationDate = DateTimeOffset.Now,
                         Avatar = @"ava3.jpg"
@@ -56,7 +56,7 @@ namespace Elevel.Domain
                 {
                     new User()
                     {
-                        UserName = "User Userov",
+                        UserName = "User_Userov",
                         EmailConfirmed = true,
                         PhoneNumberConfirmed = true,
                         FirstName = "User",
@@ -67,7 +67,7 @@ namespace Elevel.Domain
                     },
                     new User()
                     {
-                        UserName = "User Userov1",
+                        UserName = "User_Userov1",
                         EmailConfirmed = true,
                         PhoneNumberConfirmed = true,
                         FirstName = "User1",
@@ -78,7 +78,7 @@ namespace Elevel.Domain
                     },
                     new User()
                     {
-                        UserName = "User Userov2",
+                        UserName = "User_Userov2",
                         EmailConfirmed = true,
                         PhoneNumberConfirmed = true,
                         FirstName = "User2",
@@ -89,7 +89,7 @@ namespace Elevel.Domain
                     },
                     new User()
                     {
-                        UserName = "User Userov3",
+                        UserName = "User_Userov3",
                         EmailConfirmed = true,
                         PhoneNumberConfirmed = true,
                         FirstName = "User3",
@@ -100,7 +100,7 @@ namespace Elevel.Domain
                     },
                     new User()
                     {
-                        UserName = "User Userov4",
+                        UserName = "User_Userov4",
                         EmailConfirmed = true,
                         PhoneNumberConfirmed = true,
                         FirstName = "User4",
@@ -111,7 +111,7 @@ namespace Elevel.Domain
                     },
                     new User()
                     {
-                        UserName = "User Userov5",
+                        UserName = "User_Userov5",
                         EmailConfirmed = true,
                         PhoneNumberConfirmed = true,
                         FirstName = "User5",
@@ -128,7 +128,7 @@ namespace Elevel.Domain
                 {
                     new User()
                     {
-                        UserName = "Coach Coachev",
+                        UserName = "Coach_Coachev",
                         EmailConfirmed = true,
                         PhoneNumberConfirmed = true,
                         FirstName = "Coach",
@@ -139,7 +139,7 @@ namespace Elevel.Domain
                     },
                     new User()
                     {
-                        UserName = "Coach Coachev1",
+                        UserName = "Coach_Coachev1",
                         EmailConfirmed = true,
                         PhoneNumberConfirmed = true,
                         FirstName = "Coach1",
@@ -156,7 +156,7 @@ namespace Elevel.Domain
                 {
                     new User()
                     {
-                        UserName = "Manager Managerov",
+                        UserName = "Manager_Managerov",
                         EmailConfirmed = true,
                         PhoneNumberConfirmed = true,
                         FirstName = "Manager",
@@ -167,7 +167,7 @@ namespace Elevel.Domain
                     },
                     new User()
                     {
-                        UserName = "Manager Managerov1",
+                        UserName = "Manager_Managerov1",
                         EmailConfirmed = true,
                         PhoneNumberConfirmed = true,
                         FirstName = "Manager1",
@@ -178,7 +178,7 @@ namespace Elevel.Domain
                     },
                     new User()
                     {
-                        UserName = "Manager Managerov2",
+                        UserName = "Manager_Managerov2",
                         EmailConfirmed = true,
                         PhoneNumberConfirmed = true,
                         FirstName = "Manager2",
