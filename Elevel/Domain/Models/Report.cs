@@ -17,6 +17,9 @@ namespace Elevel.Domain.Models
         public Guid UserId { get; set; }
         public User User { get; set; }
 
+        public Guid CreatorId { get; set; }
+        public User Creator { get; set; }
+
         public Guid TestId { get; set; }
         public Test Test { get; set; }
 

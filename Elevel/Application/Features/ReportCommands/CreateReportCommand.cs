@@ -3,12 +3,14 @@ using Elevel.Application.Interfaces;
 using Elevel.Domain.Models;
 using MediatR;
 using System;
+using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Elevel.Application.Features.AuditionCommands;
 using Elevel.Application.Infrastructure;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 
 namespace Elevel.Application.Features.ReportCommands
 {
@@ -82,6 +84,46 @@ namespace Elevel.Application.Features.ReportCommands
             {
                 var report = _mapper.Map<Report>(request);
                 
+                if (request.AuditionId == null && request.QuestionId != null)
+                {
+                    var question = await _context.Questions
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(x => x.Id == request.QuestionId, cancellationToken: cancellationToken);
+                    
+                    if (question == null)
+                    {
+                        throw new NotFoundException(nameof(question), request.QuestionId);
+                    }
+
+                    report.CreatorId = question.CreatorId;
+                }
+                else if(request.AuditionId != null && request.QuestionId != null)
+                {
+                    var audition = await _context.Auditions
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(x => x.Id == request.AuditionId, cancellationToken: cancellationToken);
+
+                    if (audition == null)
+                    {
+                        throw new NotFoundException(nameof(audition), request.AuditionId);
+                    }
+
+                    report.CreatorId = audition.CreatorId;
+                }
+                else if(request.TopicId != null)
+                {
+                    var topic = await _context.Topics
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(x => x.Id == request.TopicId, cancellationToken: cancellationToken);
+
+                    if (topic == null)
+                    {
+                        throw new NotFoundException(nameof(topic), request.TopicId);
+                    }
+
+                    report.CreatorId = topic.CreatorId;
+                }
+
                 _context.Reports.Add(report);
                 await _context.SaveChangesAsync(cancellationToken);
 

@@ -50,10 +50,10 @@ namespace Elevel.Application.Features.ReportCommands
                 var report = await _context.Reports
                     .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
-                //if(report.CoachId != request.CoachId)
-                //{
-                //    throw new ValidationException("You can't change this report status");
-                //}
+                if (report.CreatorId != request.CoachId)
+                {
+                    throw new ValidationException("You can't change this report status");
+                }
 
                 if (report is null)
                 {
