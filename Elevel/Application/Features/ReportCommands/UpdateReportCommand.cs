@@ -20,7 +20,7 @@ namespace Elevel.Application.Features.ReportCommands
         public class Request : IRequest<Response>
         {
             public Guid Id { get; set; }
-            [JsonIgnore] 
+            [JsonIgnore]
             public Guid CoachId { get; set; }
             public ReportStatus ReportStatus { get; set; }
         }
