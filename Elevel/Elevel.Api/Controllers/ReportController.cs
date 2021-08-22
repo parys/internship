@@ -82,6 +82,8 @@ namespace Elevel.Api.Controllers
                 return BadRequest("Id's from url and from body are different");
             }
 
+            request.CoachId = User.GetLoggedInUserId();
+
             var response = await Mediator.Send(request);
 
             return Ok(response);
