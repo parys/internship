@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
+using Elevel.Application.Extensions;
 using Elevel.Application.Interfaces;
 using Elevel.Application.Pagination;
 using Elevel.Domain.Enums;
@@ -40,16 +41,32 @@ namespace Elevel.Application.Features.ReportCommands
                     .AsNoTracking()
                     .Where(x=>x.ReportStatus == ReportStatus.Created);
 
-                return new Response()
+                Expression<Func<Report, object>> sortBy = x => x.ReportStatus;
+                Expression<Func<Report, object>> thenBy = x => x.CreationDate;
+
+                if (!string.IsNullOrWhiteSpace(request.SortOn)) 
                 {
-                    PageSize = request.PageSize,
-                    CurrentPage = request.CurrentPage,
-                    RowCount = await dbReport.CountAsync(cancellationToken),
-                    Results = await dbReport.Skip(request.SkipCount())
-                    .Take(request.PageSize)
-                    .ProjectTo<ReportDto>(_mapper.ConfigurationProvider)
-                    .ToListAsync(cancellationToken)
-                };
+                   if (request.SortOn.Contains(nameof(Report.ReportStatus),
+                       StringComparison.InvariantCultureIgnoreCase))
+                   {
+                       sortBy = x => x.ReportStatus;
+                       thenBy = x => x.CreationDate;
+                   }
+                   else if (request.SortOn.Contains(nameof(Report.CreationDate),
+                       StringComparison.InvariantCultureIgnoreCase))
+                   {
+                       sortBy = x => x.CreationDate;
+                       thenBy = x => x.ReportStatus;
+                   }
+                   else if (request.SortOn.Contains(nameof(Report.Description),
+                       StringComparison.InvariantCultureIgnoreCase))
+                   {
+                        sortBy = x => x.Description;
+                        thenBy = x => x.ReportStatus;
+                   }
+                }
+
+                return await dbReport.GetPagedAsync<Response, Report, ReportDto>(request, _mapper, sortBy, thenBy);
             }
         }
 
