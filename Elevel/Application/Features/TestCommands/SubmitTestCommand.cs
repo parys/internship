@@ -47,6 +47,14 @@ namespace Elevel.Application.Features.TestCommands
                 RuleFor(x => x.AuditionAnswers)
                     .Must(x => x is null ? true : x.Count() == x.Distinct().Count())
                     .WithMessage("Some answers from audition are the same");
+
+                RuleFor(x => x.GrammarAnswers.Count())
+                    .InclusiveBetween(Constants.MIN_QUESTION_AMOUNT,Constants.GRAMMAR_QUESTION_AMOUNT)
+                    .WithMessage("Amount of grammar answers");
+
+                RuleFor(x => x.AuditionAnswers.Count())
+                    .InclusiveBetween(Constants.MIN_QUESTION_AMOUNT, Constants.GRAMMAR_QUESTION_AMOUNT)
+                    .WithMessage("Amount of grammar answers");
             }
         }
         public class Handler : IRequestHandler<Request, Response>
