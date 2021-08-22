@@ -19,9 +19,8 @@ namespace Elevel.Application.Features.ReportCommands
     {
         public class Request : PagedQueryBase, IRequest<Response>
         {
-            public Guid? QuestionId { get; set; }
-            public Guid? AuditionId { get; set; }
-            public Guid? TopicId { get; set; }
+            public Guid? CreatorId { get; set; }
+            public DateTimeOffset? CreationDate { get; set; }
             public ReportStatus? ReportStatus { get; set; }
         }
 
@@ -43,17 +42,13 @@ namespace Elevel.Application.Features.ReportCommands
                 var dbReport = _context.Reports
                     .AsNoTracking();
 
-                if (request.QuestionId.HasValue)
+                if (request.CreatorId.HasValue)
                 {
-                    dbReport = dbReport.Where(x => x.QuestionId == request.QuestionId);
+                    dbReport = dbReport.Where(x => x.CreatorId == request.CreatorId);
                 }
-                if (request.AuditionId.HasValue)
+                if (request.CreationDate.HasValue)
                 {
-                    dbReport = dbReport.Where(x => x.AuditionId == request.AuditionId);
-                }
-                if (request.TopicId.HasValue)
-                {
-                    dbReport = dbReport.Where(x => x.TopicId == request.TopicId);
+                    dbReport = dbReport.Where(x => x.CreationDate == request.CreationDate);
                 }
                 if (request.ReportStatus.HasValue)
                 {
