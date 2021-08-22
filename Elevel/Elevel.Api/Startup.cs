@@ -2,12 +2,10 @@ using AutoMapper.EquivalencyExpression;
 using Elevel.Api.Filters;
 using Elevel.Application;
 using Elevel.Application.Infrastructure;
-using Elevel.Application.Interfaces;
 using Elevel.Application.Profiles;
 using Elevel.Domain.Authentication;
 using Elevel.Domain.Models;
 using Elevel.Infrastructure.Persistence.Context;
-using Elevel.Infrastructure.Services.Jobs;
 using Elevel.Persistence;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -21,9 +19,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Text;
-using AutoMapper.EquivalencyExpression;
-using Microsoft.EntityFrameworkCore;
-using MailKit;
 
 namespace Elevel.Api
 {

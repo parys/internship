@@ -30,8 +30,11 @@ namespace Elevel.Infrastructure.Persistence.Context
                 {
                     foreach (var user in userSet.Value)
                     {
-                        await userManager.CreateAsync(user, Authorization.DefaultPassword);
-                        await userManager.AddToRoleAsync(user, userSet.Key.ToString());
+                        var createdUser = await userManager.CreateAsync(user, Authorization.DefaultPassword);
+                        if (createdUser.Succeeded)
+                        {
+                            await userManager.AddToRoleAsync(user, userSet.Key.ToString());
+                        }
                     }
                 }
             }
