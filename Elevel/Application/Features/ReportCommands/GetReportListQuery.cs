@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
+using Elevel.Application.Extensions;
 using Elevel.Application.Interfaces;
 using Elevel.Application.Pagination;
 using Elevel.Domain.Enums;
@@ -18,7 +19,9 @@ namespace Elevel.Application.Features.ReportCommands
     {
         public class Request : PagedQueryBase, IRequest<Response>
         {
-            
+            public Guid? CreatorId { get; set; }
+            public DateTimeOffset? CreationDate { get; set; }
+            public ReportStatus? ReportStatus { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Response>
@@ -37,19 +40,48 @@ namespace Elevel.Application.Features.ReportCommands
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
                 var dbReport = _context.Reports
-                    .AsNoTracking()
-                    .Where(x=>x.ReportStatus == ReportStatus.Created);
+                    .AsNoTracking();
 
-                return new Response()
+                if (request.CreatorId.HasValue)
                 {
-                    PageSize = request.PageSize,
-                    CurrentPage = request.CurrentPage,
-                    RowCount = await dbReport.CountAsync(cancellationToken),
-                    Results = await dbReport.Skip(request.SkipCount())
-                    .Take(request.PageSize)
-                    .ProjectTo<ReportDto>(_mapper.ConfigurationProvider)
-                    .ToListAsync(cancellationToken)
-                };
+                    dbReport = dbReport.Where(x => x.CreatorId == request.CreatorId);
+                }
+                if (request.CreationDate.HasValue)
+                {
+                    dbReport = dbReport.Where(x => x.CreationDate == request.CreationDate);
+                }
+                if (request.ReportStatus.HasValue)
+                {
+                    dbReport = dbReport.Where(x => x.ReportStatus == request.ReportStatus.Value);
+                }
+
+
+                Expression<Func<Report, object>> sortBy = x => x.ReportStatus;
+                Expression<Func<Report, object>> thenBy = x => x.CreationDate;
+
+                if (!string.IsNullOrWhiteSpace(request.SortOn)) 
+                {
+                   if (request.SortOn.Contains(nameof(Report.ReportStatus),
+                       StringComparison.InvariantCultureIgnoreCase))
+                   {
+                       sortBy = x => x.ReportStatus;
+                       thenBy = x => x.CreationDate;
+                   }
+                   else if (request.SortOn.Contains(nameof(Report.CreationDate),
+                       StringComparison.InvariantCultureIgnoreCase))
+                   {
+                       sortBy = x => x.CreationDate;
+                       thenBy = x => x.ReportStatus;
+                   }
+                   else if (request.SortOn.Contains(nameof(Report.Description),
+                       StringComparison.InvariantCultureIgnoreCase))
+                   {
+                        sortBy = x => x.Description;
+                        thenBy = x => x.ReportStatus;
+                   }
+                }
+
+                return await dbReport.GetPagedAsync<Response, Report, ReportDto>(request, _mapper, sortBy, thenBy);
             }
         }
 
