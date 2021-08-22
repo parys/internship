@@ -61,11 +61,11 @@ namespace Elevel.Application.Features.TestCommands
                     throw new NotFoundException($"User with {request.UserId}");
                 }
 
-                //if (await _context.Tests.AnyAsync(x => x.UserId == request.UserId
-                //    && DateTimeOffset.Compare(x.CreationDate.Date, DateTimeOffset.UtcNow.Date) == 0))
-                //{
-                //    throw new ValidationException($"User: {request.UserId} has already had a test today");
-                //}
+                if (await _context.Tests.AnyAsync(x => x.UserId == request.UserId
+                    && DateTimeOffset.Compare(x.CreationDate.Date, DateTimeOffset.UtcNow.Date) == 0))
+                {
+                    throw new ValidationException($"User: {request.UserId} has already had a test today");
+                }
 
                 var test = _mapper.Map<Test>(request);
 
