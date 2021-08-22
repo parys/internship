@@ -1,10 +1,7 @@
-﻿using System;
-using System.Linq.Expressions;
-using AutoMapper;
-using AutoMapper.EquivalencyExpression;
-using Elevel.Application.Features.AuditionCommands;
+﻿using AutoMapper;
 using Elevel.Application.Features.ReportCommands;
 using Elevel.Domain.Models;
+using System;
 
 namespace Elevel.Application.Profiles
 {
@@ -16,7 +13,9 @@ namespace Elevel.Application.Profiles
             CreateMap<Report, GetReportListQuery.ReportDto>()
                 .ForMember(dest => dest.CoachName,
                     opt => opt.MapFrom(src =>
-                        src.Question.Creator.UserName ?? src.Audition.Creator.UserName ?? src.Topic.Creator.UserName))
+                        src.Question.Creator.UserName.Replace("_", " ") ??
+                        src.Audition.Creator.UserName.Replace("_", " ") ??
+                        src.Topic.Creator.UserName.Replace("_", " ")))
                 .ForMember(x => x.CoachId,
                     opt => opt.MapFrom(src =>
                         src.Question != null ? src.Question.CreatorId :
@@ -26,13 +25,13 @@ namespace Elevel.Application.Profiles
             CreateMap<Report, GetReportDetailQuery.Response>()
                 .ForMember(dest => dest.CoachName,
                     opt => opt.MapFrom(src =>
-                        src.Creator.UserName))
+                        src.Creator.UserName.Replace("_", " ")))
                 .ForMember(dest => dest.CoachId,
                     opt => opt.MapFrom(src =>
                         src.Creator.Id))
                 .ForMember(dest => dest.UserName,
                     opt => opt.MapFrom(src =>
-                        src.User.UserName))
+                        src.User.UserName.Replace("_", " ")))
                 .ForMember(dest => dest.UserId,
                     opt => opt.MapFrom(src =>
                         src.User.Id));
