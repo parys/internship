@@ -75,10 +75,10 @@ namespace Elevel.Application.Features.TestCommands
                     throw new ValidationException("You can't pass this test");
                 }
 
-                //if(DateTimeOffset.Compare(((DateTimeOffset)test.AssignmentEndDate).Date, DateTimeOffset.UtcNow.Date) < 0)
-                //{
-                //    throw new ValidationException("Assignment end date has alredy passed");
-                //}
+                if (DateTimeOffset.Compare(((DateTimeOffset)test.AssignmentEndDate).Date, DateTimeOffset.UtcNow.Date) < 0)
+                {
+                    throw new ValidationException("Assignment end date has alredy passed");
+                }
 
                 if (test.TestPassingDate.HasValue)
                 {

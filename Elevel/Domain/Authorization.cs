@@ -24,7 +24,7 @@ namespace Elevel.Domain
                         UserName = "AdminAdminov",
                         Email = "ElevelAdministrator@gmail.com",
                         CreationDate = DateTimeOffset.Now,
-                        Avatar = @"\wwwroot\default_avatar.jpg"
+                        Avatar = @"ava1.jpg"
                     },
                     new User()
                     {
@@ -35,7 +35,7 @@ namespace Elevel.Domain
                         UserName = "AdminAdminov1",
                         Email = "ElevelAdministrator1@gmail.com",
                         CreationDate = DateTimeOffset.Now,
-                        Avatar = @"\wwwroot\default_avatar1.jpg"
+                       Avatar = @"ava2.jpg"
                     },
                     new User()
                     {
@@ -46,7 +46,7 @@ namespace Elevel.Domain
                         UserName = "AdminAdminov2",
                         Email = "ElevelAdministrator2@gmail.com",
                         CreationDate = DateTimeOffset.Now,
-                        Avatar = @"\wwwroot\default_avatar2.jpg"
+                        Avatar = @"ava3.jpg"
                     }
                 }
             },
@@ -63,7 +63,7 @@ namespace Elevel.Domain
                         LastName = "Userov",
                         Email = "ElevelUser@gmail.com",
                         CreationDate = DateTimeOffset.Now,
-                        Avatar = @"\wwwroot\default_avatar.jpg"
+                        Avatar = @"ava4.jpg"
                     },
                     new User()
                     {
@@ -74,7 +74,7 @@ namespace Elevel.Domain
                         LastName = "Userov1",
                         Email = "ElevelUser1@gmail.com",
                         CreationDate = DateTimeOffset.Now,
-                        Avatar = @"\wwwroot\default_avatar1.jpg"
+                        Avatar = @"ava5.jpg"
                     },
                     new User()
                     {
@@ -85,7 +85,7 @@ namespace Elevel.Domain
                         LastName = "Userov2",
                         Email = "ElevelUser2@gmail.com",
                         CreationDate = DateTimeOffset.Now,
-                        Avatar = @"\wwwroot\default_avatar2.jpg"
+                        Avatar = @"ava6.jpg"
                     },
                     new User()
                     {
@@ -96,7 +96,7 @@ namespace Elevel.Domain
                         LastName = "Userov3",
                         Email = "ElevelUser3@gmail.com",
                         CreationDate = DateTimeOffset.Now,
-                        Avatar = @"\wwwroot\default_avatar3.jpg"
+                        Avatar = @"ava7.jpg"
                     },
                     new User()
                     {
@@ -107,7 +107,7 @@ namespace Elevel.Domain
                         LastName = "Userov4",
                         Email = "ElevelUser4@gmail.com",
                         CreationDate = DateTimeOffset.Now,
-                        Avatar = @"\wwwroot\default_avatar4.jpg"
+                        Avatar = @"ava8.jpg"
                     },
                     new User()
                     {
@@ -118,7 +118,7 @@ namespace Elevel.Domain
                         LastName = "Userov5",
                         Email = "ElevelUser5@gmail.com",
                         CreationDate = DateTimeOffset.Now,
-                        Avatar = @"\wwwroot\default_avatar5.jpg"
+                        Avatar = @"ava9.jpg"
                     },
                 }
             },
@@ -135,7 +135,7 @@ namespace Elevel.Domain
                         LastName = "Coachev",
                         Email = "ElevelCoach@gmail.com",
                         CreationDate = DateTimeOffset.Now,
-                        Avatar = @"\wwwroot\default_avatar.jpg"
+                        Avatar = @"ava10.jpg"
                     },
                     new User()
                     {
@@ -146,7 +146,7 @@ namespace Elevel.Domain
                         LastName = "Coachev1",
                         Email = "ElevelCoach1@gmail.com",
                         CreationDate = DateTimeOffset.Now,
-                        Avatar = @"\wwwroot\default_avatar1.jpg"
+                        Avatar = @"ava11.jpg"
                     }
                 }
             },
@@ -163,7 +163,7 @@ namespace Elevel.Domain
                         LastName = "Managerov",
                         Email = "ElevelHumanResourceManager@gmail.com",
                         CreationDate = DateTimeOffset.Now,
-                        Avatar = @"\wwwroot\default_avatar.jpg"
+                        Avatar = @"ava12.jpg"
                     },
                     new User()
                     {
@@ -174,7 +174,7 @@ namespace Elevel.Domain
                         LastName = "Managerov1",
                         Email = "ElevelHumanResourceManager1@gmail.com",
                         CreationDate = DateTimeOffset.Now,
-                        Avatar = @"\wwwroot\default_avatar1.jpg"
+                        Avatar = @"ava13.jpg"
                     },
                     new User()
                     {
@@ -185,7 +185,7 @@ namespace Elevel.Domain
                         LastName = "Managerov2",
                         Email = "ElevelHumanResourceManager2@gmail.com",
                         CreationDate = DateTimeOffset.Now,
-                        Avatar = @"\wwwroot\default_avatar2.jpg"
+                        Avatar = @"ava14.jpg"
                     }
                 }
             }
