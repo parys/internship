@@ -19,7 +19,10 @@ namespace Elevel.Application.Features.ReportCommands
     {
         public class Request : PagedQueryBase, IRequest<Response>
         {
-            
+            public Guid? QuestionId { get; set; }
+            public Guid? AuditionId { get; set; }
+            public Guid? TopicId { get; set; }
+            public ReportStatus? ReportStatus { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Response>
@@ -38,8 +41,25 @@ namespace Elevel.Application.Features.ReportCommands
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
                 var dbReport = _context.Reports
-                    .AsNoTracking()
-                    .Where(x=>x.ReportStatus == ReportStatus.Created);
+                    .AsNoTracking();
+
+                if (request.QuestionId.HasValue)
+                {
+                    dbReport = dbReport.Where(x => x.QuestionId == request.QuestionId);
+                }
+                if (request.AuditionId.HasValue)
+                {
+                    dbReport = dbReport.Where(x => x.AuditionId == request.AuditionId);
+                }
+                if (request.TopicId.HasValue)
+                {
+                    dbReport = dbReport.Where(x => x.TopicId == request.TopicId);
+                }
+                if (request.ReportStatus.HasValue)
+                {
+                    dbReport = dbReport.Where(x => x.ReportStatus == request.ReportStatus.Value);
+                }
+
 
                 Expression<Func<Report, object>> sortBy = x => x.ReportStatus;
                 Expression<Func<Report, object>> thenBy = x => x.CreationDate;
