@@ -34,7 +34,7 @@ namespace Elevel.Infrastructure.Persistence.FillDbScript
 
         public static async Task FillDB(ApplicationDbContext context, UserManager<User> userManager)
         {
-            Guid creatorId = (await userManager.Users.FirstOrDefaultAsync(x => x.FirstName == "Coach")).Id;
+            Guid creatorId = (await userManager.GetUsersInRoleAsync(nameof(UserRole.Coach))).FirstOrDefault().Id;
 
             for (int del = 0; del < 2; del++)
             {
@@ -46,7 +46,7 @@ namespace Elevel.Infrastructure.Persistence.FillDbScript
                         {
                             Id = Guid.NewGuid(),
                             AudioFilePath = (level == 1 ? "A2.mp3"
-                            : level == 2 ? "A2+.mp3"
+                            : level == 2 ? "A2plus.mp3"
                             : level == 3 ? "B1.mp3"
                             : level == 4 ? "B2.mp3"
                             : "C1.mp3"),
@@ -328,7 +328,6 @@ namespace Elevel.Infrastructure.Persistence.FillDbScript
 
                 deleted = !deleted;
             }
-
 
             if (!await context.Topics.AnyAsync())
             {
