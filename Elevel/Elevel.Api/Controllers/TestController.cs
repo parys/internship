@@ -87,6 +87,8 @@ namespace Elevel.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllTestsAsync([FromQuery] GetAllTestsQuery.Request request)
         {
+            request.SearchingUserId = User.GetLoggedInUserId();
+
             var result = await Mediator.Send(request);
 
             return Ok(result);

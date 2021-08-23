@@ -5,10 +5,12 @@ using Elevel.Application.Pagination;
 using Elevel.Domain.Enums;
 using Elevel.Domain.Models;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,25 +27,35 @@ namespace Elevel.Application.Features.TestCommands
 
             public Guid? UserId { get; set; }
 
+            [JsonIgnore]
+            public Guid SearchingUserId { get; set; }
+
             public Guid? Id { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IApplicationDbContext _context;
-
+            private readonly UserManager<User> _userManager;
             private readonly IMapper _mapper;
 
-            public Handler(IApplicationDbContext context, IMapper mapper)
+            public Handler(IApplicationDbContext context, IMapper mapper, UserManager<User> userManager)
             {
                 _context = context;
-
+                _userManager = userManager;
                 _mapper = mapper;
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
                 var tests = _context.Tests.AsNoTracking();
+                var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == request.SearchingUserId);
+                var roles = await _userManager.GetRolesAsync(user);
+
+                if(user.Id != request.UserId && !roles.Contains(nameof(UserRole.HumanResourceManager)))
+                {
+                    throw new Exception("Forbidden");
+                }
 
                 if (request.Level.HasValue)
                 {

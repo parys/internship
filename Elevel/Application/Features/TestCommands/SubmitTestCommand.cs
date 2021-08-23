@@ -144,7 +144,7 @@ namespace Elevel.Application.Features.TestCommands
 
             private async Task CheckAnswersBelongtoTestAsync(IEnumerable<Guid> answers, Guid testId)
             {
-                var questionIds = await _context.TestQuestions
+                var questionIds = await _context.TestQuestions.IgnoreQueryFilters()
                     .Where(x => x.TestId == testId)
                     .Join(_context.Answers, tq => tq.QuestionId, an => an.QuestionId,
                         (tq, an) => new
@@ -162,7 +162,7 @@ namespace Elevel.Application.Features.TestCommands
 
             private void CheckSingleAnswerForQuestion(IEnumerable<Guid> answers, Guid testId)
             {
-                var questionAnswers = _context.TestQuestions.Where(x => x.TestId == testId)
+                var questionAnswers = _context.TestQuestions.IgnoreQueryFilters().Where(x => x.TestId == testId)
                     .Join(_context.Answers,
                     tq => tq.QuestionId,
                     an => an.QuestionId,
