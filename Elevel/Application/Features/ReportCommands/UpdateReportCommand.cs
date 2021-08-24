@@ -68,7 +68,7 @@ namespace Elevel.Application.Features.ReportCommands
                 var userEmail = (await _userManager.Users.FirstOrDefaultAsync(x => x.Id == report.UserId)).Email;
                 if (string.IsNullOrWhiteSpace(userEmail))
                 {
-                    throw new NotFoundException($"User with {report.UserId}");
+                    throw new ArgumentException($"User email couldn't be null or empty.");
                 }
 
                 if (request.ReportStatus == ReportStatus.Fixed)

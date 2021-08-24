@@ -107,7 +107,7 @@ namespace Elevel.Application.Features.ReportCommands
                     userEmail = (await _userManager.Users.FirstOrDefaultAsync(x => x.Id == question.CreatorId)).Email;
                     if (string.IsNullOrWhiteSpace(userEmail))
                     {
-                        throw new NotFoundException($"User with {request.UserId}");
+                        throw new ArgumentException($"User email couldn't be null or empty.");
                     }
                 }
                 else if(request.AuditionId != null && request.QuestionId != null)
@@ -126,7 +126,7 @@ namespace Elevel.Application.Features.ReportCommands
                     userEmail = (await _userManager.Users.FirstOrDefaultAsync(x => x.Id == audition.CreatorId)).Email;
                     if (string.IsNullOrWhiteSpace(userEmail))
                     {
-                        throw new NotFoundException($"User with {request.UserId}");
+                        throw new ArgumentException($"User email couldn't be null or empty.");
                     }
                 }
                 else if(request.TopicId != null)
@@ -145,7 +145,7 @@ namespace Elevel.Application.Features.ReportCommands
                     userEmail = (await _userManager.Users.FirstOrDefaultAsync(x => x.Id == topic.CreatorId)).Email;
                     if (string.IsNullOrWhiteSpace(userEmail))
                     {
-                        throw new NotFoundException($"User with {request.UserId}");
+                        throw new ArgumentException($"User email couldn't be null or empty.");
                     }
                 }
 
