@@ -3,15 +3,14 @@ using Elevel.Application.Infrastructure;
 using Elevel.Application.Interfaces;
 using Elevel.Domain.Enums;
 using Elevel.Domain.Models;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper.QueryableExtensions;
-using FluentValidation;
+using System.Linq;
 
 namespace Elevel.Application.Features.ReportCommands
 {
@@ -60,6 +59,8 @@ namespace Elevel.Application.Features.ReportCommands
                     throw new NotFoundException(nameof(Report), request.Id);
                 }
 
+                
+
                 if(request.ReportStatus == ReportStatus.Fixed)
                 {
                     var test = await _context.Tests.FirstOrDefaultAsync(x => x.Id == report.TestId);
@@ -68,13 +69,25 @@ namespace Elevel.Application.Features.ReportCommands
                         throw new NotFoundException("Test", test);
                     }
 
-                    if(report.QuestionId.HasValue && report.AuditionId.HasValue && !report.TopicId.HasValue)
+                    var IsRightAnswer = (await _context.TestQuestions
+                        .Include(x => x.UserAnswer)
+                        .FirstOrDefaultAsync(x => x.TestId == report.TestId
+                            && (report.QuestionId.HasValue ? x.QuestionId == report.QuestionId : true)))
+                        .UserAnswer.IsRight;
+
+                    if (report.QuestionId.HasValue && report.AuditionId.HasValue && !report.TopicId.HasValue)
                     {
-                        test.AuditionMark++;
+                        if (IsRightAnswer)
+                        {
+                            test.AuditionMark++;
+                        }
                     }
                     else if (report.QuestionId.HasValue && !report.AuditionId.HasValue && !report.TopicId.HasValue)
                     {
-                        test.GrammarMark++;
+                        if (IsRightAnswer)
+                        {
+                            test.GrammarMark++;
+                        }
                     }
                 }
 
