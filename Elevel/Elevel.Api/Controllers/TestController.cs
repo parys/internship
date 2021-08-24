@@ -87,7 +87,12 @@ namespace Elevel.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllTestsAsync([FromQuery] GetAllTestsQuery.Request request)
         {
-            request.SearchingUserId = User.GetLoggedInUserId();
+            var userRole = User.GetLoggedInUserRole();
+            if (userRole != nameof(UserRole.HumanResourceManager) && !request.UserId.HasValue 
+                || userRole != nameof(UserRole.HumanResourceManager) && User.GetLoggedInUserId() != request.UserId)
+            {
+                return Forbid();
+            }
 
             var result = await Mediator.Send(request);
 

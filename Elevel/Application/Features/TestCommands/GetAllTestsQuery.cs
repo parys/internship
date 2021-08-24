@@ -27,9 +27,6 @@ namespace Elevel.Application.Features.TestCommands
 
             public Guid? UserId { get; set; }
 
-            [JsonIgnore]
-            public Guid SearchingUserId { get; set; }
-
             public Guid? Id { get; set; }
         }
 
@@ -49,14 +46,7 @@ namespace Elevel.Application.Features.TestCommands
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
                 var tests = _context.Tests.AsNoTracking();
-                var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == request.SearchingUserId);
-                var roles = await _userManager.GetRolesAsync(user);
-
-                if(user.Id != request.UserId && !roles.Contains(nameof(UserRole.HumanResourceManager)))
-                {
-                    throw new Exception("Forbidden");
-                }
-
+                
                 if (request.Level.HasValue)
                 {
                     tests = tests.Where(x => x.Level == request.Level.Value);
