@@ -48,6 +48,7 @@ namespace Elevel.Application.Features.TopicCommands
         public class Response
         {
             public Guid Id { get; set; }
+            public long TopicNumber { get; set; }
             public string TopicName { get; set; }
             public Level Level { get; set; }
             public Guid CreatorId { get; set; }

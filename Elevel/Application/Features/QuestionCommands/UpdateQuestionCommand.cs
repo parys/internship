@@ -2,12 +2,14 @@
 using Elevel.Application.Infrastructure;
 using Elevel.Application.Interfaces;
 using Elevel.Domain.Enums;
+using Elevel.Domain.Models;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,6 +19,8 @@ namespace Elevel.Application.Features.QuestionCommands
     {
         public class Request : IRequest<Response>
         {
+            [JsonIgnore]
+            public Guid CreatorId { get; set; }
             public Guid Id { get; set; }
 
             public string NameQuestion { get; set; }
@@ -75,29 +79,39 @@ namespace Elevel.Application.Features.QuestionCommands
                     throw new ValidationException($"This question doesn't contain answers you sent");
                 }
 
-                foreach (var answer in answers)
-                {
-                    var requestAnswer = request.Answers.FirstOrDefault(x => x.Id == answer.Id);
+                question.Deleted = true;
 
-                    answer.NameAnswer = requestAnswer.NameAnswer;
-                    answer.IsRight = (bool)requestAnswer.IsRight;
+                var newQuestion = _mapper.Map<Question>(request);
+                newQuestion.Id = Guid.NewGuid();
+                foreach (var answer in newQuestion.Answers)
+                {
+                    answer.Id = Guid.NewGuid();
                 }
 
-                question.Level = request.Level;
-                question.NameQuestion = request.NameQuestion;
-
+                await _context.Questions.AddAsync(newQuestion);
                 await _context.SaveChangesAsync();
-                return new Response { Id = question.Id };
+
+                var response = _mapper.Map<Response>(newQuestion);
+
+                return response;
             }
         }
         public class Response
         {
             public Guid Id { get; set; }
+
+            public long QuestionNumber { get; set; }
+
+            public string NameQuestion { get; set; }
+
+            public DateTimeOffset CreationDate { get; set; }
+
+            public List<AnswerDto> Answers { get; set; }
         }
 
         public class AnswerDto
         {
-            public Guid? Id { get; set; }
+            public Guid Id { get; set; }
             public string NameAnswer { get; set; }
             public bool IsRight { get; set; }
         }

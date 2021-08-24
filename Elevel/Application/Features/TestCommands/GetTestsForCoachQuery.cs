@@ -73,7 +73,9 @@ namespace Elevel.Application.Features.TestCommands
                     tests = tests.Where(x => x.TestPassingDate == request.TestPassingDate);
                 }
 
-                return new Response()
+                var topics = await _context.Topics.IgnoreQueryFilters().Where(x => tests.Any(t => t.EssayId == x.Id || t.SpeakingId == x.Id)).AsNoTracking().ToListAsync();
+
+                var response = new Response()
                 {
                     PageSize = request.PageSize,
                     CurrentPage = request.CurrentPage,
@@ -84,6 +86,14 @@ namespace Elevel.Application.Features.TestCommands
                     .OrderByDescending(x => x.Priority)
                     .ToListAsync(cancellationToken)
                 };
+
+                foreach (var result in response.Results)
+                {
+                    result.EssayTopic = topics.FirstOrDefault(x => x.Id == result.EssayId).TopicName;
+                    result.SpeakingTopic = topics.FirstOrDefault(x => x.Id == result.SpeakingId).TopicName;
+                }
+
+                return response;
             }
         }
         public class Response : PagedResult<TestDto>
@@ -96,6 +106,10 @@ namespace Elevel.Application.Features.TestCommands
             public Level Level { get; set; }
             public DateTimeOffset TestPassingDate { get; set; }
             public bool Priority { get; set; }
+            public Guid EssayId { get; set; }
+            public string EssayTopic { get; set; }
+            public Guid SpeakingId { get; set; }
+            public string SpeakingTopic { get; set; }
             public string EssayAnswer { get; set; }
             public string SpeakingAnswerReference { get; set; }
             public int? EssayMark { get; set; }

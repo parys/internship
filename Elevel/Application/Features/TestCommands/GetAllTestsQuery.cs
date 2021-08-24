@@ -5,10 +5,12 @@ using Elevel.Application.Pagination;
 using Elevel.Domain.Enums;
 using Elevel.Domain.Models;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -31,20 +33,18 @@ namespace Elevel.Application.Features.TestCommands
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IApplicationDbContext _context;
-
             private readonly IMapper _mapper;
 
             public Handler(IApplicationDbContext context, IMapper mapper)
             {
                 _context = context;
-
                 _mapper = mapper;
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
                 var tests = _context.Tests.AsNoTracking();
-
+                
                 if (request.Level.HasValue)
                 {
                     tests = tests.Where(x => x.Level == request.Level.Value);
