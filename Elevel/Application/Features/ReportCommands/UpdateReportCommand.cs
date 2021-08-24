@@ -110,7 +110,7 @@ namespace Elevel.Application.Features.ReportCommands
                         "You get notification about received mistake report.",
                         $"The Elevel team reviewed your report and fixed the error.<br/>"
                         + "We are grateful for your help.<br/><br/>"
-                        + $"{(isRightAnswer ? $"You will be credited with 1 point." : $"")}"
+                        + $"{(isRightAnswer ? "" : "You will be credited with 1 point.")}"
                         + "Please go to the following link to enter the Elevel site: <br/>"
                         + "<a href=\"http://exadel-train-app.herokuapp.com/\">Enter the Elevel site</a><br/><br/>"
                         + "Best regards, <br/>Elevel team");
