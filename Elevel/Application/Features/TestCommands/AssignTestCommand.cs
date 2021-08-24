@@ -77,7 +77,7 @@ namespace Elevel.Application.Features.TestCommands
                 if (await _context.Tests.AnyAsync(x => x.UserId == request.UserId
                  && ((DateTimeOffset)x.AssignmentEndDate).Date <= DateTimeOffset.UtcNow.Date
                  && !x.AuditionMark.HasValue 
-                 && (x.AssignmentEndDate.Value.Date == DateTimeOffset.UtcNow.Date)))
+                 && (x.AssignmentEndDate.Value.Date >= DateTimeOffset.UtcNow.Date)))
                 {
                     throw new ValidationException($"User with id {request.UserId} hasn't passed the previous assigned test for today");
                 }
