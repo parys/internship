@@ -5,15 +5,12 @@ using Elevel.Domain.Enums;
 using Elevel.Domain.Models;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Linq;
-using AutoMapper.QueryableExtensions;
-using FluentValidation;
-using Microsoft.AspNetCore.Identity;
 
 namespace Elevel.Application.Features.ReportCommands
 {
