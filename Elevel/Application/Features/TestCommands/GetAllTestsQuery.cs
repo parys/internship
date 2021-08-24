@@ -33,13 +33,11 @@ namespace Elevel.Application.Features.TestCommands
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IApplicationDbContext _context;
-            private readonly UserManager<User> _userManager;
             private readonly IMapper _mapper;
 
-            public Handler(IApplicationDbContext context, IMapper mapper, UserManager<User> userManager)
+            public Handler(IApplicationDbContext context, IMapper mapper)
             {
                 _context = context;
-                _userManager = userManager;
                 _mapper = mapper;
             }
 
