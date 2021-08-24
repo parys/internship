@@ -29,4 +29,8 @@
     <ProjectReference Include="..\Elevel.Api\Elevel.Api.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ReportCommandTest\" />
+  </ItemGroup>
+
 </Project>
