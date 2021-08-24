@@ -6,6 +6,7 @@ using Elevel.Domain.Models;
 using FluentValidation;
 using MediatR;
 using System;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,7 +16,9 @@ namespace Elevel.Application.Features.TopicCommands
     {
         public class Request : IRequest<Response>
         {
-            public string TopicName {get; set;}
+            [JsonIgnore]
+            public Guid CreatorId { get; set; }
+            public string TopicName { get; set; }
             public Level Level { get; set; }
         }
 
