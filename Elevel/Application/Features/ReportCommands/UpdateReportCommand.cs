@@ -87,14 +87,14 @@ namespace Elevel.Application.Features.ReportCommands
 
                     if (report.QuestionId.HasValue && report.AuditionId.HasValue && !report.TopicId.HasValue)
                     {
-                        if (isRightAnswer)
+                        if (!isRightAnswer)
                         {
                             test.AuditionMark++;
                         }
                     }
                     else if (report.QuestionId.HasValue && !report.AuditionId.HasValue && !report.TopicId.HasValue)
                     {
-                        if (isRightAnswer)
+                        if (!isRightAnswer)
                         {
                             test.GrammarMark++;
                         }
