@@ -63,7 +63,6 @@ namespace Elevel.Application.Features.ReportCommands
                     throw new NotFoundException(nameof(Report), request.Id);
                 }
 
-
                 var userEmail = (await _userManager.Users.FirstOrDefaultAsync(x => x.Id == report.UserId)).Email;
                 if (string.IsNullOrWhiteSpace(userEmail))
                 {
