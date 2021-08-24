@@ -5,15 +5,12 @@ using Elevel.Domain.Enums;
 using Elevel.Domain.Models;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Linq;
-using AutoMapper.QueryableExtensions;
-using FluentValidation;
-using Microsoft.AspNetCore.Identity;
 
 namespace Elevel.Application.Features.ReportCommands
 {
@@ -53,6 +50,8 @@ namespace Elevel.Application.Features.ReportCommands
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
+                bool isRightAnswer = true;
+
                 var report = await _context.Reports
                     .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
@@ -65,7 +64,6 @@ namespace Elevel.Application.Features.ReportCommands
                 {
                     throw new NotFoundException(nameof(Report), request.Id);
                 }
-
 
                 var userEmail = (await _userManager.Users.FirstOrDefaultAsync(x => x.Id == report.UserId)).Email;
                 if (string.IsNullOrWhiteSpace(userEmail))
@@ -81,7 +79,7 @@ namespace Elevel.Application.Features.ReportCommands
                         throw new NotFoundException("Test", test);
                     }
 
-                    var IsRightAnswer = (await _context.TestQuestions
+                    isRightAnswer = (await _context.TestQuestions
                         .Include(x => x.UserAnswer)
                         .FirstOrDefaultAsync(x => x.TestId == report.TestId
                             && (report.QuestionId.HasValue ? x.QuestionId == report.QuestionId : true)))
@@ -89,14 +87,14 @@ namespace Elevel.Application.Features.ReportCommands
 
                     if (report.QuestionId.HasValue && report.AuditionId.HasValue && !report.TopicId.HasValue)
                     {
-                        if (IsRightAnswer)
+                        if (isRightAnswer)
                         {
                             test.AuditionMark++;
                         }
                     }
                     else if (report.QuestionId.HasValue && !report.AuditionId.HasValue && !report.TopicId.HasValue)
                     {
-                        if (IsRightAnswer)
+                        if (isRightAnswer)
                         {
                             test.GrammarMark++;
                         }
@@ -106,17 +104,13 @@ namespace Elevel.Application.Features.ReportCommands
                 report = _mapper.Map(request, report);
                 await _context.SaveChangesAsync(cancellationToken);
 
-                //Add check the user answered the question correctly
-                //type of bool
-                var answerUser = true;
-
                 if (request.ReportStatus == ReportStatus.Fixed)
                 {
                     _mailService.SendMessage(userEmail,
                         "You get notification about received mistake report.",
                         $"The Elevel team reviewed your report and fixed the error.<br/>"
                         + "We are grateful for your help.<br/><br/>"
-                        + $"{(answerUser ? $"You will be credited with 1 point." : $"")}"
+                        + $"{(isRightAnswer ? $"You will be credited with 1 point." : $"")}"
                         + "Please go to the following link to enter the Elevel site: <br/>"
                         + "<a href=\"http://exadel-train-app.herokuapp.com/\">Enter the Elevel site</a><br/><br/>"
                         + "Best regards, <br/>Elevel team");
