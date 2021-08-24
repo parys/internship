@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper.QueryableExtensions;
 using FluentValidation;
+using Microsoft.AspNetCore.Identity;
 
 namespace Elevel.Application.Features.ReportCommands
 {
@@ -38,11 +39,15 @@ namespace Elevel.Application.Features.ReportCommands
         {
             private readonly IApplicationDbContext _context;
             private readonly IMapper _mapper;
+            private readonly UserManager<User> _userManager;
+            private readonly IMailService _mailService;
 
-            public Handler(IApplicationDbContext context, IMapper mapper)
+            public Handler(IApplicationDbContext context, IMapper mapper, UserManager<User> userManager, IMailService mailService)
             {
                 _context = context;
                 _mapper = mapper;
+                _userManager = userManager;
+                _mailService = mailService;
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
@@ -60,7 +65,13 @@ namespace Elevel.Application.Features.ReportCommands
                     throw new NotFoundException(nameof(Report), request.Id);
                 }
 
-                if(request.ReportStatus == ReportStatus.Fixed)
+                var userEmail = (await _userManager.Users.FirstOrDefaultAsync(x => x.Id == report.UserId)).Email;
+                if (string.IsNullOrWhiteSpace(userEmail))
+                {
+                    throw new NotFoundException($"User with {report.UserId}");
+                }
+
+                if (request.ReportStatus == ReportStatus.Fixed)
                 {
                     var test = await _context.Tests.FirstOrDefaultAsync(x => x.Id == report.TestId);
                     if(test is null)
@@ -81,7 +92,32 @@ namespace Elevel.Application.Features.ReportCommands
                 report = _mapper.Map(request, report);
                 await _context.SaveChangesAsync(cancellationToken);
 
-                return new Response { Id = report.Id };
+                //Add check the user answered the question correctly
+                //type of bool
+                var answerUser = true;
+
+                if (request.ReportStatus == ReportStatus.Fixed)
+                {
+                    _mailService.SendMessage(userEmail,
+                        "You get notification about received mistake report.",
+                        $"The Elevel team reviewed your report and fixed the error.<br/>"
+                        + "We are grateful for your help.<br/><br/>"
+                        + $"{(answerUser ? $"You will be credited with 1 point." : $"")}"
+                        + "Please go to the following link to enter the Elevel site: <br/>"
+                        + "<a href=\"http://exadel-train-app.herokuapp.com/\">Enter the Elevel site</a><br/><br/>"
+                        + "Best regards, <br/>Elevel team");
+                }
+                else if (request.ReportStatus == ReportStatus.Declined)
+                {
+                    _mailService.SendMessage(userEmail,
+                        "You get notification about received mistake report.",
+                        $"The Elevel team reviewed your report and declined it.<br/><br/>"
+                        + "Please go to the following link to enter the Elevel site: <br/>"
+                        + "<a href=\"http://exadel-train-app.herokuapp.com/\">Enter the Elevel site</a><br/><br/>"
+                        + "Best regards, <br/>Elevel team");
+                }
+
+                return new Response {Id = report.Id};
             }
         }
 
