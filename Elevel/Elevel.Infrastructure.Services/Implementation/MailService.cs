@@ -113,10 +113,5 @@ namespace Elevel.Infrastructure.Services.Implementation
             _smtpClient.Disconnect(true);
             _smtpClient.Dispose();
         }
-
-        ~MailService()
-        {
-            _smtpClient.Dispose();
-        }
     }
 }
