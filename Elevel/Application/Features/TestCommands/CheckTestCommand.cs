@@ -35,7 +35,7 @@ namespace Elevel.Application.Features.TestCommands
             public Validator()
             {
                 RuleFor(x => x.SpeakingMark)
-                    .InclusiveBetween(Constants.MIN_MARK,Constants.MAX_MARK)
+                    .InclusiveBetween(Constants.MIN_MARK, Constants.MAX_MARK)
                     .WithMessage("Speaking mark number is out if range from 0 to 10!");
 
                 RuleFor(x => x.EssayMark)
@@ -48,29 +48,29 @@ namespace Elevel.Application.Features.TestCommands
         {
             private readonly IApplicationDbContext _context;
             private readonly IMapper _mapper;
+            private readonly IMailService _mailService;
 
-            public Handler(IApplicationDbContext context, IMapper mapper)
+            public Handler(IApplicationDbContext context, IMapper mapper, IMailService mailService)
             {
                 _context = context;
                 _mapper = mapper;
+                _mailService = mailService;
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var test = await _context.Tests.FirstOrDefaultAsync(x => x.Id == request.Id);
+                var test = await _context.Tests.Include(x => x.Hr).Include(x => x.User).FirstOrDefaultAsync(x => x.Id == request.Id);
 
                 if (test == null)
                 {
                     throw new NotFoundException($"Test with Id {request.Id}");
                 }
 
-                if (test.CoachId != request.CoachId 
+                if (test.CoachId != request.CoachId
                     || test.UserId == request.CoachId)
                 {
                     throw new ValidationException("You can't check this test");
                 }
-
-                
 
                 test.SpeakingMark = request.SpeakingMark;
 
@@ -80,10 +80,25 @@ namespace Elevel.Application.Features.TestCommands
 
                 await _context.SaveChangesAsync();
 
+                if (test.HrId.HasValue)
+                {
+                    _mailService.SendMessage(test.Hr.Email,
+                         "The test you assigned to user was checked",
+                         $"The test which was assigned to user {test.User.FirstName} {test.User.LastName} ({test.User.Email}) by you is checked now.<br/>"
+                         + "Please go to the following link to see the marks: <br/>"
+                         + "<a href=\"http://exadel-train-app.herokuapp.com/home\">Enter the Elevel site</a><br/><br/>");
+                }
+
+                _mailService.SendMessage(test.User.Email,
+                    "Your test was checked",
+                    "The test which was assigned to you is checked now.<br/>"
+                    + "Please go to the following link to see the marks: <br/>"
+                    + "<a href=\"http://exadel-train-app.herokuapp.com/home\">Enter the Elevel site</a><br/><br/>");
 
                 return _mapper.Map<Response>(test);
             }
         }
+
         public class Response
         {
             public Level Level { get; set; }

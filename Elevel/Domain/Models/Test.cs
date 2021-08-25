@@ -44,5 +44,6 @@ namespace Elevel.Domain.Models
         public Topic Speaking { get; set; }
 
         public ICollection<TestQuestion> TestQuestions { get; set; }
+        public ICollection<Report> Reports { get; set; }
     }
 }

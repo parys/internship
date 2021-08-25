@@ -1,5 +1,4 @@
 ﻿using Elevel.Application.Infrastructure.Configurations;
-using Microsoft.Extensions.Options;
 using Quartz;
 using Quartz.Impl;
 using System;
@@ -21,7 +20,7 @@ namespace Elevel.Infrastructure.Services.Jobs
                 .WithIdentity("MailingTrigger", "default")
                 .StartAt(DateBuilder.DateOf(
                     schedulerConfig.startHour,
-                    schedulerConfig.startMinute, 
+                    schedulerConfig.startMinute,
                     schedulerConfig.startSecond,
                     schedulerConfig.startDay,
                     schedulerConfig.startMonth))

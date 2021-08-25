@@ -1,22 +1,16 @@
-﻿using Elevel.Application.Features.AuditionCommands;
+﻿using Elevel.Application.Extensions;
+using Elevel.Application.Features.AuditionCommands;
+using Elevel.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.IO;
 using System.Threading.Tasks;
-using Elevel.Application.Extensions;
-using Elevel.Domain.Enums;
-using Microsoft.AspNetCore.Http;
 
 namespace Elevel.Api.Controllers
 {
     [Authorize(Roles = nameof(UserRole.Coach)), Route("api/[controller]")]
     public class AuditionController : BaseApiController
     {
-        public AuditionController()
-        {
-        }
-
         /// <summary>
         /// Get list with auditions.
         /// Receive AuditionNumber and Level from query.
