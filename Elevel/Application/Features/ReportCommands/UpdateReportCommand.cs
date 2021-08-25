@@ -107,10 +107,9 @@ namespace Elevel.Application.Features.ReportCommands
                 if (request.ReportStatus == ReportStatus.Fixed)
                 {
                     _mailService.SendMessage(userEmail,
-                        "You get notification about received mistake report.",
-                        $"The Elevel team reviewed your report and fixed the error.<br/>"
-                        + "We are grateful for your help.<br/><br/>"
-                        + $"{(isRightAnswer ? $"You will be credited with 1 point." : $"")}"
+                        "Reported mistake has been resolved.",
+                        $"Your reported mistake has been resolved by Coach.< br/>"
+                        + $"{(isRightAnswer ? $"Thanks for reporting us!" : $"In thanks for reporting us one point is added to the score of test result.")}"
                         + "Please go to the following link to enter the Elevel site: <br/>"
                         + "<a href=\"http://exadel-train-app.herokuapp.com/\">Enter the Elevel site</a><br/><br/>"
                         + "Best regards, <br/>Elevel team");
@@ -118,8 +117,10 @@ namespace Elevel.Application.Features.ReportCommands
                 else if (request.ReportStatus == ReportStatus.Declined)
                 {
                     _mailService.SendMessage(userEmail,
-                        "You get notification about received mistake report.",
-                        $"The Elevel team reviewed your report and declined it.<br/><br/>"
+                        "Mistake is investigated.",
+                        $"Your reported mistake has been investigated by Coach.<br/>"
+                        + "The reported mistake doesn't contain mistake. <br/>"
+                        + "Thanks for reporting us!<br/>"
                         + "Please go to the following link to enter the Elevel site: <br/>"
                         + "<a href=\"http://exadel-train-app.herokuapp.com/\">Enter the Elevel site</a><br/><br/>"
                         + "Best regards, <br/>Elevel team");
