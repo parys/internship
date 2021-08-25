@@ -60,6 +60,11 @@ namespace Elevel.Application.Features.ReportCommands
                     throw new ValidationException("You can't change this report status");
                 }
 
+                if(report.ReportStatus == ReportStatus.Fixed || report.ReportStatus == ReportStatus.Declined)
+                {
+                    throw new ValidationException("This report has already been solved");
+                }
+
                 if (report is null)
                 {
                     throw new NotFoundException(nameof(Report), request.Id);
@@ -87,14 +92,14 @@ namespace Elevel.Application.Features.ReportCommands
 
                     if (report.QuestionId.HasValue && report.AuditionId.HasValue && !report.TopicId.HasValue)
                     {
-                        if (isRightAnswer)
+                        if (!isRightAnswer)
                         {
                             test.AuditionMark++;
                         }
                     }
                     else if (report.QuestionId.HasValue && !report.AuditionId.HasValue && !report.TopicId.HasValue)
                     {
-                        if (isRightAnswer)
+                        if (!isRightAnswer)
                         {
                             test.GrammarMark++;
                         }

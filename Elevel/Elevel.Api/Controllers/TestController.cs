@@ -88,8 +88,8 @@ namespace Elevel.Api.Controllers
         public async Task<IActionResult> GetAllTestsAsync([FromQuery] GetAllTestsQuery.Request request)
         {
             var userRole = User.GetLoggedInUserRole();
-            if (userRole != nameof(UserRole.HumanResourceManager)
-                || User.GetLoggedInUserId() != request.UserId)
+            if (userRole != nameof(UserRole.HumanResourceManager) && !request.UserId.HasValue ||
+                userRole != nameof(UserRole.HumanResourceManager) && User.GetLoggedInUserId() != request.UserId)
             {
                 return Forbid();
             }
