@@ -18,24 +18,30 @@ namespace Elevel.Test.QuestionCommandTest
             _validator = new Validator();
         }
 
-        [Fact]
-        public void CheckIfTheTopicNameIsValid()
+        [Theory]
+        [InlineData("Valid data")]
+        [InlineData("vfnfkevejkdfvg")]
+        [InlineData("пример")]
+        [InlineData("64815156")]
+        public void CreateQuestion_WhenNameProvided_ReturnsOk(string name)
         {
             var model = new Request
             {
-                NameQuestion = "Valid Question Name"
+                NameQuestion = name
             };
 
             var result = _validator.TestValidate(model, opt => opt.IncludeProperties(x => x.NameQuestion));
             result.ShouldNotHaveValidationErrorFor(x => x.NameQuestion);
         }
 
-        [Fact]
-        public void CheckIfTheTopicNameIsNull()
+        [Theory]
+        [InlineData((string)null)]
+        [InlineData("")]
+        public void CreateQuestion_WhenInvalidNameProvided_ReturnsValidationError(string name)
         {
             var model = new Request
             {
-                NameQuestion = null
+                NameQuestion = name
             };
 
             var result = _validator.TestValidate(model, opt => opt.IncludeProperties(x => x.NameQuestion));
@@ -43,19 +49,7 @@ namespace Elevel.Test.QuestionCommandTest
         }
 
         [Fact]
-        public void CheckIfTheTopicNameIsEmpty()
-        {
-            var model = new Request
-            {
-                NameQuestion = ""
-            };
-
-            var result = _validator.TestValidate(model, opt => opt.IncludeProperties(x => x.NameQuestion));
-            result.ShouldHaveValidationErrorFor(x => x.NameQuestion);
-        }
-
-        [Fact]
-        public void CheckIfLevelIsInEnum()
+        public void CreateQuestion_WhenValidLevelProvided_ReturnsOk()
         {
             Random rnm = new();
             var model = new Request
@@ -67,12 +61,14 @@ namespace Elevel.Test.QuestionCommandTest
             result.ShouldNotHaveValidationErrorFor(x => x.Level);
         }
 
-        [Fact]
-        public void CheckIfLevelIsNotInEnum()
+        [Theory]
+        [InlineData((Level)0)]
+        [InlineData((Level)42)]
+        public void CreateQuestion_WhenInvalidLevelProvided_ReturnsValidationError(Level level)
         {
             var model = new Request
             {
-                Level = (Level)6
+                Level = level
             };
 
             var result = _validator.TestValidate(model, opt => opt.IncludeProperties(x => x.Level));
@@ -80,7 +76,7 @@ namespace Elevel.Test.QuestionCommandTest
         }
 
         [Fact]
-        public void CheckIfTheAnswersAreValid()
+        public void CreateQuestion_WhenValidAnswersProvided_ReturnsOk()
         {
             var model = new Request
             {
@@ -97,7 +93,7 @@ namespace Elevel.Test.QuestionCommandTest
         }
 
         [Fact]
-        public void CheckIfTheAmountOfAnswersDoesNotEqualsFour()
+        public void CreateQuestion_WhenNotFourAnswersProvided_ReturnsValidationError()
         {
             var model = new Request
             {
@@ -115,7 +111,7 @@ namespace Elevel.Test.QuestionCommandTest
         }
 
         [Fact]
-        public void CheckIfTheAmountOfRightAnswersDoesNotEqualsOne()
+        public void CreateQuestion_WhenNotOneRightAnswerProvided_ReturnsValidationError()
         {
             var model = new Request
             {
