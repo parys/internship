@@ -33,6 +33,7 @@ namespace Elevel.Application.Features.QuestionCommands
             public Validator()
             {
                 RuleFor(x => x.NameQuestion)
+                    .NotNull()
                     .NotEmpty()
                     .WithMessage("The question name can't be empty or null!");
 
