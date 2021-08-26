@@ -36,7 +36,7 @@ namespace Elevel.Application.Features.ReportCommands
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-               var report = await _context.Reports
+               var report = await _context.Reports.IgnoreQueryFilters()
                     .AsNoTracking()
                     .ProjectTo<Response>(_mapper.ConfigurationProvider)
                     .FirstOrDefaultAsync(a => a.Id == request.Id, cancellationToken);
