@@ -39,7 +39,7 @@ namespace Elevel.Application.Features.ReportCommands
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var dbReport = _context.Reports
+                var dbReport = _context.Reports.IgnoreQueryFilters()
                     .AsNoTracking();
 
                 if (request.CreatorId.HasValue)
