@@ -83,6 +83,7 @@ namespace Elevel.Application.Features.QuestionCommands
 
                 var newQuestion = _mapper.Map<Question>(request);
                 newQuestion.Id = Guid.NewGuid();
+                newQuestion.CreatorId = request.CreatorId;
                 foreach (var answer in newQuestion.Answers)
                 {
                     answer.Id = Guid.NewGuid();
