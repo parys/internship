@@ -21,10 +21,10 @@ namespace Elevel.Domain
                         PhoneNumberConfirmed = true,
                         FirstName = "Admin",
                         LastName = "Adminov",
-                        UserName = "AdminAdminov",
+                        UserName = "Admin_Adminov",
                         Email = "ElevelAdministrator@gmail.com",
                         CreationDate = DateTimeOffset.Now,
-                        Avatar = @"\wwwroot\default_avatar.jpg"
+                        Avatar = @"ava1.jpg"
                     },
                     new User()
                     {
@@ -32,10 +32,10 @@ namespace Elevel.Domain
                         PhoneNumberConfirmed = true,
                         FirstName = "Admin1",
                         LastName = "Adminov1",
-                        UserName = "AdminAdminov1",
+                        UserName = "Admin_Adminov1",
                         Email = "ElevelAdministrator1@gmail.com",
                         CreationDate = DateTimeOffset.Now,
-                        Avatar = @"\wwwroot\default_avatar1.jpg"
+                       Avatar = @"ava2.jpg"
                     },
                     new User()
                     {
@@ -43,10 +43,10 @@ namespace Elevel.Domain
                         PhoneNumberConfirmed = true,
                         FirstName = "Admin2",
                         LastName = "Adminov2",
-                        UserName = "AdminAdminov2",
+                        UserName = "Admin_Adminov2",
                         Email = "ElevelAdministrator2@gmail.com",
                         CreationDate = DateTimeOffset.Now,
-                        Avatar = @"\wwwroot\default_avatar2.jpg"
+                        Avatar = @"ava3.jpg"
                     }
                 }
             },
@@ -56,69 +56,69 @@ namespace Elevel.Domain
                 {
                     new User()
                     {
-                        UserName = "UserUserov",
+                        UserName = "User_Userov",
                         EmailConfirmed = true,
                         PhoneNumberConfirmed = true,
                         FirstName = "User",
                         LastName = "Userov",
                         Email = "ElevelUser@gmail.com",
                         CreationDate = DateTimeOffset.Now,
-                        Avatar = @"\wwwroot\default_avatar.jpg"
+                        Avatar = @"ava4.jpg"
                     },
                     new User()
                     {
-                        UserName = "UserUserov1",
+                        UserName = "User_Userov1",
                         EmailConfirmed = true,
                         PhoneNumberConfirmed = true,
                         FirstName = "User1",
                         LastName = "Userov1",
                         Email = "ElevelUser1@gmail.com",
                         CreationDate = DateTimeOffset.Now,
-                        Avatar = @"\wwwroot\default_avatar1.jpg"
+                        Avatar = @"ava5.jpg"
                     },
                     new User()
                     {
-                        UserName = "UserUserov2",
+                        UserName = "User_Userov2",
                         EmailConfirmed = true,
                         PhoneNumberConfirmed = true,
                         FirstName = "User2",
                         LastName = "Userov2",
                         Email = "ElevelUser2@gmail.com",
                         CreationDate = DateTimeOffset.Now,
-                        Avatar = @"\wwwroot\default_avatar2.jpg"
+                        Avatar = @"ava6.jpg"
                     },
                     new User()
                     {
-                        UserName = "UserUserov3",
+                        UserName = "User_Userov3",
                         EmailConfirmed = true,
                         PhoneNumberConfirmed = true,
                         FirstName = "User3",
                         LastName = "Userov3",
                         Email = "ElevelUser3@gmail.com",
                         CreationDate = DateTimeOffset.Now,
-                        Avatar = @"\wwwroot\default_avatar3.jpg"
+                        Avatar = @"ava7.jpg"
                     },
                     new User()
                     {
-                        UserName = "UserUserov4",
+                        UserName = "User_Userov4",
                         EmailConfirmed = true,
                         PhoneNumberConfirmed = true,
                         FirstName = "User4",
                         LastName = "Userov4",
                         Email = "ElevelUser4@gmail.com",
                         CreationDate = DateTimeOffset.Now,
-                        Avatar = @"\wwwroot\default_avatar4.jpg"
+                        Avatar = @"ava8.jpg"
                     },
                     new User()
                     {
-                        UserName = "UserUserov5",
+                        UserName = "User_Userov5",
                         EmailConfirmed = true,
                         PhoneNumberConfirmed = true,
                         FirstName = "User5",
                         LastName = "Userov5",
                         Email = "ElevelUser5@gmail.com",
                         CreationDate = DateTimeOffset.Now,
-                        Avatar = @"\wwwroot\default_avatar5.jpg"
+                        Avatar = @"ava9.jpg"
                     },
                 }
             },
@@ -128,25 +128,25 @@ namespace Elevel.Domain
                 {
                     new User()
                     {
-                        UserName = "CoachCoachev",
+                        UserName = "Coach_Coachev",
                         EmailConfirmed = true,
                         PhoneNumberConfirmed = true,
                         FirstName = "Coach",
                         LastName = "Coachev",
                         Email = "ElevelCoach@gmail.com",
                         CreationDate = DateTimeOffset.Now,
-                        Avatar = @"\wwwroot\default_avatar.jpg"
+                        Avatar = @"ava10.jpg"
                     },
                     new User()
                     {
-                        UserName = "CoachCoachev1",
+                        UserName = "Coach_Coachev1",
                         EmailConfirmed = true,
                         PhoneNumberConfirmed = true,
                         FirstName = "Coach1",
                         LastName = "Coachev1",
                         Email = "ElevelCoach1@gmail.com",
                         CreationDate = DateTimeOffset.Now,
-                        Avatar = @"\wwwroot\default_avatar1.jpg"
+                        Avatar = @"ava11.jpg"
                     }
                 }
             },
@@ -156,36 +156,36 @@ namespace Elevel.Domain
                 {
                     new User()
                     {
-                        UserName = "ManagerManagerov",
+                        UserName = "Manager_Managerov",
                         EmailConfirmed = true,
                         PhoneNumberConfirmed = true,
                         FirstName = "Manager",
                         LastName = "Managerov",
                         Email = "ElevelHumanResourceManager@gmail.com",
                         CreationDate = DateTimeOffset.Now,
-                        Avatar = @"\wwwroot\default_avatar.jpg"
+                        Avatar = @"ava12.jpg"
                     },
                     new User()
                     {
-                        UserName = "ManagerManagerov1",
+                        UserName = "Manager_Managerov1",
                         EmailConfirmed = true,
                         PhoneNumberConfirmed = true,
                         FirstName = "Manager1",
                         LastName = "Managerov1",
                         Email = "ElevelHumanResourceManager1@gmail.com",
                         CreationDate = DateTimeOffset.Now,
-                        Avatar = @"\wwwroot\default_avatar1.jpg"
+                        Avatar = @"ava13.jpg"
                     },
                     new User()
                     {
-                        UserName = "ManagerManagerov2",
+                        UserName = "Manager_Managerov2",
                         EmailConfirmed = true,
                         PhoneNumberConfirmed = true,
                         FirstName = "Manager2",
                         LastName = "Managerov2",
                         Email = "ElevelHumanResourceManager2@gmail.com",
                         CreationDate = DateTimeOffset.Now,
-                        Avatar = @"\wwwroot\default_avatar2.jpg"
+                        Avatar = @"ava14.jpg"
                     }
                 }
             }

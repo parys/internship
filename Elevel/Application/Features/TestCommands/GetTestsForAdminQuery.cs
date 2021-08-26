@@ -44,8 +44,8 @@ namespace Elevel.Application.Features.TestCommands
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
                 var tests = _context.Tests.AsNoTracking()
-                    .Where(x => !string.IsNullOrWhiteSpace(x.EssayAnswer) 
-                    || !string.IsNullOrWhiteSpace(x.SpeakingAnswerReference));
+                    .Where(x => !x.EssayMark.HasValue
+                    && !x.SpeakingMark.HasValue && x.AuditionMark.HasValue && x.GrammarMark.HasValue);
 
                 if (request.IsAssigned)
                 {

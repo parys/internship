@@ -71,6 +71,8 @@ namespace Elevel.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatorId");
+
                     b.ToTable("Auditions");
                 });
 
@@ -109,6 +111,8 @@ namespace Elevel.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("AuditionId");
 
+                    b.HasIndex("CreatorId");
+
                     b.ToTable("Questions");
                 });
 
@@ -125,6 +129,9 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("SYSDATETIMEOFFSET()");
+
+                    b.Property<Guid>("CreatorId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -149,6 +156,8 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AuditionId");
+
+                    b.HasIndex("CreatorId");
 
                     b.HasIndex("QuestionId");
 
@@ -300,6 +309,8 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatorId");
 
                     b.ToTable("Topics");
                 });
@@ -522,6 +533,17 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     b.Navigation("Question");
                 });
 
+            modelBuilder.Entity("Elevel.Domain.Models.Audition", b =>
+                {
+                    b.HasOne("Elevel.Domain.Models.User", "Creator")
+                        .WithMany("Auditions")
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Creator");
+                });
+
             modelBuilder.Entity("Elevel.Domain.Models.Question", b =>
                 {
                     b.HasOne("Elevel.Domain.Models.Audition", "Audition")
@@ -529,7 +551,15 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         .HasForeignKey("AuditionId")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("Elevel.Domain.Models.User", "Creator")
+                        .WithMany("Questions")
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Audition");
+
+                    b.Navigation("Creator");
                 });
 
             modelBuilder.Entity("Elevel.Domain.Models.Report", b =>
@@ -539,6 +569,12 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         .HasForeignKey("AuditionId")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("Elevel.Domain.Models.User", "Creator")
+                        .WithMany("CreatorReports")
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Elevel.Domain.Models.Question", "Question")
                         .WithMany("Reports")
                         .HasForeignKey("QuestionId")
@@ -547,7 +583,8 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     b.HasOne("Elevel.Domain.Models.Test", "Test")
                         .WithMany("Reports")
                         .HasForeignKey("TestId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Elevel.Domain.Models.Topic", "Topic")
                         .WithMany("Reports")
@@ -561,6 +598,8 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Audition");
+
+                    b.Navigation("Creator");
 
                     b.Navigation("Question");
 
@@ -641,6 +680,17 @@ namespace Elevel.Infrastructure.Persistence.Migrations
                     b.Navigation("Test");
 
                     b.Navigation("UserAnswer");
+                });
+
+            modelBuilder.Entity("Elevel.Domain.Models.Topic", b =>
+                {
+                    b.HasOne("Elevel.Domain.Models.User", "Creator")
+                        .WithMany("Topics")
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Creator");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -735,9 +785,17 @@ namespace Elevel.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Elevel.Domain.Models.User", b =>
                 {
+                    b.Navigation("Auditions");
+
                     b.Navigation("CoachTests");
 
+                    b.Navigation("CreatorReports");
+
                     b.Navigation("HrTests");
+
+                    b.Navigation("Questions");
+
+                    b.Navigation("Topics");
 
                     b.Navigation("UserReports");
 

@@ -17,5 +17,13 @@ namespace Elevel.Application.Extensions
 
             return Guid.Parse(userId);
         }
+        public static string GetLoggedInUserRole(this ClaimsPrincipal principal)
+        {
+            var claims = principal.Claims.ToList();
+
+            var userRole = claims.FirstOrDefault(x => x.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role").Value;
+
+            return userRole;
+        }
     }
 }

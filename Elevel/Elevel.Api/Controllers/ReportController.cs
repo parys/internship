@@ -9,7 +9,7 @@ using Elevel.Domain.Enums;
 
 namespace Elevel.Api.Controllers
 {
-    [Authorize, Route("api/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class ReportController : BaseApiController
     {
@@ -19,6 +19,7 @@ namespace Elevel.Api.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
+        [Authorize(Roles = nameof(UserRole.Coach))]
         [HttpGet]
         public async Task<IActionResult> GetReportList([FromQuery] GetReportListQuery.Request request)
         {
@@ -34,6 +35,7 @@ namespace Elevel.Api.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
+        [Authorize(Roles = nameof(UserRole.Coach))]
         [HttpGet("{Id:Guid}")]
         public async Task<IActionResult> GetReportById([FromRoute] GetReportDetailQuery.Request request)
         {
@@ -51,6 +53,7 @@ namespace Elevel.Api.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateReportAsync([FromBody] CreateReportCommand.Request request)
         {
@@ -69,6 +72,7 @@ namespace Elevel.Api.Controllers
         /// <param name="id"></param>
         /// <param name="request"></param>
         /// <returns></returns>
+        [Authorize(Roles = nameof(UserRole.Coach))]
         [HttpPut("{Id:Guid}")]
         public async Task<IActionResult> UpdateReportAsync([FromRoute] Guid id,
             [FromBody] UpdateReportCommand.Request request)
@@ -77,6 +81,8 @@ namespace Elevel.Api.Controllers
             {
                 return BadRequest("Id's from url and from body are different");
             }
+
+            request.CoachId = User.GetLoggedInUserId();
 
             var response = await Mediator.Send(request);
 

@@ -47,6 +47,14 @@ namespace Elevel.Application.Features.TestCommands
                 RuleFor(x => x.AuditionAnswers)
                     .Must(x => x is null ? true : x.Count() == x.Distinct().Count())
                     .WithMessage("Some answers from audition are the same");
+
+                RuleFor(x => x.GrammarAnswers.Count())
+                    .InclusiveBetween(Constants.MIN_QUESTION_AMOUNT,Constants.GRAMMAR_QUESTION_AMOUNT)
+                    .WithMessage("Amount of grammar answers");
+
+                RuleFor(x => x.AuditionAnswers.Count())
+                    .InclusiveBetween(Constants.MIN_QUESTION_AMOUNT, Constants.GRAMMAR_QUESTION_AMOUNT)
+                    .WithMessage("Amount of grammar answers");
             }
         }
         public class Handler : IRequestHandler<Request, Response>
@@ -89,10 +97,10 @@ namespace Elevel.Application.Features.TestCommands
                     throw new ValidationException("Essay Answer is too long");
                 }
 
-                //if (DateTimeOffset.Compare(((DateTimeOffset)test.TestPassingDate).AddMinutes(Constants.TEST_DURATION), DateTimeOffset.Now) < 0)
-                //{
-                //    throw new ValidationException("Test time has passed");
-                //}
+                if (DateTimeOffset.Compare(((DateTimeOffset)test.TestPassingDate).AddMinutes(Constants.TEST_DURATION), DateTimeOffset.Now) < 0)
+                {
+                    throw new ValidationException("Test time has passed");
+                }
 
                 if (!request.GrammarAnswers.Any()
                     && !request.AuditionAnswers.Any())
@@ -136,7 +144,7 @@ namespace Elevel.Application.Features.TestCommands
 
             private async Task CheckAnswersBelongtoTestAsync(IEnumerable<Guid> answers, Guid testId)
             {
-                var questionIds = await _context.TestQuestions
+                var questionIds = await _context.TestQuestions.IgnoreQueryFilters()
                     .Where(x => x.TestId == testId)
                     .Join(_context.Answers, tq => tq.QuestionId, an => an.QuestionId,
                         (tq, an) => new
@@ -154,7 +162,7 @@ namespace Elevel.Application.Features.TestCommands
 
             private void CheckSingleAnswerForQuestion(IEnumerable<Guid> answers, Guid testId)
             {
-                var questionAnswers = _context.TestQuestions.Where(x => x.TestId == testId)
+                var questionAnswers = _context.TestQuestions.IgnoreQueryFilters().Where(x => x.TestId == testId)
                     .Join(_context.Answers,
                     tq => tq.QuestionId,
                     an => an.QuestionId,

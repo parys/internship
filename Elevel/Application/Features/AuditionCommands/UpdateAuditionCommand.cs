@@ -21,6 +21,8 @@ namespace Elevel.Application.Features.AuditionCommands
     {
         public class Request : IRequest<Response>
         {
+            [JsonIgnore]
+            public Guid CreatorId { get; set; }
             public Guid Id { get; set; }
             public string AudioFilePath { get; set; }
             public Level Level { get; set; }
@@ -111,6 +113,8 @@ namespace Elevel.Application.Features.AuditionCommands
                     throw new NotFoundException(nameof(Audition), request.Id);
                 }
 
+                audition.Deleted = true;
+
                 foreach (var question in request.Questions)
                 {
                     var dbQuestion = audition.Questions.FirstOrDefault(x => x.Id == question.Id);
@@ -120,28 +124,42 @@ namespace Elevel.Application.Features.AuditionCommands
                         throw new ArgumentException("Invalid question Id.", nameof(request));
                     }
 
-                    var questionsAnswersIdList = question.Answers.Select(x => x.Id);
-                    var dbQuestionsAnswersIdList = dbQuestion.Answers.Select(x => x.Id);
-
-                    if (questionsAnswersIdList.Count() != dbQuestionsAnswersIdList.Count() || 
-                        !questionsAnswersIdList.All(x=> dbQuestionsAnswersIdList.Contains(x)))
-                    {
-                        throw new ArgumentException("Invalid answer Id.", nameof(request));
-                    }
-
-                    question.QuestionNumber = dbQuestion.QuestionNumber;
-                    question.Level = request.Level;
+                    dbQuestion.Deleted = true;
                 }
 
-                audition = _mapper.Map(request, audition);
+                var newAudition = _mapper.Map<Audition>(request);
+
+                newAudition.Id = Guid.NewGuid();
+                foreach (var question in newAudition.Questions)
+                {
+                    question.Id = Guid.NewGuid();
+                    question.Level = newAudition.Level;
+                    question.AuditionId = newAudition.Id;
+                    question.CreatorId = newAudition.CreatorId;
+
+                    foreach (var answer in question.Answers)
+                    {
+                        answer.Id = Guid.NewGuid();
+                        answer.QuestionId = question.Id;
+                    }
+                }
+
+                _context.Auditions.Add(newAudition);
+
                 await _context.SaveChangesAsync(cancellationToken);
-                return new Response { Id = audition.Id };
+
+                var response = _mapper.Map<Response>(newAudition);
+
+                return response;
             }
         }
 
         public class Response
         {
             public Guid Id { get; set; }
+            public string AudioFilePath { get; set; }
+            public Level Level { get; set; }
+            public List<QuestionDto> Questions { get; set; }
         }
 
         public class QuestionDto

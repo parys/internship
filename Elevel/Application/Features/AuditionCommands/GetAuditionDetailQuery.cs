@@ -33,7 +33,7 @@ namespace Elevel.Application.Features.AuditionCommands
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var audition = await _context.Auditions
+                var audition = await _context.Auditions.IgnoreQueryFilters()
                     .ProjectTo<Response>(_mapper.ConfigurationProvider)
                     .FirstOrDefaultAsync(a => a.Id == request.Id, cancellationToken);
                 

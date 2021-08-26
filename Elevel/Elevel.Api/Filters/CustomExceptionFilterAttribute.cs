@@ -35,6 +35,12 @@ namespace Elevel.Api.Filters
                 context.Result = new JsonResult(validationException.Message);
             }
 
+            if (string.Equals(context.Exception.Message, "Forbidden", StringComparison.CurrentCultureIgnoreCase))
+            {
+                code = HttpStatusCode.Forbidden;
+                context.Result = new JsonResult("Forbidden");
+            }
+
             if(context.Exception is NotFoundException notFoundException)
             {
                 code = HttpStatusCode.NotFound;

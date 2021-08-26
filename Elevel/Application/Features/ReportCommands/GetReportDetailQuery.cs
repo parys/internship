@@ -6,8 +6,10 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper.QueryableExtensions;
 using Elevel.Domain.Enums;
 
 namespace Elevel.Application.Features.ReportCommands
@@ -34,7 +36,9 @@ namespace Elevel.Application.Features.ReportCommands
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var report = await _context.Reports.AsNoTracking()
+               var report = await _context.Reports.IgnoreQueryFilters()
+                    .AsNoTracking()
+                    .ProjectTo<Response>(_mapper.ConfigurationProvider)
                     .FirstOrDefaultAsync(a => a.Id == request.Id, cancellationToken);
 
                 if (report is null)
@@ -44,34 +48,6 @@ namespace Elevel.Application.Features.ReportCommands
 
                 var response = _mapper.Map<Response>(report);
 
-                if (report.QuestionId != null)
-                {
-                    var question = _context.Questions.FirstOrDefaultAsync(x => x.Id == report.QuestionId, cancellationToken: cancellationToken);
-                    
-                    if (question is null)
-                    {
-                        throw new NotFoundException(nameof(User));
-                    }
-
-                    var coach = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == question.Result.CreatorId, cancellationToken);
-                    
-                    if (coach is null)
-                    {
-                        throw new NotFoundException(nameof(User));
-                    }
-
-                    response.User = new UserDTO
-                    {
-                        UserName = report.User.UserName
-                    };
-
-                    response.Coach = new CoachDTO
-                    {
-                        CoachName = coach.UserName
-                    };
-
-                }
-                
                 return response;
             }
         }
@@ -82,18 +58,10 @@ namespace Elevel.Application.Features.ReportCommands
             public string Description { get; set; }
             public DateTimeOffset CreationDate { get; set; }
             public ReportStatus ReportStatus { get; set; }
-            public UserDTO User { get; set; }
-            public CoachDTO Coach { get; set; }
-        }
-
-        public class UserDTO
-        {
             public string UserName { get; set; }
-        }
-
-        public class CoachDTO
-        {
+            public Guid UserId { get; set; }
             public string CoachName { get; set; }
+            public Guid CoachId { get; set; }
         }
     }
 }

@@ -31,7 +31,8 @@ namespace Elevel.Application.Features.TopicCommands
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var topic = await _context.Topics.AsNoTracking()
+                var topic = await _context.Topics.IgnoreQueryFilters()
+                    .AsNoTracking()
                     .ProjectTo<Response>(_mapper.ConfigurationProvider)
                     .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
@@ -48,6 +49,7 @@ namespace Elevel.Application.Features.TopicCommands
         public class Response
         {
             public Guid Id { get; set; }
+            public long TopicNumber { get; set; }
             public string TopicName { get; set; }
             public Level Level { get; set; }
             public Guid CreatorId { get; set; }

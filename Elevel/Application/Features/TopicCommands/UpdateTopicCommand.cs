@@ -2,10 +2,12 @@
 using Elevel.Application.Infrastructure;
 using Elevel.Application.Interfaces;
 using Elevel.Domain.Enums;
+using Elevel.Domain.Models;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,6 +17,8 @@ namespace Elevel.Application.Features.TopicCommands
     {
         public class Request : IRequest<Response>
         {
+            [JsonIgnore]
+            public Guid CreatorId { get; set; }
             public Guid Id { get; set; }
             public string TopicName { get; set; }
             public Level Level { get; set; }
@@ -51,15 +55,29 @@ namespace Elevel.Application.Features.TopicCommands
                     throw new NotFoundException($"The topic with the ID = {request.Id}");
                 }
 
-                topic = _mapper.Map(request, topic);
+                topic.Deleted = true;
+
+                var newTopic = _mapper.Map<Topic>(request);
+                newTopic.Id = Guid.NewGuid();
+
+                _context.Topics.Add(newTopic);
+
                 await _context.SaveChangesAsync(cancellationToken);
-                return new Response { Id = topic.Id };
+
+                var response = _mapper.Map<Response>(newTopic);
+
+                return response;
             }
         }
 
         public class Response
         {
+            
             public Guid Id { get; set; }
+            public string TopicName { get; set; }
+            public Level Level { get; set; }
+            public Guid CreatorId { get; set; }
+            public DateTimeOffset CreationDate { get; set; }
         }
 
     }
