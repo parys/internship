@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elevel.Infrastructure.Servi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{EF32189E-C599-4905-8564-10FC4A19CFFC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elevel.Test", "Elevel.Test\Elevel.Test.csproj", "{5AF52435-0292-4E07-8297-77C429880AF4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elevel.Test", "Elevel.Test\Elevel.Test.csproj", "{5AF52435-0292-4E07-8297-77C429880AF4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
