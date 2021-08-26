@@ -21,6 +21,21 @@ namespace Elevel.Test.QuestionCommandTest
             _validator = new Validator();
         }
 
+        public static IEnumerable<object[]> ValidData => new List<object[]>
+        {
+            new object[] {new List<string> {"Nitwit", "Blubber", "Oddment", "Tweat"}, new List<bool> { false, true, false, false} },
+            new object[] {new List<string> {"Fall", "Winter", "Spring", "Summer"}, new List<bool> { false, false, false, true}},
+            new object[] {new List<string> {"One", "Two", "Three", "Four"}, new List<bool> { false, false, true, false}}
+        };
+
+        public static IEnumerable<object[]> UnvalidData => new List<object[]>
+        {
+            new object[] {new List<string> {"That", "is", "enough"}, new List<bool> { false, true, false}},
+            new object[] {new List<string> {"Every", "Answer", "Is", "Fine"}, new List<bool> { true, true, true, true } },
+            new object[] {new List<string> {"There", "Is", "no", "answer"}, new List<bool> {false, false, false, false } },
+            new object[] {new List<string> {"Two", "errors", "at once"}, new List<bool> { false, true, true}}
+        };
+
         [Theory]
         [InlineData("Valid data")]
         [InlineData("vfnfkevejkdfvg")]
@@ -78,53 +93,37 @@ namespace Elevel.Test.QuestionCommandTest
             result.ShouldHaveValidationErrorFor(x => x.Level);
         }
 
-        [Fact]
-        public void UpdateQuestion_WhenValidAnswersProvided_ReturnsOk()
+        [Theory]
+        [MemberData(nameof(ValidData))]
+        public void UpdateQuestion_WhenValidAnswersProvided_ReturnsOk(List<string> name, List<bool> isRight)
         {
             var model = new Request
             {
                 Answers = new List<AnswerDto>()
             };
 
-            model.Answers.Add(new AnswerDto { NameAnswer = "First", IsRight = true });
-            model.Answers.Add(new AnswerDto { NameAnswer = "Second", IsRight = false });
-            model.Answers.Add(new AnswerDto { NameAnswer = "Third", IsRight = false });
-            model.Answers.Add(new AnswerDto { NameAnswer = "Fourth", IsRight = false });
+            for (var i = 0; i < name.Count; i++)
+            {
+                model.Answers.Add(new AnswerDto { NameAnswer = name[i], IsRight = isRight[i]});
+            }
 
             var result = _validator.TestValidate(model, opt => opt.IncludeProperties(x => x.Answers));
             result.ShouldNotHaveValidationErrorFor(x => x.Answers);
         }
 
-        [Fact]
-        public void UpdateQuestion_WhenNotFourAnswersProvided_ReturnsValidationError()
+        [Theory]
+        [MemberData(nameof(UnvalidData))]
+        public void UpdateQuestion_WhenUnvalidAnswersProvided_ReturnsValidationError(List<string> name, List<bool> isRight)
         {
             var model = new Request
             {
                 Answers = new List<AnswerDto>()
             };
 
-            model.Answers.Add(new AnswerDto { NameAnswer = "First", IsRight = true });
-            model.Answers.Add(new AnswerDto { NameAnswer = "Second", IsRight = false });
-            model.Answers.Add(new AnswerDto { NameAnswer = "Third", IsRight = false });
-            model.Answers.Add(new AnswerDto { NameAnswer = "Fourth", IsRight = false });
-            model.Answers.Add(new AnswerDto { NameAnswer = "Fifth", IsRight = false });
-
-            var result = _validator.TestValidate(model, opt => opt.IncludeProperties(x => x.Answers));
-            result.ShouldHaveValidationErrorFor(x => x.Answers);
-        }
-
-        [Fact]
-        public void UpdateQuestion_WhenNotOneRightAnswerProvided_ReturnsValidationError()
-        {
-            var model = new Request
+            for (var i = 0; i < name.Count; i++)
             {
-                Answers = new List<AnswerDto>()
-            };
-
-            model.Answers.Add(new AnswerDto { NameAnswer = "First", IsRight = true });
-            model.Answers.Add(new AnswerDto { NameAnswer = "Second", IsRight = false });
-            model.Answers.Add(new AnswerDto { NameAnswer = "Third", IsRight = false });
-            model.Answers.Add(new AnswerDto { NameAnswer = "Fourth", IsRight = true });
+                model.Answers.Add(new AnswerDto { NameAnswer = name[i], IsRight = isRight[i] });
+            }
 
             var result = _validator.TestValidate(model, opt => opt.IncludeProperties(x => x.Answers));
             result.ShouldHaveValidationErrorFor(x => x.Answers);
