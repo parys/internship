@@ -35,31 +35,25 @@ namespace Elevel.Application.Features.ReportCommands
             {
                 this.CascadeMode = CascadeMode.Stop;
                 
-                When(x => x.QuestionId.HasValue && !x.AuditionId.HasValue, () =>
+                When(x => (x.QuestionId.HasValue && !x.QuestionId.Equals(Guid.Empty)) && !x.AuditionId.HasValue, () =>
                 {
-                    RuleFor(x => x.QuestionId).NotEmpty().NotEqual(Guid.Empty)
-                        .WithMessage("When QuestionId is given, AuditionId and TopicId must be empty.");
                     RuleFor(x => x.TopicId).Null()
                         .WithMessage("When QuestionId is given, AuditionId and TopicId must be empty.");
                 });
 
-                When(x => x.AuditionId.HasValue, () =>
+                When(x => x.AuditionId.HasValue && !x.AuditionId.Equals(Guid.Empty), () =>
                 {
-                    RuleFor(x => x.AuditionId).NotEmpty().NotEqual(Guid.Empty)
-                        .WithMessage("When QuestionId and AuditionId is given, TopicId must be empty.");
                     RuleFor(x => x.QuestionId).NotEmpty().NotEqual(Guid.Empty)
-                        .WithMessage("When QuestionId and AuditionId is given, TopicId must be empty.");
+                        .WithMessage("When AuditionId is given, QuestionId and TopicId must be empty.");
                     RuleFor(x => x.TopicId).Null()
                         .WithMessage("When QuestionId and AuditionId is given, TopicId must be empty.");
                 });
 
-                When(x => x.TopicId.HasValue, () =>
+                When(x => x.TopicId.HasValue && !x.TopicId.Equals(Guid.Empty), () =>
                 {
                     RuleFor(x => x.QuestionId).Null()
                         .WithMessage("When TopicId is given, AuditionId and QuestionId must be empty.");
                     RuleFor(x => x.AuditionId).Null()
-                        .WithMessage("When TopicId is given, AuditionId and QuestionId must be empty.");
-                    RuleFor(x => x.TopicId).NotEmpty().NotEqual(Guid.Empty)
                         .WithMessage("When TopicId is given, AuditionId and QuestionId must be empty.");
                 });
 
@@ -67,7 +61,7 @@ namespace Elevel.Application.Features.ReportCommands
                     x.QuestionId.HasValue && x.QuestionId != Guid.Empty ||
                     x.AuditionId.HasValue && x.AuditionId != Guid.Empty ||
                     x.TopicId.HasValue && x.TopicId != Guid.Empty)
-                    .WithMessage("At least one field QuestionId, AuditionId or TopicId must have a value");
+                    .WithMessage("At least one field QuestionId, AuditionId or TopicId must have a value.");
             }
         }
 
