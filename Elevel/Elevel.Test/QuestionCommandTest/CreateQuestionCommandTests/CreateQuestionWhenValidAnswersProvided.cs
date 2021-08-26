@@ -2,19 +2,12 @@
 using System.Collections.Generic;
 using Xunit;
 using Request = Elevel.Application.Features.QuestionCommands.CreateQuestionCommand.Request;
-using Validator = Elevel.Application.Features.QuestionCommands.CreateQuestionCommand.Validator;
 using AnswerDto = Elevel.Application.Features.QuestionCommands.CreateQuestionCommand.AnswerDto;
 
 namespace Elevel.Test.QuestionCommandTest.CreateQuestionCommandTests
 {
-    public class CreateQuestionWhenValidAnswersProvided
+    public class CreateQuestionWhenValidAnswersProvided : CreateQuestionValidator
     {
-        private readonly Validator _validator;
-        public CreateQuestionWhenValidAnswersProvided()
-        {
-            _validator = new Validator();
-        }
-
         public static IEnumerable<object[]> ValidData => new List<object[]>
         {
             new object[] {new List<string> {"Nitwit", "Blubber", "Oddment", "Tweat"}, new List<bool> { false, true, false, false} },
@@ -24,7 +17,7 @@ namespace Elevel.Test.QuestionCommandTest.CreateQuestionCommandTests
 
         [Theory]
         [MemberData(nameof(ValidData))]
-        public void CreateQuestion_WhenValidAnswersProvided_Execute(List<string> name, List<bool> isRight)
+        public void CreateQuestion_WhenValidAnswersProvided_ShouldNotHaveError(List<string> name, List<bool> isRight)
         {
             var model = new Request
             {

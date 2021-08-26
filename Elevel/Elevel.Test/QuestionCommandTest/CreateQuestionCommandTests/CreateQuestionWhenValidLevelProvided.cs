@@ -3,20 +3,13 @@ using FluentValidation.TestHelper;
 using System;
 using Xunit;
 using Request = Elevel.Application.Features.QuestionCommands.CreateQuestionCommand.Request;
-using Validator = Elevel.Application.Features.QuestionCommands.CreateQuestionCommand.Validator;
 
 namespace Elevel.Test.QuestionCommandTest.CreateQuestionCommandTests
 {
-    public class CreateQuestionWhenValidLevelProvided
+    public class CreateQuestionWhenValidLevelProvided : CreateQuestionValidator
     {
-        private readonly Validator _validator;
-        public CreateQuestionWhenValidLevelProvided()
-        {
-            _validator = new Validator();
-        }
-
         [Fact]
-        public void CreateQuestion_WhenLevelProvided_Execute()
+        public void CreateQuestion_WhenLevelProvided_ShouldNotHaveError()
         {
             Random rnm = new();
             var model = new Request

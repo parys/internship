@@ -1,25 +1,17 @@
 ﻿using FluentValidation.TestHelper;
 using Xunit;
 using Request = Elevel.Application.Features.QuestionCommands.CreateQuestionCommand.Request;
-using Validator = Elevel.Application.Features.QuestionCommands.CreateQuestionCommand.Validator;
 
 namespace Elevel.Test.QuestionCommandTest.CreateQuestionCommandTests
 {
-    public class CreateQuestionWhenValidNameProvided
+    public class CreateQuestionWhenValidNameProvided : CreateQuestionValidator
     {
-
-        private readonly Validator _validator;
-        public CreateQuestionWhenValidNameProvided()
-        {
-            _validator = new Validator();
-        }
-
         [Theory]
         [InlineData("Valid data")]
         [InlineData("vfnfkevejkdfvg")]
         [InlineData("пример")]
         [InlineData("64815156")]
-        public void CreateQuestion_WhenNameProvided_Execute(string name)
+        public void CreateQuestion_WhenNameProvided_ShouldNotHaveError(string name)
         {
             var model = new Request
             {

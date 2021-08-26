@@ -2,18 +2,12 @@
 using System.Collections.Generic;
 using Xunit;
 using Request = Elevel.Application.Features.QuestionCommands.UpdateQuestionCommand.Request;
-using Validator = Elevel.Application.Features.QuestionCommands.UpdateQuestionCommand.Validator;
 using AnswerDto = Elevel.Application.Features.QuestionCommands.UpdateQuestionCommand.AnswerDto;
 
 namespace Elevel.Test.QuestionCommandTest.UpdateQuestionCommandTests
 {
-    public class UpdateQuestionWhenValidAnswersProvided
+    public class UpdateQuestionWhenValidAnswersProvided : UpdateQuestionValidator
     {
-        private readonly Validator _validator;
-        public UpdateQuestionWhenValidAnswersProvided()
-        {
-            _validator = new Validator();
-        }
 
         public static IEnumerable<object[]> ValidData => new List<object[]>
         {
@@ -24,7 +18,7 @@ namespace Elevel.Test.QuestionCommandTest.UpdateQuestionCommandTests
 
         [Theory]
         [MemberData(nameof(ValidData))]
-        public void UpdateQuestion_WhenValidAnswersProvided_Execute(List<string> name, List<bool> isRight)
+        public void UpdateQuestion_WhenValidAnswersProvided_ShouldNotHaveError(List<string> name, List<bool> isRight)
         {
             var model = new Request
             {

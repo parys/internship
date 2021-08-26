@@ -1,22 +1,16 @@
 ﻿using FluentValidation.TestHelper;
 using Xunit;
 using Request = Elevel.Application.Features.QuestionCommands.UpdateQuestionCommand.Request;
-using Validator = Elevel.Application.Features.QuestionCommands.UpdateQuestionCommand.Validator;
 
 namespace Elevel.Test.QuestionCommandTest.UpdateQuestionCommandTests
 {
-    public class UpdateQuestionWhenInvalidNameProvided
+    public class UpdateQuestionWhenInvalidNameProvided : UpdateQuestionValidator
     {
-        private readonly Validator _validator;
-        public UpdateQuestionWhenInvalidNameProvided()
-        {
-            _validator = new Validator();
-        }
 
         [Theory]
         [InlineData((string)null)]
         [InlineData("")]
-        public void UpdateQuestion_WhenInvalidNameProvided_Execute(string name)
+        public void UpdateQuestion_WhenInvalidNameProvided_ShouldHaveError(string name)
         {
             var model = new Request
             {

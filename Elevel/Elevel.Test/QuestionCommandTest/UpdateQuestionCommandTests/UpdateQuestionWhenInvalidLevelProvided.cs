@@ -2,22 +2,16 @@
 using FluentValidation.TestHelper;
 using Xunit;
 using Request = Elevel.Application.Features.QuestionCommands.UpdateQuestionCommand.Request;
-using Validator = Elevel.Application.Features.QuestionCommands.UpdateQuestionCommand.Validator;
 
 namespace Elevel.Test.QuestionCommandTest.UpdateQuestionCommandTests
 {
-    public class UpdateQuestionWhenInvalidLevelProvided
+    public class UpdateQuestionWhenInvalidLevelProvided : UpdateQuestionValidator
     {
-        private readonly Validator _validator;
-        public UpdateQuestionWhenInvalidLevelProvided()
-        {
-            _validator = new Validator();
-        }
 
         [Theory]
         [InlineData((Level)0)]
         [InlineData((Level)42)]
-        public void UpdateQuestion_WhenInvalidLevelProvided_Execute(Level level)
+        public void UpdateQuestion_WhenInvalidLevelProvided_ShouldHaveError(Level level)
         {
             var model = new Request
             {

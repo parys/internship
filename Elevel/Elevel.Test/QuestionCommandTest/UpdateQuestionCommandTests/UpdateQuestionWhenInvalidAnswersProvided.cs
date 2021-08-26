@@ -1,5 +1,4 @@
 ﻿using Xunit;
-using Validator = Elevel.Application.Features.QuestionCommands.UpdateQuestionCommand.Validator;
 using Request = Elevel.Application.Features.QuestionCommands.UpdateQuestionCommand.Request;
 using AnswerDto = Elevel.Application.Features.QuestionCommands.UpdateQuestionCommand.AnswerDto;
 using FluentValidation.TestHelper;
@@ -7,15 +6,8 @@ using System.Collections.Generic;
 
 namespace Elevel.Test.QuestionCommandTest.UpdateQuestionCommandTests
 {
-    public class UpdateQuestionWhenInvalidAnswersProvided
+    public class UpdateQuestionWhenInvalidAnswersProvided : UpdateQuestionValidator
     {
-        private readonly Validator _validator;
-
-        public UpdateQuestionWhenInvalidAnswersProvided()
-        {
-            _validator = new Validator();
-        }
-
         public static IEnumerable<object[]> UnvalidData => new List<object[]>
         {
             new object[] {new List<string> {"That", "is", "enough"}, new List<bool> { false, true, false}},
@@ -26,7 +18,7 @@ namespace Elevel.Test.QuestionCommandTest.UpdateQuestionCommandTests
 
         [Theory]
         [MemberData(nameof(UnvalidData))]
-        public void UpdateQuestion_WhenInvalidAnswersProvided_Execute(List<string> name, List<bool> isRight)
+        public void UpdateQuestion_WhenInvalidAnswersProvided_ShouldHaveError(List<string> name, List<bool> isRight)
         {
             var model = new Request
             {
