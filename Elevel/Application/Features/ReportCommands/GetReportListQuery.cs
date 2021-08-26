@@ -40,7 +40,7 @@ namespace Elevel.Application.Features.ReportCommands
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
                 var dbReport = _context.Reports
-                    .AsNoTracking();
+                    .AsNoTracking().Where(x=>x.ReportStatus == ReportStatus.Created);
 
                 if (request.CreatorId.HasValue)
                 {
