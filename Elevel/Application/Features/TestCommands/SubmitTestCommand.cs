@@ -50,11 +50,17 @@ namespace Elevel.Application.Features.TestCommands
 
                 RuleFor(x => x.GrammarAnswers.Count())
                     .InclusiveBetween(Constants.MIN_QUESTION_AMOUNT,Constants.GRAMMAR_QUESTION_AMOUNT)
-                    .WithMessage("Amount of grammar answers");
+                    .WithMessage("Wrong amount of grammar answers");
 
                 RuleFor(x => x.AuditionAnswers.Count())
                     .InclusiveBetween(Constants.MIN_QUESTION_AMOUNT, Constants.GRAMMAR_QUESTION_AMOUNT)
-                    .WithMessage("Amount of grammar answers");
+                    .WithMessage("Wrong amount of grammar answers");
+
+                RuleFor(x => x.EssayAnswer.Length).Must(x => x <= 512)
+                    .WithMessage("essayAnswer lenght must be less then 513 characters");
+
+                RuleFor(x => x.EssayAnswer.Length).Must(x => x >= 0)
+                    .WithMessage("essayAnswer lenght must be greater then 0 characters");
             }
         }
         public class Handler : IRequestHandler<Request, Response>

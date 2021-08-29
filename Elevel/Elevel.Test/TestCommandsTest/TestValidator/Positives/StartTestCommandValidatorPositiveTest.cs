@@ -2,13 +2,16 @@
 using Elevel.Domain.Enums;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
-namespace Elevel.Test.TestCommandsTest
+namespace Elevel.Test.TestCommandsTest.TestValidator.Positives
 {
-    public class CreateTestCommandValidatorTest
+    public class StartTestCommandValidatorPositiveTest
     {
-        public static IEnumerable<object[]> UserIds => new List<object[]> 
+        public static IEnumerable<object[]> validatorData = new List<object[]>
         {
             new object[]
             {
@@ -33,25 +36,26 @@ namespace Elevel.Test.TestCommandsTest
         };
 
         [Theory]
-        [MemberData(nameof(UserIds))]
-        public void CreateTestValidatorTest(Level level)
+        [MemberData(nameof(validatorData))]
+        public void StartTestCommandValidatorPositiveTestExecution(Level level)
         {
             //Arrange
-            var request = new CreateTestCommand.Request()
+
+            var request = new StartTestByIdQuery.Request
             {
+                Id = Guid.NewGuid(),
                 UserId = Guid.NewGuid(),
                 Level = level
             };
 
             //Act
 
-            var validator = new CreateTestCommand.Validator();
-            var validatorResult = validator.Validate(request);
+            var validator = new StartTestByIdQuery.Validator();
+            var result = validator.Validate(request);
 
             //Assert
 
-            Assert.NotNull(validatorResult);
-
+            Assert.True(result.IsValid);
         }
     }
 }
