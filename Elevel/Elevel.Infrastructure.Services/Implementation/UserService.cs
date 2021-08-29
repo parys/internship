@@ -17,12 +17,10 @@ namespace Elevel.Infrastructure.Services.Implementation
     public class UserService : IUserService
     {
         private readonly UserManager<User> _userManager;
-        private readonly RoleManager<IdentityRole<Guid>> _roleManager;
         private readonly TokenConfiguration _jwt;
-        public UserService(UserManager<User> userManager, RoleManager<IdentityRole<Guid>> roleManager, IOptions<TokenConfiguration> jwt)
+        public UserService(UserManager<User> userManager, IOptions<TokenConfiguration> jwt)
         {
             _userManager = userManager;
-            _roleManager = roleManager;
             _jwt = jwt.Value;
         }
 
